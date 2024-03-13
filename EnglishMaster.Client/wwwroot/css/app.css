@@ -1,3 +1,23 @@
+:root {
+    --app-primary-100: #D7E7FE;
+    --app-primary-400: #05429E;
+    --app-black: #212121;
+    --app-white: #F2F2F2;
+}
+
+* {
+    /*reset*/
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body, #app {
+    height: 100%;
+    background-color: var(--app-black);
+    color: var(--app-white);
+}
+
 .valid.modified:not([type=checkbox]) {
     outline: 1px solid #26b050;
 }
