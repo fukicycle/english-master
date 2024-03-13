@@ -1,7 +1,6 @@
 ﻿.nav-wrapper {
     width: 100%;
-    padding-bottom: env(safe-area-inset-bottom);
-    background-color: var(--app-primary-800);
+    background-color: var(--app-black);
 }
 
 nav {
