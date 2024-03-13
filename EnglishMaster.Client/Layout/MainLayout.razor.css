@@ -1,0 +1,32 @@
+﻿.main-content {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: 70px calc(100% - 150px) 80px;
+}
+
+.header-wrapper {
+    width: 100%;
+    height: 100%;
+    background-color: var(--app-primary-400);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+header {
+    width: 100%;
+    max-width: 600px;
+    padding: .5rem;
+    font-size: 24px;
+}
+
+article {
+    padding: .5rem;
+    width: 100%;
+    overflow: auto;
+    max-width: 600px;
+    margin: auto;
+    height: 100%;
+}
