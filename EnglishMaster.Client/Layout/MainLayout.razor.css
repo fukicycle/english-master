@@ -3,8 +3,7 @@
     height: 100%;
     display: grid;
     grid-template-columns: auto;
-    grid-template-rows: 60px calc(100% - 140px - env(safe-area-inset-bottom)) calc(env(safe-area-inset-bottom) + 80px);
-    padding-bottom: env(safe-area-inset-bottom);
+    grid-template-rows: 60px calc(100% - 140px) 80px;
 }
 
 .header-wrapper {
