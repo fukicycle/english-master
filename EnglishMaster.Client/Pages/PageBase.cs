@@ -18,5 +18,22 @@ namespace EnglishMaster.Client.Pages
             StateContainer.OnMessageChanged -= StateHasChanged;
             StateContainer.OnLoadingStateChanged -= StateHasChanged;
         }
+
+        protected void RunActionWithLoading(Action action)
+        {
+            try
+            {
+                StateContainer.IsLoading = true;
+                action();
+            }
+            catch (Exception ex)
+            {
+                StateContainer.Message = ex.Message;
+            }
+            finally
+            {
+                StateContainer.IsLoading = false;
+            }
+        }
     }
 }
