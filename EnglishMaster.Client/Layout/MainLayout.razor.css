@@ -3,13 +3,14 @@
     height: 100%;
     display: grid;
     grid-template-columns: auto;
-    grid-template-rows: 70px calc(100% - 150px) 80px;
+    grid-template-rows: 60px calc(100% - 140px - env(safe-area-inset-bottom)) calc(env(safe-area-inset-bottom) + 80px);
+    padding-bottom: env(safe-area-inset-bottom);
 }
 
 .header-wrapper {
     width: 100%;
     height: 100%;
-    background-color: var(--app-primary-400);
+    background-color: var(--app-primary-800);
     display: flex;
     flex-direction: column;
     justify-content: center;

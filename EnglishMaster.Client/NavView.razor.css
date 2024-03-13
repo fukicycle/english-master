@@ -1,6 +1,6 @@
 ﻿.nav-wrapper {
     width: 100%;
-    background-color: var(--app-primary-400);
+    background-color: var(--app-primary-800);
 }
 
 nav {
@@ -8,13 +8,41 @@ nav {
     margin: auto;
     height: 100%;
     max-width: 600px;
-    color: var(--app-white);
     display: flex;
     justify-content: space-around;
     align-items: center;
 }
 
-.nav-link {
-    text-decoration: none;
-    color: var(--app-white);
+::deep .nav-link {
+    font-size: .8rem;
+    text-decoration: none !important;
+    color: var(--app-primary-400) !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+::deep .nav-link.active {
+    color: var(--app-primary-100) !important;
+}
+
+.nav-link>span {
+    padding-top: 5px;
+}
+
+::deep .menu-fill {
+    fill: var(--app-primary-400) !important;
+}
+
+::deep .menu-fill.active {
+    fill: var(--app-primary-100) !important;
+}
+
+::deep .menu-stroke {
+    stroke: var(--app-primary-400) !important;
+}
+
+::deep .menu-stroke.active {
+    stroke: var(--app-primary-100) !important;
 }
