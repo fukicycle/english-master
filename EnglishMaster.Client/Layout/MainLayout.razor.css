@@ -4,6 +4,7 @@
     display: grid;
     grid-template-columns: auto;
     grid-template-rows: 60px calc(100% - 140px) 80px;
+    padding-bottom: env(safe-area-inset-bottom);
 }
 
 .header-wrapper {
@@ -19,7 +20,7 @@ header {
     width: 100%;
     max-width: 600px;
     padding: .5rem;
-    font-size: 24px;
+    font-size: 18px;
     display: flex;
     align-items: center;
     justify-content: start;
@@ -33,6 +34,7 @@ img {
 }
 
 article {
+    background-color: var(--app-black);
     padding: .5rem;
     width: 100%;
     overflow: auto;
