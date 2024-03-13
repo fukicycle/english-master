@@ -20,6 +20,16 @@ header {
     max-width: 600px;
     padding: .5rem;
     font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    color: var(--app-primary-100);
+}
+
+img {
+    height: 50px;
+    margin-right: .5rem;
+    object-fit: contain;
 }
 
 article {
