@@ -4,6 +4,6 @@ namespace EnglishMaster.Server.Services.Interfaces
 {
     public interface IDictionaryService
     {
-        IList<DictionaryResponseDto> GetDictionaryResponseDtos();
+        IList<DictionaryWordResponseDto> GetDictionaryResponseDtos();
     }
 }

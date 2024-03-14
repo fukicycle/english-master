@@ -16,12 +16,12 @@ namespace EnglishMaster.Server.Services
             _logger = logger;
         }
 
-        public IList<DictionaryResponseDto> GetDictionaryResponseDtos()
+        public IList<DictionaryWordResponseDto> GetDictionaryResponseDtos()
         {
             return _db.MeaningOfWords
                 .Include(a => a.Word).Include(a => a.PartOfSpeech)
                 .ToList()
-                .Select(a => new DictionaryResponseDto(a.WordId, a.Word.Word1, a.Meaning, a.PartOfSpeech.InJapanese))
+                .Select(a => new DictionaryWordResponseDto(a.WordId, a.Word.Word1, a.Meaning, a.PartOfSpeech.InJapanese))
                 .OrderBy(a => a.Word)
                 .ToList();
         }

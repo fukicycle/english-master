@@ -9,7 +9,7 @@
         <div class="search-info">Number of words:@_dictionaries.Count()</div>
     </div>
     <ul>
-        @foreach (DictionaryResponseDto dictionary in _dictionaries)
+        @foreach (DictionaryWordResponseDto dictionary in _dictionaries)
         {
             <li>
                 <WordCard Dictionary="dictionary" />

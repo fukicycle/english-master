@@ -7,7 +7,7 @@ namespace EnglishMaster.Client.Pages
 {
     public partial class Dictionary : PageBase
     {
-        private IList<DictionaryResponseDto> _dictionaries = new List<DictionaryResponseDto>();
+        private IList<DictionaryWordResponseDto> _dictionaries = new List<DictionaryWordResponseDto>();
         protected override async Task OnInitializedAsync()
         {
             await RunActionWithLoading(async () =>
@@ -17,10 +17,10 @@ namespace EnglishMaster.Client.Pages
                   {
                       throw new Exception(dictionaryResult.Message);
                   }
-                  IList<DictionaryResponseDto>? dictionaries = JsonConvert.DeserializeObject<IList<DictionaryResponseDto>>(dictionaryResult.Json);
+                  IList<DictionaryWordResponseDto>? dictionaries = JsonConvert.DeserializeObject<IList<DictionaryWordResponseDto>>(dictionaryResult.Json);
                   if (dictionaries == null)
                   {
-                      throw new Exception($"Can not deserialized.{nameof(IList<DictionaryResponseDto>)}");
+                      throw new Exception($"Can not deserialized.{nameof(IList<DictionaryWordResponseDto>)}");
                   }
                   _dictionaries = dictionaries;
               });

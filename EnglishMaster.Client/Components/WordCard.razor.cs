@@ -6,7 +6,7 @@ namespace EnglishMaster.Client.Components
     public partial class WordCard
     {
         [Parameter]
-        public DictionaryResponseDto Dictionary { get; set; } = null!;
+        public DictionaryWordResponseDto Dictionary { get; set; } = null!;
 
         private string _description = string.Empty;
 

@@ -7,18 +7,17 @@ using System.Threading.Tasks;
 
 namespace EnglishMaster.Shared.Dto.Response
 {
-    public sealed class DictionaryResponseDto
+    public sealed class DictionaryWordResponseDto
     {
-        public DictionaryResponseDto(long id, string word, string meaning, string partOfSpeech)
+        public DictionaryWordResponseDto(long id, string word, IEnumerable<DictionaryMeaningResponseDto> meanings)
         {
             Id = id;
             Word = word;
-            Meaning = meaning;
-            PartOfSpeech = partOfSpeech;
+            Meanings = meanings;
         }
         public long Id { get; }
         public string Word { get; }
-        public string Meaning { get; }
-        public string PartOfSpeech { get; }
+
+        public IEnumerable<DictionaryMeaningResponseDto> Meanings { get; }
     }
 }
