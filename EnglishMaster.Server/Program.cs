@@ -1,3 +1,5 @@
+using EnglishMaster.Server.Services;
+using EnglishMaster.Server.Services.Interfaces;
 using EnglishMaster.Shared;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -69,6 +71,9 @@ builder.Services.AddSwaggerGen(options =>
         }
     });
 });
+
+//Register service
+builder.Services.AddScoped<IDictionaryService, DictionaryService>();
 
 var app = builder.Build();
 
