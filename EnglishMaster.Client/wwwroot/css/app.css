@@ -21,6 +21,10 @@ body,
     color: var(--app-white);
 }
 
+    body .pwa-updater[b-pwa-updater] {
+        --pwa-updater-bar-backcolor: var(--app-primary-400);
+    }
+
 .valid.modified:not([type=checkbox]) {
     outline: 1px solid #26b050;
 }
