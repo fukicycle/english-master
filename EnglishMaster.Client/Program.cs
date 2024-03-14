@@ -1,4 +1,6 @@
 using EnglishMaster.Client;
+using EnglishMaster.Client.Services;
+using EnglishMaster.Client.Services.Interfaces;
 using EnglishMaster.Client.Stores;
 using EnglishMaster.Shared;
 using Microsoft.AspNetCore.Components.Web;
@@ -18,5 +20,6 @@ builder.Services.AddHttpClient(nameof(ApplicationMode.Prod), httpClient =>
 });
 
 builder.Services.AddScoped<IStateContainer, StateContainer>();
+builder.Services.AddScoped<IHttpClientService, HttpClientService>();
 
 await builder.Build().RunAsync();
