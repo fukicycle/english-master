@@ -29,6 +29,7 @@
             {
                 HideLoader();
             }
+            StateHasChanged();
         }
     }
 }
