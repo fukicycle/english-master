@@ -5,6 +5,7 @@ using EnglishMaster.Client.Stores;
 using EnglishMaster.Shared;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Toolbelt.Blazor.Extensions.DependencyInjection;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -19,6 +20,7 @@ builder.Services.AddHttpClient(nameof(ApplicationMode.Prod), httpClient =>
     httpClient.BaseAddress = new Uri("https://www.sato-home.mydns.jp:9445");
 });
 
+builder.Services.AddPWAUpdater();
 builder.Services.AddScoped<IStateContainer, StateContainer>();
 builder.Services.AddScoped<IHttpClientService, HttpClientService>();
 
