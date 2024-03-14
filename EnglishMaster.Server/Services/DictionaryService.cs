@@ -20,6 +20,7 @@ namespace EnglishMaster.Server.Services
         {
             return _db.MeaningOfWords
                 .Include(a => a.Word).Include(a => a.PartOfSpeech)
+                .ToList()
                 .Select(a => new DictionaryResponseDto(a.WordId, a.Word.Word1, a.Meaning, a.PartOfSpeech.InJapanese))
                 .OrderBy(a => a.Word)
                 .ToList();

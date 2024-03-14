@@ -1,17 +1,18 @@
 ﻿@page "/dictionary"
 @inherits PageBase
+@inject IHttpClientService HttpClientService
 
 <PageTitle>Dictionary</PageTitle>
 <div class="dictionary-area">
     <div class="search-area">
         <input type="search" placeholder="Search" />
-        <div class="search-info">Number of words:9304</div>
+        <div class="search-info">Number of words:@_dictionaries.Count()</div>
     </div>
     <ul>
-        @for (int i = 0; i <= 1000; i++)
+        @foreach (DictionaryResponseDto dictionary in _dictionaries)
         {
             <li>
-                <WordCard />
+                <WordCard Dictionary="dictionary" />
             </li>
         }
     </ul>

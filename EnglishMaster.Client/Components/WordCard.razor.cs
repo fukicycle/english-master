@@ -1,18 +1,22 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using EnglishMaster.Shared.Dto.Response;
+using Microsoft.AspNetCore.Components;
 
 namespace EnglishMaster.Client.Components
 {
     public partial class WordCard
     {
         [Parameter]
-        public long Id { get; set; }
-        public string _word = string.Empty;
-        public string _description = string.Empty;
+        public DictionaryResponseDto Dictionary { get; set; } = null!;
 
-        protected override void OnInitialized()
+        private string _description = string.Empty;
+
+        protected override void OnParametersSet()
         {
-            _word = "Sample word";
-            _description = "動詞,名刺";
+            if (Dictionary == null)
+            {
+                throw new ArgumentNullException(nameof(Dictionary));
+            }
+            _description = $"{Dictionary.PartOfSpeech}:{Dictionary.Meaning}";
         }
     }
 }
