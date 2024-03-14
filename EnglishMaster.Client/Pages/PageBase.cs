@@ -18,22 +18,5 @@ namespace EnglishMaster.Client.Pages
             StateContainer.OnMessageChanged -= StateHasChanged;
             StateContainer.OnLoadingStateChanged -= StateHasChanged;
         }
-
-        protected async Task RunActionWithLoading(Func<Task> func)
-        {
-            try
-            {
-                await InvokeAsync(() => StateContainer.IsLoading = true);
-                await func();
-            }
-            catch (Exception ex)
-            {
-                StateContainer.Message = ex.Message;
-            }
-            finally
-            {
-                await InvokeAsync(() => StateContainer.IsLoading = false);
-            }
-        }
     }
 }

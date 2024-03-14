@@ -16,7 +16,7 @@ namespace EnglishMaster.Client.Components
             {
                 throw new ArgumentNullException(nameof(Dictionary));
             }
-            _description = $"{Dictionary.PartOfSpeech}:{Dictionary.Meaning}";
+            _description = string.Join(", ", Dictionary.Meanings.Select(a => a.Meaning));
         }
     }
 }

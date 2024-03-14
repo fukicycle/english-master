@@ -18,12 +18,21 @@ namespace EnglishMaster.Server.Services
 
         public IList<DictionaryWordResponseDto> GetDictionaryResponseDtos()
         {
-            return _db.MeaningOfWords
+            IList<DictionaryWordResponseDto> dictionaryWordResponseDtos = new List<DictionaryWordResponseDto>();
+            IList<MeaningOfWord> meanings = _db.MeaningOfWords
                 .Include(a => a.Word).Include(a => a.PartOfSpeech)
-                .ToList()
-                .Select(a => new DictionaryWordResponseDto(a.WordId, a.Word.Word1, a.Meaning, a.PartOfSpeech.InJapanese))
-                .OrderBy(a => a.Word)
                 .ToList();
+            foreach (var grouping in meanings.GroupBy(a => new
+            {
+                a.Word.Id,
+                a.Word.Word1
+            }))
+            {
+                IEnumerable<DictionaryMeaningResponseDto> dictionaryMeaningResponseDtos = grouping.Select(a => new DictionaryMeaningResponseDto(a.Meaning, a.PartOfSpeech.InJapanese));
+                DictionaryWordResponseDto dictionaryWordResponseDto = new DictionaryWordResponseDto(grouping.Key.Id, grouping.Key.Word1, dictionaryMeaningResponseDtos);
+                dictionaryWordResponseDtos.Add(dictionaryWordResponseDto);
+            }
+            return dictionaryWordResponseDtos.OrderBy(a => a.Word).ToList();
         }
     }
 }
