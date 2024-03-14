@@ -2,4 +2,17 @@
 @inherits PageBase
 
 <PageTitle>Dictionary</PageTitle>
-<div>dictionary</div>
+<div class="dictionary-area">
+    <div class="search-area">
+        <input type="search" placeholder="Search" />
+        <div class="search-info">Number of words:9304</div>
+    </div>
+    <ul>
+        @for (int i = 0; i <= 1000; i++)
+        {
+            <li>
+                <WordCard />
+            </li>
+        }
+    </ul>
+</div>
