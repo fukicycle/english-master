@@ -1,6 +1,7 @@
 ﻿
 
 using EnglishMaster.Shared.Dto.Response;
+using Microsoft.AspNetCore.Components;
 using Newtonsoft.Json;
 
 namespace EnglishMaster.Client.Pages
@@ -8,6 +9,7 @@ namespace EnglishMaster.Client.Pages
     public partial class Dictionary : PageBase
     {
         private List<DictionaryWordResponseDto> _dictionaries = new List<DictionaryWordResponseDto>();
+        private List<DictionaryWordResponseDto> _originalDictionaries = new List<DictionaryWordResponseDto>();
         protected override async Task OnInitializedAsync()
         {
             try
@@ -23,7 +25,8 @@ namespace EnglishMaster.Client.Pages
                 {
                     throw new Exception($"Can not deserialized.{nameof(List<DictionaryWordResponseDto>)}");
                 }
-                _dictionaries = dictionaries;
+                _originalDictionaries = dictionaries;
+                _dictionaries.AddRange(_originalDictionaries);
             }
             catch (Exception ex)
             {
@@ -33,6 +36,26 @@ namespace EnglishMaster.Client.Pages
             {
                 StateContainer.IsLoading = false;
             }
+        }
+
+        private void SearchInputOnChanged(ChangeEventArgs e)
+        {
+            if (e.Value == null)
+            {
+                return;
+            }
+            string? value = e.Value.ToString();
+            if (value == null)
+            {
+                return;
+            }
+            _dictionaries = Filter(_originalDictionaries, value);
+        }
+
+        private List<DictionaryWordResponseDto> Filter(List<DictionaryWordResponseDto> items, string searchString)
+        {
+            if (!string.IsNullOrEmpty(searchString)) return Filter(items.Where(a => a.Word.ToLower().Contains(searchString.ToLower())).ToList(), "");
+            return items.OrderBy(a => a.Word).ToList();
         }
     }
 }

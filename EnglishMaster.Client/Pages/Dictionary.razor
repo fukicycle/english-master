@@ -5,7 +5,7 @@
 <PageTitle>Dictionary</PageTitle>
 <div class="dictionary-area">
     <div class="search-area">
-        <input type="search" placeholder="Search" />
+        <input type="search" placeholder="Search" @oninput=@SearchInputOnChanged />
         <div class="search-info">Number of words:@_dictionaries.Count()</div>
     </div>
     <ul>
