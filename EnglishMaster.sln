@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34701.34
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnglishMaster.Server", "EnglishMaster.Server\EnglishMaster.Server.csproj", "{4BB147F3-C2FE-4871-B403-31B4E7E553C3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EnglishMaster.Server", "EnglishMaster.Server\EnglishMaster.Server.csproj", "{4BB147F3-C2FE-4871-B403-31B4E7E553C3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnglishMaster.Client", "EnglishMaster.Client\EnglishMaster.Client.csproj", "{679AA255-7745-40C4-9082-F41C0752FC45}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EnglishMaster.Client", "EnglishMaster.Client\EnglishMaster.Client.csproj", "{679AA255-7745-40C4-9082-F41C0752FC45}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnglishMaster.Shared", "EnglishMaster.Shared\EnglishMaster.Shared.csproj", "{D781EBA8-5CDC-4840-AC52-78BB70FDE590}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EnglishMaster.Shared", "EnglishMaster.Shared\EnglishMaster.Shared.csproj", "{D781EBA8-5CDC-4840-AC52-78BB70FDE590}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
