@@ -19,12 +19,12 @@ namespace EnglishMaster.Client.Pages
             StateContainer.OnLoadingStateChanged -= StateHasChanged;
         }
 
-        protected void RunActionWithLoading(Action action)
+        protected async Task RunActionWithLoading(Func<Task> func)
         {
             try
             {
-                StateContainer.IsLoading = true;
-                action();
+                await InvokeAsync(() => StateContainer.IsLoading = true);
+                await func();
             }
             catch (Exception ex)
             {
@@ -32,7 +32,7 @@ namespace EnglishMaster.Client.Pages
             }
             finally
             {
-                StateContainer.IsLoading = false;
+                await InvokeAsync(() => StateContainer.IsLoading = false);
             }
         }
     }
