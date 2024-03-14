@@ -1,7 +1,9 @@
 using EnglishMaster.Server.Services;
 using EnglishMaster.Server.Services.Interfaces;
 using EnglishMaster.Shared;
+using EnglishMaster.Shared.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Security.Cryptography;
@@ -73,6 +75,7 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 //Register service
+builder.Services.AddDbContext<DB>(a => a.UseSqlServer(builder.Configuration.GetConnectionString("DB")));
 builder.Services.AddScoped<IDictionaryService, DictionaryService>();
 
 var app = builder.Build();
