@@ -1,3 +1,4 @@
+using EnglishMaster.Server;
 using EnglishMaster.Server.Services;
 using EnglishMaster.Server.Services.Interfaces;
 using EnglishMaster.Shared;
@@ -77,6 +78,9 @@ builder.Services.AddSwaggerGen(options =>
 //Register service
 builder.Services.AddDbContext<DB>(a => a.UseSqlServer(builder.Configuration.GetConnectionString("DB")));
 builder.Services.AddScoped<IDictionaryService, DictionaryService>();
+builder.Services.AddScoped<IQuestionService, QuestionService>();
+builder.Services.AddScoped<IPartOfSpeechService, PartOfSpeechService>();
+builder.Services.AddScoped<ILevelService, LevelService>();
 
 var app = builder.Build();
 
