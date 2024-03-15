@@ -19,25 +19,28 @@ public sealed class QuestionService : IQuestionService
         IEnumerable<MeaningOfWord> originals = _db.MeaningOfWords.Include(a => a.Word).ToList();
         IEnumerable<MeaningOfWord> meaningOfWords = Filter(originals, partOfSpeechId, levelId);
         IList<QuestionResponseDto> questionResponseDtos = new List<QuestionResponseDto>();
+        int number = 1;
         foreach (MeaningOfWord meaningOfWord in meaningOfWords.Take(numberOfQuestions))
         {
             IEnumerable<MeaningOfWord> answerTargets = Filter(originals, meaningOfWord.PartOfSpeechId, meaningOfWord.LevelId);
-            IEnumerable<MeaningOfWord> randomAnswers = GetRandomChoices(answerTargets);
+            IEnumerable<MeaningOfWord> randomAnswers = GetRandomChoices(answerTargets, meaningOfWord);
             IList<AnswerResponseDto> answerResponseDtos = new List<AnswerResponseDto>();
             foreach (MeaningOfWord answer in randomAnswers)
             {
-                AnswerResponseDto answerResponseDto = new AnswerResponseDto(answer.WordId, answer.Meaning);
+                AnswerResponseDto answerResponseDto = new AnswerResponseDto(answer.Id, answer.Meaning);
                 answerResponseDtos.Add(answerResponseDto);
             }
-            QuestionResponseDto questionResponseDto = new QuestionResponseDto(meaningOfWord.Id, meaningOfWord.Word.Word1, meaningOfWord.PartOfSpeechId, meaningOfWord.LevelId, answerResponseDtos);
+            QuestionResponseDto questionResponseDto = new QuestionResponseDto(number, meaningOfWord.Id, meaningOfWord.Word.Word1, meaningOfWord.PartOfSpeechId, meaningOfWord.LevelId, answerResponseDtos);
             questionResponseDtos.Add(questionResponseDto);
+            number++;
         }
         return questionResponseDtos;
     }
 
-    private IEnumerable<MeaningOfWord> GetRandomChoices(IEnumerable<MeaningOfWord> answerTargets, int numberOfAnswer = 4)
+    private IEnumerable<MeaningOfWord> GetRandomChoices(IEnumerable<MeaningOfWord> answerTargets, MeaningOfWord questionWord, int numberOfAnswer = 4)
     {
-        IEnumerable<MeaningOfWord> randoms = answerTargets.OrderByDescending(a => Guid.NewGuid()).Take(numberOfAnswer);
+        IEnumerable<MeaningOfWord> randoms = answerTargets.OrderByDescending(a => Guid.NewGuid()).Take(numberOfAnswer - 1);
+        randoms = randoms.Append(questionWord).OrderByDescending(a => Guid.NewGuid());
         return randoms;
     }
 
