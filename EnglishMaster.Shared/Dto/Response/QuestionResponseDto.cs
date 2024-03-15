@@ -2,16 +2,18 @@
 
 public class QuestionResponseDto
 {
-    public QuestionResponseDto(long id,string word,long partOfSpeechId,long levelId,IEnumerable<AnswerResponseDto> answerResponseDtos)
+    public QuestionResponseDto(int number, long meaningOfWordId, string word, long partOfSpeechId, long levelId, IEnumerable<AnswerResponseDto> answerResponseDtos)
     {
-        Id = id;
+        Number = number;
+        MeaningOfWordId = meaningOfWordId;
         Word = word;
         PartOfSpeechId = partOfSpeechId;
         LevelId = levelId;
         AnswerResponseDtos = answerResponseDtos;
     }
-    public long Id { get; }
-    public string Word { get;  }
+    public int Number { get; }
+    public long MeaningOfWordId { get; }
+    public string Word { get; }
     public long PartOfSpeechId { get; }
     public long LevelId { get; }
     public IEnumerable<AnswerResponseDto> AnswerResponseDtos { get; }
