@@ -1,11 +1,11 @@
 {
-  "name": "EnglishMaster.Client",
-  "short_name": "EnglishMaster.Client",
+  "name": "English Master v2",
+  "short_name": "English Master v2",
   "id": "./",
   "start_url": "./",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#03173d",
+  "background_color": "#02193B",
+  "theme_color": "#02193B",
   "prefer_related_applications": false,
   "icons": [
     {
