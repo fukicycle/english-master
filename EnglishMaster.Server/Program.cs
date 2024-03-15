@@ -79,6 +79,8 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddDbContext<DB>(a => a.UseSqlServer(builder.Configuration.GetConnectionString("DB")));
 builder.Services.AddScoped<IDictionaryService, DictionaryService>();
 builder.Services.AddScoped<IQuestionService, QuestionService>();
+builder.Services.AddScoped<IPartOfSpeechService, PartOfSpeechService>();
+builder.Services.AddScoped<ILevelService, LevelService>();
 
 var app = builder.Build();
 
