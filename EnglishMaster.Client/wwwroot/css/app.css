@@ -19,6 +19,7 @@ body,
     height: 100%;
     background-color: var(--app-primary-800);
     color: var(--app-white);
+    font-size: 16px;
 }
 
 body .pwa-updater[b-pwa-updater] {
@@ -32,15 +33,15 @@ body .pwa-updater[b-pwa-updater] {
     height: 100%;
     width: 100%;
     display: flex;
-    justify-content: space-around;
+    justify-content: space-evenly;
     align-items: center;
     flex-direction: column;
     background-color: var(--app-primary-800);
 }
 
 .splash-screen-logo-wrapper {
-    width: 80%;
-    max-width: 300px;
+    width: 30%;
+    max-width: 200px;
     border-radius: 50%;
     box-shadow: 0 0 8px var(--app-primary-100);
 }
@@ -50,7 +51,7 @@ body .pwa-updater[b-pwa-updater] {
 }
 
 .splash-screen div {
-    font-size: 36px;
+    font-size: 16px;
 }
 
 
