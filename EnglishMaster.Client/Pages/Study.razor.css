@@ -64,6 +64,20 @@ select {
 
 .result-area {
     flex: 1;
+    position: relative;
+}
+
+.result {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #212121f1;
+    z-index: 10;
 }
 
 .next-btn {
@@ -112,7 +126,7 @@ select {
     font-size: 1.1rem;
 }
 
-.option-btn:active {
+.option-btn:focus {
     box-shadow: none;
     color: var(--app-black);
     background-color: var(--app-primary-100);

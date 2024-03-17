@@ -42,7 +42,16 @@
                     </div>
                     <div class="result-area">
                         <div class="word">@_question.Word</div>
-                        <div class="result">Correct</div>
+                        <div class="result">
+                            @if (_isCorrect)
+                            {
+                                <img src="svgs/correct.svg" />
+                            }
+                            else
+                            {
+                                <img src="svgs/incorrect.svg" />
+                            }
+                        </div>
                     </div>
                     <button class="next-btn" @onclick=@NextButtonOnClick>Next</button>
                 </div>
@@ -64,7 +73,7 @@
         {
             @foreach (var option in _question.AnswerResponseDtos)
             {
-                <button class="option-btn" @onclick=@OptionButtonOnClick>@option.Meaning</button>
+                <button class="option-btn" @onclick=@(() => OptionButtonOnClick(option.WordId))>@option.Meaning</button>
             }
         }
     </div>

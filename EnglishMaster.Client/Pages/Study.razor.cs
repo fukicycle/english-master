@@ -17,6 +17,7 @@ namespace EnglishMaster.Client.Pages
         private List<LevelResponseDto> _levles = new List<LevelResponseDto>();
         private int _questionIndex = 0;
         private bool _isAnswered = false;
+        private bool _isCorrect = false;
 
         protected override async Task OnInitializedAsync()
         {
@@ -101,8 +102,14 @@ namespace EnglishMaster.Client.Pages
             }
         }
 
-        private void OptionButtonOnClick()
+        private void OptionButtonOnClick(long wordId)
         {
+            if (_question == null)
+            {
+                StateContainer.Message = "Unexpected error has occured.";
+                return;
+            }
+            _isCorrect = _question.MeaningOfWordId == wordId;
             _isAnswered = true;
         }
 
