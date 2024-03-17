@@ -80,6 +80,10 @@ select {
     z-index: 10;
 }
 
+    .result div {
+        margin-top: .5rem;
+    }
+
 .next-btn {
     width: 100%;
     outline: none;
