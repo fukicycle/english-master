@@ -24,7 +24,7 @@ public sealed class QuestionService : IQuestionService
         int number = 1;
         foreach (MeaningOfWord meaningOfWord in meaningOfWords.Take(numberOfQuestions))
         {
-            IEnumerable<MeaningOfWord> answerTargets = Filter(originals, meaningOfWord.PartOfSpeechId, meaningOfWord.LevelId);
+            IEnumerable<MeaningOfWord> answerTargets = Filter(originals, meaningOfWord.PartOfSpeechId, 0);
             IEnumerable<MeaningOfWord> randomAnswers = GetRandomChoices(answerTargets, meaningOfWord);
             IList<AnswerResponseDto> answerResponseDtos = new List<AnswerResponseDto>();
             foreach (MeaningOfWord answer in randomAnswers)
@@ -36,12 +36,12 @@ public sealed class QuestionService : IQuestionService
             questionResponseDtos.Add(questionResponseDto);
             number++;
         }
-        return questionResponseDtos;
+        return questionResponseDtos.OrderByDescending(a => Guid.NewGuid()).ToList();
     }
 
     private IEnumerable<MeaningOfWord> GetRandomChoices(IEnumerable<MeaningOfWord> answerTargets, MeaningOfWord questionWord, int numberOfAnswer = 4)
     {
-        IEnumerable<MeaningOfWord> randoms = answerTargets.OrderByDescending(a => Guid.NewGuid()).Take(numberOfAnswer - 1);
+        IEnumerable<MeaningOfWord> randoms = answerTargets.Where(a => a.WordId != questionWord.WordId).OrderByDescending(a => Guid.NewGuid()).Take(numberOfAnswer - 1);
         randoms = randoms.Append(questionWord).OrderByDescending(a => Guid.NewGuid());
         return randoms;
     }
