@@ -19,7 +19,7 @@ public sealed class QuestionService : IQuestionService
     public IList<QuestionResponseDto> GetQuestionResponseDtos(long partOfSpeechId, long levelId = 0, int numberOfQuestions = 50)
     {
         IEnumerable<MeaningOfWord> originals = _db.MeaningOfWords.Include(a => a.Word).ToList();
-        IEnumerable<MeaningOfWord> meaningOfWords = Filter(originals, partOfSpeechId, levelId);
+        IEnumerable<MeaningOfWord> meaningOfWords = Filter(originals, partOfSpeechId, levelId).OrderByDescending(a => Guid.NewGuid());
         IList<QuestionResponseDto> questionResponseDtos = new List<QuestionResponseDto>();
         int number = 1;
         foreach (MeaningOfWord meaningOfWord in meaningOfWords.Take(numberOfQuestions))
@@ -36,7 +36,7 @@ public sealed class QuestionService : IQuestionService
             questionResponseDtos.Add(questionResponseDto);
             number++;
         }
-        return questionResponseDtos.OrderByDescending(a => Guid.NewGuid()).ToList();
+        return questionResponseDtos;
     }
 
     private IEnumerable<MeaningOfWord> GetRandomChoices(IEnumerable<MeaningOfWord> answerTargets, MeaningOfWord questionWord, int numberOfAnswer = 4)
