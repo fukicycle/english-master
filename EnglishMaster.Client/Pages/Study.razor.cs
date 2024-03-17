@@ -1,4 +1,5 @@
 ﻿
+using System.Net.NetworkInformation;
 using EnglishMaster.Shared;
 using EnglishMaster.Shared.Dto.Response;
 using EnglishMaster.Shared.Models;
@@ -15,6 +16,7 @@ namespace EnglishMaster.Client.Pages
         private List<PartOfSpeechResponseDto> _partOfSpeeches = new List<PartOfSpeechResponseDto>();
         private List<LevelResponseDto> _levles = new List<LevelResponseDto>();
         private int _questionIndex = 0;
+        private bool _isAnswered = false;
 
         protected override async Task OnInitializedAsync()
         {
@@ -97,6 +99,22 @@ namespace EnglishMaster.Client.Pages
             {
                 StateContainer.IsLoading = false;
             }
+        }
+
+        private void OptionButtonOnClick()
+        {
+            _isAnswered = true;
+        }
+
+        private void NextButtonOnClick()
+        {
+            _isAnswered = false;
+            _questionIndex++;
+            if (_questionIndex >= 50)
+            {
+                _questionIndex--;
+            }
+            _question = _questions[_questionIndex];
         }
     }
 }

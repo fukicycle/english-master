@@ -33,13 +33,30 @@
         }
         else
         {
-            <div class="question-card">
-                <div class="card-header">
-                    <div class="no">No. @_question.Number</div>
-                    <div class="count">1/@_questions.Count</div>
+            @if (_isAnswered)
+            {
+                <div class="answer-card">
+                    <div class="card-header">
+                        <div class="no">No. @_question.Number</div>
+                        <div class="count">@(_questionIndex + 1)/@_questions.Count</div>
+                    </div>
+                    <div class="result-area">
+                        <div class="word">@_question.Word</div>
+                        <div class="result">Correct</div>
+                    </div>
+                    <button class="next-btn" @onclick=@NextButtonOnClick>Next</button>
                 </div>
-                <div class="word">@_question.Word</div>
-            </div>
+            }
+            else
+            {
+                <div class="question-card">
+                    <div class="card-header">
+                        <div class="no">No. @_question.Number</div>
+                        <div class="count">@(_questionIndex + 1)/@_questions.Count</div>
+                    </div>
+                    <div class="word">@_question.Word</div>
+                </div>
+            }
         }
     </div>
     <div class="answer-option-area">
@@ -47,7 +64,7 @@
         {
             @foreach (var option in _question.AnswerResponseDtos)
             {
-                <button class="option-btn">@option.Meaning</button>
+                <button class="option-btn" @onclick=@OptionButtonOnClick>@option.Meaning</button>
             }
         }
     </div>
