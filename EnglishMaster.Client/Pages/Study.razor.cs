@@ -26,7 +26,6 @@ namespace EnglishMaster.Client.Pages
                 StateContainer.IsLoading = true;
                 await GetPartOfSpeechesAsync();
                 await GetLevelsAsync();
-                await RefreshQuestionAsync();
             }
             catch (Exception ex)
             {
@@ -68,7 +67,7 @@ namespace EnglishMaster.Client.Pages
             _partOfSpeeches = partOfSpeeches;
         }
 
-        private async Task RefreshQuestionAsync()
+        private async Task GetQuestionsAsync()
         {
             HttpResponseResult questionResponse = await HttpClientService.SendAsync(HttpMethod.Get, $"/api/v1/questions/part-of-speeches/{_partOfSpeechId}/levels/{_levelId}");
             if (questionResponse.StatusCode != System.Net.HttpStatusCode.OK)
@@ -89,7 +88,7 @@ namespace EnglishMaster.Client.Pages
             {
                 StateContainer.IsLoading = true;
                 _questionIndex = 0;
-                await RefreshQuestionAsync();
+                await GetQuestionsAsync();
                 _question = _questions[_questionIndex];
             }
             catch (Exception ex)
@@ -119,9 +118,13 @@ namespace EnglishMaster.Client.Pages
             _questionIndex++;
             if (_questionIndex >= 50)
             {
-                _questionIndex--;
+                _questionIndex = 0;
+                _question = null;
             }
-            _question = _questions[_questionIndex];
+            else
+            {
+                _question = _questions[_questionIndex];
+            }
         }
     }
 }
