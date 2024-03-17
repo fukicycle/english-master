@@ -10,87 +10,84 @@ namespace EnglishMaster.Client.Pages
     {
         private long _partOfSpeechId = 0;
         private long _levelId = 0;
+        private QuestionResponseDto? _question = null;
         private List<QuestionResponseDto> _questions = new List<QuestionResponseDto>();
         private List<PartOfSpeechResponseDto> _partOfSpeeches = new List<PartOfSpeechResponseDto>();
         private List<LevelResponseDto> _levles = new List<LevelResponseDto>();
+        private int _questionIndex = 0;
 
         protected override async Task OnInitializedAsync()
         {
-            await GetPartOfSpeechesAsync();
-            await GetLevelsAsync();
-            await RefreshQuestionAsync();
+            try
+            {
+                StateContainer.IsLoading = true;
+                await GetPartOfSpeechesAsync();
+                await GetLevelsAsync();
+                await RefreshQuestionAsync();
+            }
+            catch (Exception ex)
+            {
+                StateContainer.Message = ex.Message;
+            }
+            finally
+            {
+                StateContainer.IsLoading = false;
+            }
         }
 
         private async Task GetLevelsAsync()
         {
-            try
+            HttpResponseResult levelsResponse = await HttpClientService.SendAsync(HttpMethod.Get, "/api/v1/levels");
+            if (levelsResponse.StatusCode != System.Net.HttpStatusCode.OK)
             {
-                StateContainer.IsLoading = true;
-                HttpResponseResult levelsResponse = await HttpClientService.SendAsync(HttpMethod.Get, "levels");
-                if (levelsResponse.StatusCode != System.Net.HttpStatusCode.OK)
-                {
-                    throw new Exception(levelsResponse.Message);
-                }
-                List<LevelResponseDto>? levels = JsonConvert.DeserializeObject<List<LevelResponseDto>>(levelsResponse.Json);
-                if (levels == null)
-                {
-                    throw new Exception($"Can not deserialized.{nameof(List<LevelResponseDto>)}");
-                }
-                _levles = levels;
+                throw new Exception(levelsResponse.Message);
             }
-            catch (Exception ex)
+            List<LevelResponseDto>? levels = JsonConvert.DeserializeObject<List<LevelResponseDto>>(levelsResponse.Json);
+            if (levels == null)
             {
-                StateContainer.Message = ex.Message;
+                throw new Exception($"Can not deserialized.{nameof(List<LevelResponseDto>)}");
             }
-            finally
-            {
-                StateContainer.IsLoading = false;
-            }
+            _levles = levels;
         }
 
         private async Task GetPartOfSpeechesAsync()
         {
-            try
+            HttpResponseResult partOfSpeechesResponse = await HttpClientService.SendAsync(HttpMethod.Get, "/api/v1/part-of-speeches");
+            if (partOfSpeechesResponse.StatusCode != System.Net.HttpStatusCode.OK)
             {
-                StateContainer.IsLoading = true;
-                HttpResponseResult partOfSpeechesResponse = await HttpClientService.SendAsync(HttpMethod.Get, "part-of-speeches");
-                if (partOfSpeechesResponse.StatusCode != System.Net.HttpStatusCode.OK)
-                {
-                    throw new Exception(partOfSpeechesResponse.Message);
-                }
-                List<PartOfSpeechResponseDto>? partOfSpeeches = JsonConvert.DeserializeObject<List<PartOfSpeechResponseDto>>(partOfSpeechesResponse.Json);
-                if (partOfSpeeches == null)
-                {
-                    throw new Exception($"Can not deserialized.{nameof(List<PartOfSpeechResponseDto>)}");
-                }
-                _partOfSpeeches = partOfSpeeches;
+                throw new Exception(partOfSpeechesResponse.Message);
             }
-            catch (Exception ex)
+            List<PartOfSpeechResponseDto>? partOfSpeeches = JsonConvert.DeserializeObject<List<PartOfSpeechResponseDto>>(partOfSpeechesResponse.Json);
+            if (partOfSpeeches == null)
             {
-                StateContainer.Message = ex.Message;
+                throw new Exception($"Can not deserialized.{nameof(List<PartOfSpeechResponseDto>)}");
             }
-            finally
-            {
-                StateContainer.IsLoading = false;
-            }
+            _partOfSpeeches = partOfSpeeches;
         }
 
         private async Task RefreshQuestionAsync()
         {
+            HttpResponseResult questionResponse = await HttpClientService.SendAsync(HttpMethod.Get, $"/api/v1/questions/part-of-speeches/{_partOfSpeechId}/levels/{_levelId}");
+            if (questionResponse.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                throw new Exception(questionResponse.Message);
+            }
+            List<QuestionResponseDto>? questions = JsonConvert.DeserializeObject<List<QuestionResponseDto>>(questionResponse.Json);
+            if (questions == null)
+            {
+                throw new Exception($"Can not deserialized.{nameof(List<QuestionResponseDto>)}");
+            }
+            _questions = questions;
+        }
+
+        private async Task StartButtonOnClick()
+        {
             try
             {
                 StateContainer.IsLoading = true;
-                HttpResponseResult questionResponse = await HttpClientService.SendAsync(HttpMethod.Get, $"part-of-speeches/{_partOfSpeechId}/levels/{_levelId}");
-                if (questionResponse.StatusCode != System.Net.HttpStatusCode.OK)
-                {
-                    throw new Exception(questionResponse.Message);
-                }
-                List<QuestionResponseDto>? questions = JsonConvert.DeserializeObject<List<QuestionResponseDto>>(questionResponse.Json);
-                if (questions == null)
-                {
-                    throw new Exception($"Can not deserialized.{nameof(List<QuestionResponseDto>)}");
-                }
-                _questions = questions;
+                _questionIndex = 0;
+                await RefreshQuestionAsync();
+                _question = _questions[_questionIndex];
             }
             catch (Exception ex)
             {

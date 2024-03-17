@@ -7,8 +7,8 @@
     <div class="selection-area">
         <div class="selection-item">
             <div>Category</div>
-            <select>
-                <option value="0">select a option</option>
+            <select @bind=@_levelId>
+                <option value="0">All</option>
                 @foreach (LevelResponseDto level in _levles)
                 {
                     <option value="@level.Id">@level.Name</option>
@@ -17,24 +17,38 @@
         </div>
         <div class="selection-item">
             <div>Part of speech</div>
-            <select>
-                <option value="0">select a option</option>
+            <select @bind=@_partOfSpeechId>
+                <option value="0">All</option>
+                @foreach (PartOfSpeechResponseDto partOfSpeech in _partOfSpeeches)
+                {
+                    <option value="@partOfSpeech.Id">@partOfSpeech.Name</option>
+                }
             </select>
         </div>
     </div>
     <div class="question-card-wrapper">
-        <div class="question-card">
-            <div class="card-header">
-                <div class="no">No.1</div>
-                <div class="count">1/50</div>
+        @if (_question == null)
+        {
+            <button class="start-btn" @onclick=@StartButtonOnClick>Start!</button>
+        }
+        else
+        {
+            <div class="question-card">
+                <div class="card-header">
+                    <div class="no">No. @_question.Number</div>
+                    <div class="count">1/@_questions.Count</div>
+                </div>
+                <div class="word">@_question.Word</div>
             </div>
-            <div class="word">Word</div>
-        </div>
+        }
     </div>
     <div class="answer-option-area">
-        <button class="option-btn">単語</button>
-        <button class="option-btn">ほげ</button>
-        <button class="option-btn">ふが</button>
-        <button class="option-btn">ぴよぴよ</button>
+        @if (_question != null)
+        {
+            @foreach (var option in _question.AnswerResponseDtos)
+            {
+                <button class="option-btn">@option.Meaning</button>
+            }
+        }
     </div>
 </div>

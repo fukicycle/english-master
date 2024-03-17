@@ -49,7 +49,7 @@ public sealed class QuestionService : IQuestionService
     private IEnumerable<MeaningOfWord> Filter(IEnumerable<MeaningOfWord> items, long partOfSpeechId, long levelId)
     {
         if (partOfSpeechId != 0) return Filter(items.Where(a => a.PartOfSpeechId == partOfSpeechId), 0, levelId);
-        if (levelId != 0) return Filter(items.Where(a => a.LevelId == levelId), levelId, 0);
+        if (levelId != 0) return Filter(items.Where(a => a.LevelId == levelId), partOfSpeechId, 0);
         return items;
     }
 }
