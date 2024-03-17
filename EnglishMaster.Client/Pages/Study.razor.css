@@ -16,9 +16,9 @@
     grid-template-rows: auto;
 }
 
-.selection-item div {
-    margin: auto 0;
-}
+    .selection-item div {
+        margin: auto 0;
+    }
 
 select {
     font-size: 16px;
@@ -103,7 +103,7 @@ select {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 9vh;
+    font-size: 6vh;
     flex: 1;
     font-weight: bold;
 }
@@ -126,11 +126,11 @@ select {
     font-size: 1.1rem;
 }
 
-.option-btn:focus {
-    box-shadow: none;
-    color: var(--app-black);
-    background-color: var(--app-primary-100);
-}
+    .option-btn:focus {
+        box-shadow: none;
+        color: var(--app-black);
+        background-color: var(--app-primary-100);
+    }
 
 .start-btn {
     width: 100%;
