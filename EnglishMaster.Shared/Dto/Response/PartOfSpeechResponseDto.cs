@@ -1,4 +1,4 @@
-﻿namespace EnglishMaster.Shared;
+﻿namespace EnglishMaster.Shared.Dto.Response;
 
 public sealed class PartOfSpeechResponseDto
 {

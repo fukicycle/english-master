@@ -1,5 +1,6 @@
 ﻿@page "/study"
 @inherits PageBase
+@inject IHttpClientService HttpClientService
 
 <PageTitle>Study</PageTitle>
 <div class="study-area">
@@ -7,13 +8,17 @@
         <div class="selection-item">
             <div>Category</div>
             <select>
-                <option>select a option</option>
+                <option value="0">select a option</option>
+                @foreach (LevelResponseDto level in _levles)
+                {
+                    <option value="@level.Id">@level.Name</option>
+                }
             </select>
         </div>
         <div class="selection-item">
             <div>Part of speech</div>
             <select>
-                <option>select a option</option>
+                <option value="0">select a option</option>
             </select>
         </div>
     </div>
