@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using EnglishMaster.Server.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 
-namespace EnglishMaster.Server;
+namespace EnglishMaster.Server.Controllers;
 
 [Route("/api/v1/levels")]
 public sealed class LevelController : ControllerBase

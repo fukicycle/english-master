@@ -1,6 +1,7 @@
 ﻿using EnglishMaster.Shared;
+using EnglishMaster.Shared.Dto.Response;
 
-namespace EnglishMaster.Server;
+namespace EnglishMaster.Server.Services.Interfaces;
 
 public interface IPartOfSpeechService
 {

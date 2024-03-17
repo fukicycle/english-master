@@ -1,7 +1,9 @@
-﻿using EnglishMaster.Shared;
+﻿using EnglishMaster.Server.Services.Interfaces;
+using EnglishMaster.Shared;
+using EnglishMaster.Shared.Dto.Response;
 using EnglishMaster.Shared.Models;
 
-namespace EnglishMaster.Server;
+namespace EnglishMaster.Server.Services;
 
 public sealed class LevelService : ILevelService
 {
