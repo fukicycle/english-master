@@ -10,6 +10,9 @@ window.updateAvailable = new Promise((resolve, reject) => {
         .then(registration => {
             console.info(`Service worker registration successful (scope: ${registration.scope})`);
 
+            setInterval(() => {
+                registration.update();
+            }, 60 * 1000); // 60000ms -> check each minute
             registration.onupdatefound = () => {
                 const installingServiceWorker = registration.installing;
                 installingServiceWorker.onstatechange = () => {
@@ -32,7 +35,3 @@ window.registerForUpdateAvailableNotification = (caller, methodName) => {
         }
     });
 };
-
-setInterval(() => {
-    registration.update();
-}, 60 * 1000); // 60000ms -> check each minute

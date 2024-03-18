@@ -63,6 +63,8 @@ select {
 }
 
 .result-area {
+    display: flex;
+    flex-direction: column;
     flex: 1;
     position: relative;
 }
@@ -84,16 +86,6 @@ select {
     .result div {
         margin-top: .5rem;
     }
-
-.next-btn {
-    width: 100%;
-    outline: none;
-    background-color: var(--app-black);
-    color: var(--app-white);
-    border: none;
-    font-size: 1.1rem;
-    padding: .5rem;
-}
 
 .no {
     font-size: 16px;
