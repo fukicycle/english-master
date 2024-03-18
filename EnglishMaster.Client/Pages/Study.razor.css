@@ -78,6 +78,7 @@ select {
     align-items: center;
     background-color: #212121f1;
     z-index: 10;
+    flex-direction: column;
 }
 
     .result div {
