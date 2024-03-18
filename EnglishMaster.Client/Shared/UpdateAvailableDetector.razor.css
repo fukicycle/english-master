@@ -1,17 +1,21 @@
 ﻿.floating-update-button {
     position: fixed;
-    right: 2rem;
-    bottom: 2rem;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 500;
+    background-color: var(--app-primary-100);
+    color: var(--app-black);
     padding: 1rem 1.5rem;
     animation: fadein 2s ease-out;
 }
 
 @keyframes fadein {
     from {
-        right: -100%;
+        top: -100%;
     }
 
     to {
-        right: 2rem;
+        top: 0;
     }
 }
