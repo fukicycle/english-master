@@ -8,6 +8,8 @@
     color: var(--app-black);
     padding: 1rem 1.5rem;
     animation: fadein 2s ease-out;
+    font-size: 10px;
+    text-align: start;
 }
 
 @keyframes fadein {
