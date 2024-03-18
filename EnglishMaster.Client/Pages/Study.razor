@@ -1,6 +1,7 @@
 ﻿@page "/study"
 @inherits PageBase
 @inject IHttpClientService HttpClientService
+@inject SpeechSynthesis SpeechSynthesis
 
 <PageTitle>Study</PageTitle>
 <div class="study-area">
@@ -64,6 +65,9 @@
                         <div class="count">@(_questionIndex + 1)/@_questions.Count</div>
                     </div>
                     <div class="word">@_question.Word</div>
+                    <button class="sound-btn" @onclick=SoundButtonOnClick>
+                        <img src="svgs/sound.svg" />
+                    </button>
                 </div>
             }
         }

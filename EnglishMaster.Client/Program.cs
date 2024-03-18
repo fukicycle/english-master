@@ -20,7 +20,7 @@ builder.Services.AddHttpClient(nameof(ApplicationMode.Prod), httpClient =>
     httpClient.BaseAddress = new Uri("https://www.sato-home.mydns.jp:9445");
 });
 
-builder.Services.AddPWAUpdater();
+builder.Services.AddSpeechSynthesis();
 builder.Services.AddScoped<IStateContainer, StateContainer>();
 builder.Services.AddScoped<IHttpClientService, HttpClientService>();
 

@@ -4,6 +4,7 @@ using EnglishMaster.Shared;
 using EnglishMaster.Shared.Dto.Response;
 using EnglishMaster.Shared.Models;
 using Newtonsoft.Json;
+using Toolbelt.Blazor.SpeechSynthesis;
 
 namespace EnglishMaster.Client.Pages
 {
@@ -125,6 +126,24 @@ namespace EnglishMaster.Client.Pages
             {
                 _question = _questions[_questionIndex];
             }
+        }
+
+        private async Task SoundButtonOnClick()
+        {
+            if (_question == null)
+            {
+                StateContainer.Message = "Unexpected error has occured.";
+                return;
+            }
+            var utterancet = new SpeechSynthesisUtterance
+            {
+                Text = _question.Word,
+                Lang = "en-US", // BCP 47 language tag
+                Pitch = 1.0, // 0.0 ~ 2.0 (Default 1.0)
+                Rate = 1.0, // 0.1 ~ 10.0 (Default 1.0)
+                Volume = 1.0 // 0.0 ~ 1.0 (Default 1.0)
+            };
+            await SpeechSynthesis.SpeakAsync(utterancet);
         }
     }
 }
