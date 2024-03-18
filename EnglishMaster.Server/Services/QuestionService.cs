@@ -16,7 +16,7 @@ public sealed class QuestionService : IQuestionService
         _db = db;
         _logger = logger;
     }
-    public IList<QuestionResponseDto> GetQuestionResponseDtos(long partOfSpeechId, long levelId = 0, int numberOfQuestions = 50)
+    public IList<QuestionResponseDto> GetQuestionResponseDtos(long partOfSpeechId, long levelId = 0, int numberOfQuestions = 10)
     {
         IEnumerable<MeaningOfWord> originals = _db.MeaningOfWords.Include(a => a.Word).ToList();
         IEnumerable<MeaningOfWord> meaningOfWords = Filter(originals, partOfSpeechId, levelId).OrderByDescending(a => Guid.NewGuid());
