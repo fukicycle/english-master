@@ -116,7 +116,7 @@ namespace EnglishMaster.Client.Pages
         {
             _isAnswered = false;
             _questionIndex++;
-            if (_questionIndex >= 50)
+            if (_questionIndex >= _questions.Count)
             {
                 _questionIndex = 0;
                 _question = null;
