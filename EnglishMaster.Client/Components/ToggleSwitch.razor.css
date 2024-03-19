@@ -15,11 +15,11 @@ Releases:	https://github.com/adamculpepper/toggle-switchy/releases
 }
 
 .toggle-switchy > input + .toggle:before {
-    content: '有効';
+    content: '';
 }
 
 .toggle-switchy > input + .toggle:after {
-    content: '無効';
+    content: '';
 }
 
 .toggle-switchy > input + .toggle > .switch {

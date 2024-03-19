@@ -1,2 +1,15 @@
 ﻿@page "/settings"
-<div>Settings</div>
+<div class="setting-wrapper">
+    <div class="title">Settings</div>
+    <ul class="setting-items">
+        <li class="setting-item">
+            <span>Silent mode</span>
+            <ToggleSwitch IsSelected=@ApplicationSettings.IsMute />
+        </li>
+        <li class="setting-item">
+            <span>Number of questions</span>
+            <input type="number" @bind=@ApplicationSettings.NumberOfQuestion />
+        </li>
+    </ul>
+    <button class="save-btn">Save changes</button>
+</div>
