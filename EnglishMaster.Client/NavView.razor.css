@@ -21,28 +21,30 @@ nav {
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    width: 50px;
 }
 
-::deep .nav-link.active {
-    color: var(--app-primary-100) !important;
-}
+    ::deep .nav-link.active {
+        color: var(--app-primary-100) !important;
+    }
 
-.nav-link>span {
+.nav-link > span {
     padding-top: 5px;
+    font-size: 9px;
 }
 
 ::deep .menu-fill {
     fill: var(--app-primary-400) !important;
 }
 
-::deep .menu-fill.active {
-    fill: var(--app-primary-100) !important;
-}
+    ::deep .menu-fill.active {
+        fill: var(--app-primary-100) !important;
+    }
 
 ::deep .menu-stroke {
     stroke: var(--app-primary-400) !important;
 }
 
-::deep .menu-stroke.active {
-    stroke: var(--app-primary-100) !important;
-}
+    ::deep .menu-stroke.active {
+        stroke: var(--app-primary-100) !important;
+    }
