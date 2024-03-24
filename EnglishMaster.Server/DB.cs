@@ -167,20 +167,10 @@ public partial class DB : DbContext
 
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.FirstName).HasMaxLength(50);
-            entity.Property(e => e.Icon)
-                .HasMaxLength(255)
-                .IsUnicode(false);
             entity.Property(e => e.LastName).HasMaxLength(50);
-            entity.Property(e => e.Nickname)
-                .HasMaxLength(20)
-                .HasDefaultValueSql("('anonymouse')");
             entity.Property(e => e.Password)
                 .HasMaxLength(50)
                 .IsUnicode(false);
-            entity.Property(e => e.Token)
-                .HasMaxLength(64)
-                .IsUnicode(false)
-                .IsFixedLength();
             entity.Property(e => e.Username)
                 .HasMaxLength(50)
                 .IsUnicode(false);
