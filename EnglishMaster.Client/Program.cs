@@ -26,4 +26,9 @@ builder.Services.AddSpeechSynthesis();
 builder.Services.AddScoped<IStateContainer, StateContainer>();
 builder.Services.AddScoped<IHttpClientService, HttpClientService>();
 
+builder.Services.AddOidcAuthentication(options =>
+{
+    builder.Configuration.Bind("Google", options.ProviderOptions);
+});
+
 await builder.Build().RunAsync();
