@@ -8,7 +8,7 @@ namespace EnglishMaster.Shared
 {
     public static class ApplicationSettings
     {
-        public static ApplicationMode Mode = ApplicationMode.Dev;
+        public static ApplicationMode Mode = ApplicationMode.Prod;
         public static byte[] JWT_KEY = new byte[64];
         public static bool IsMute = false;
         public static int NumberOfQuestion = 10;
