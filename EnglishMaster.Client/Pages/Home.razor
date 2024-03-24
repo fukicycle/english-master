@@ -1,5 +1,19 @@
 ﻿@page "/"
 @inherits PageBase
+@inject NavigationManager NavigationManager
 
 <PageTitle>Home</PageTitle>
-<div>Home</div>
+<Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
+    <Authorized>
+        <div>Welcome back, @context.User.Identity?.Name!</div>
+    </Authorized>
+    <NotAuthorized>
+        <div class="not-login desc">Log in to record your learning</div>
+        <button class="not-login btn-login" @onclick=@LoginButtonOnClick>Login with Google</button>
+    </NotAuthorized>
+    <Authorizing>
+        <div class="loader-wrapper">
+            <div class="loader"></div>
+        </div>
+    </Authorizing>
+</Microsoft.AspNetCore.Components.Authorization.AuthorizeView>

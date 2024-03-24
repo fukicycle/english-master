@@ -1,0 +1,43 @@
+﻿@inject IHttpClientService HttpClientService
+@inject NavigationManager NavigationManager
+@inherits PageBase
+@using Microsoft.AspNetCore.Components.Authorization
+@using EnglishMaster.Shared.Dto.Request
+@using Newtonsoft.Json
+@using Pages
+@code {
+    [Parameter]
+    public AuthenticationState AuthenticationState { get; set; } = null!;
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            StateContainer.IsLoading = true;
+            string email = AuthenticationState.User.Claims.FirstOrDefault(a => a.Type == "email")?.Value ?? "";
+            LoginRequestDto loginRequestDto = new LoginRequestDto(email);
+            HttpResponseResult result = await
+            HttpClientService.SendAsync(HttpMethod.Post, "api/v1/login", JsonConvert.SerializeObject(loginRequestDto));
+            if (result.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                NavigationManager.NavigateTo("register");
+                return;
+            }
+            if (result.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                StateContainer.Message = result.Message ?? "Unexpected error has occured.";
+                return;
+            }
+            LoginResponseDto? loginResponseDto = JsonConvert.DeserializeObject<LoginResponseDto>(result.Json);
+            if (loginResponseDto == null)
+            {
+                StateContainer.Message = $"Can not deserialize {typeof(LoginResponseDto)}";
+                return;
+            }
+            ApplicationSettings.JWT_TOKEN = loginResponseDto.Token;
+        }
+        finally
+        {
+            StateContainer.IsLoading = false;
+        }
+    }
+}

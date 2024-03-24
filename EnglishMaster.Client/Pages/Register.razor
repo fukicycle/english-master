@@ -1,0 +1,15 @@
+﻿@page "/register"
+@inherits PageBase
+@inject NavigationManager NavigationManager
+@inject IConfiguration Configuration
+<div class="register-area-wrapper">
+    <div>Register</div>
+    <Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
+        <Authorized>
+            <div>Hello, @context.User.Identity?.Name!</div>
+            <div>Do you proceed to register your account?</div>
+            <button>Register</button>
+            <button @onclick=@CancelButtonOnClick>Cancel</button>
+        </Authorized>
+    </Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
+</div>

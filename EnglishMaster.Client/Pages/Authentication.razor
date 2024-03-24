@@ -1,0 +1,27 @@
+﻿@page "/authentication/{action}"
+<RemoteAuthenticatorView Action="@Action">
+    <LoggingIn>
+        <div class="loader-wrapper">
+            <div class="loader"></div>
+        </div>
+    </LoggingIn>
+    <CompletingLoggingIn>
+        <div class="loader-wrapper">
+            <div class="loader"></div>
+        </div>
+    </CompletingLoggingIn>
+    <CompletingLogOut>
+        <div class="loader-wrapper">
+            <div class="loader"></div>
+        </div>
+    </CompletingLogOut>
+    <LogOutSucceeded>
+        <div class="loader-wrapper">
+            <div class="loader"></div>
+        </div>
+    </LogOutSucceeded>
+</RemoteAuthenticatorView>
+
+@code {
+    [Parameter] public string? Action { get; set; }
+}

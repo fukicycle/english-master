@@ -5,6 +5,12 @@
         <header>
             <img src="svgs/logo.svg" />
             <div>English Master</div>
+            <Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
+                <Authorized>
+                    <img class="profile-picture" src="@GetProfilePicture(context)" />
+                    <EnglishMaster.Client.Shared.ApiAuthentication AuthenticationState="@context" />
+                </Authorized>
+            </Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
         </header>
     </div>
     <article>

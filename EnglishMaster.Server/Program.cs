@@ -81,6 +81,7 @@ builder.Services.AddScoped<IDictionaryService, DictionaryService>();
 builder.Services.AddScoped<IQuestionService, QuestionService>();
 builder.Services.AddScoped<IPartOfSpeechService, PartOfSpeechService>();
 builder.Services.AddScoped<ILevelService, LevelService>();
+builder.Services.AddScoped<ILoginService, LoginService>();
 
 var app = builder.Build();
 
