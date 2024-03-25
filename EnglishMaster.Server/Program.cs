@@ -82,7 +82,7 @@ builder.Services.AddScoped<IQuestionService, QuestionService>();
 builder.Services.AddScoped<IPartOfSpeechService, PartOfSpeechService>();
 builder.Services.AddScoped<ILevelService, LevelService>();
 builder.Services.AddScoped<ILoginService, LoginService>();
-builder.Services.AddScoped<ISettingService, SettingService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 var app = builder.Build();
 

@@ -1,5 +1,6 @@
 ﻿using EnglishMaster.Client.Forms;
 using EnglishMaster.Client.Services;
+using EnglishMaster.Shared.Dto.Request;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Newtonsoft.Json;
@@ -27,7 +28,8 @@ public partial class Register : PageBase
             }
             Form.Email = email;
             Form.Password = aud;
-            HttpResponseResult httpResponseResult = await HttpClientService.SendAsync(HttpMethod.Post, "api/v1/users", JsonConvert.SerializeObject(Form));
+            UserReqestDto userReqestDto = new UserReqestDto(Form.Email, Form.Password, Form.FirstName, Form.LastName);
+            HttpResponseResult httpResponseResult = await HttpClientService.SendAsync(HttpMethod.Post, "api/v1/users", JsonConvert.SerializeObject(userReqestDto));
             if (httpResponseResult.StatusCode != System.Net.HttpStatusCode.Created)
             {
                 throw new Exception(httpResponseResult.Message);
