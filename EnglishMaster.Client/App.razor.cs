@@ -9,8 +9,8 @@ namespace EnglishMaster.Client
             Settings? settings = await LocalStorageService.GetItemAsync<Settings>(ApplicationSettings.APPLICATION_ID);
             if (settings != null)
             {
-                ApplicationSettings.IsMute = settings.IsMute;
-                ApplicationSettings.NumberOfQuestion = settings.NumberOfQuestion;
+                SettingService.IsMute = settings.IsMute;
+                SettingService.NumberOfQuestion = settings.NumberOfQuestion;
             }
         }
     }

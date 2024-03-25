@@ -1,4 +1,5 @@
 ﻿@inject IHttpClientService HttpClientService
+@inject ISettingService SettingService
 @inject NavigationManager NavigationManager
 @inherits PageBase
 @using Microsoft.AspNetCore.Components.Authorization
@@ -33,7 +34,7 @@
                 StateContainer.Message = $"Can not deserialize {typeof(LoginResponseDto)}";
                 return;
             }
-            ApplicationSettings.JWT_TOKEN = loginResponseDto.Token;
+            SettingService.JWTToken = loginResponseDto.Token;
         }
         finally
         {

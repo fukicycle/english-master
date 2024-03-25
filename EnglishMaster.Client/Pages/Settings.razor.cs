@@ -1,23 +1,23 @@
-﻿using EnglishMaster.Shared;
+﻿using EnglishMaster.Client.Services;
+using EnglishMaster.Shared;
 
 namespace EnglishMaster.Client.Pages
 {
     public partial class Settings : PageBase
     {
-        private bool _isMute = ApplicationSettings.IsMute;
-        private int _numberOfQuestion = ApplicationSettings.NumberOfQuestion;
-
+        private bool _isMute = false;
+        private int _numberOfQuestion = 10;
         private async Task SaveButtonOnClick()
         {
             try
             {
                 StateContainer.IsLoading = true;
-                ApplicationSettings.IsMute = _isMute;
-                ApplicationSettings.NumberOfQuestion = _numberOfQuestion;
+                SettingService.IsMute = _isMute;
+                SettingService.NumberOfQuestion = _numberOfQuestion;
                 EnglishMaster.Shared.Settings settings = new EnglishMaster.Shared.Settings
                 {
-                    IsMute = ApplicationSettings.IsMute,
-                    NumberOfQuestion = ApplicationSettings.NumberOfQuestion
+                    IsMute = SettingService.IsMute,
+                    NumberOfQuestion = SettingService.NumberOfQuestion
                 };
                 await LocalStorageService.SetItemAsync(ApplicationSettings.APPLICATION_ID, settings);
             }
