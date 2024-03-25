@@ -9,7 +9,7 @@
     <Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
         <Authorized>
             <div>Hello, @context.User.Identity?.Name!</div>
-            <div class="title">Create a account</div>
+            <div class="title">Create an account</div>
             <EditForm class="form" Model="@Form" Context="register_form" OnValidSubmit="@(() => RegisterAccount(context))">
                 <DataAnnotationsValidator />
                 <div>First name</div>
