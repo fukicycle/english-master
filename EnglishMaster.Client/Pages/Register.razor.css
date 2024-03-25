@@ -9,7 +9,7 @@
     justify-content: center;
     align-items: center;
     z-index: 300;
-    background-color: var(--app-black);
+    background-color: var(--app-primary-800);
 }
 
 ::deep input {
@@ -23,6 +23,7 @@
     margin: 5px 0;
     text-align: center;
     width: 100%;
+    font-size: 16px;
 }
 
 ::deep .form {
@@ -59,4 +60,5 @@
     box-shadow: 0 0 4px var(--app-primary-100);
     background-color: transparent;
     color: var(--app-white);
+    font-size: 1rem;
 }
