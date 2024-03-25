@@ -7,6 +7,28 @@ namespace EnglishMaster.Client.Pages
     {
         private bool _isMute = false;
         private int _numberOfQuestion = 10;
+
+        protected override async Task OnInitializedAsync()
+        {
+            try
+            {
+                StateContainer.IsLoading = true;
+                EnglishMaster.Shared.Settings? settings = await LocalStorageService.GetItemAsync<EnglishMaster.Shared.Settings>(ApplicationSettings.APPLICATION_ID);
+                if (settings != null)
+                {
+                    _isMute = settings.IsMute;
+                    _numberOfQuestion = settings.NumberOfQuestion;
+                }
+            }
+            catch (Exception ex)
+            {
+                StateContainer.Message = ex.Message;
+            }
+            finally
+            {
+                StateContainer.IsLoading = false;
+            }
+        }
         private async Task SaveButtonOnClick()
         {
             try
