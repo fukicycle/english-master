@@ -41,6 +41,7 @@
 .dialog-body {
     flex: 1;
     align-content: center;
+    overflow: auto;
 }
 
 .dialog-action {
