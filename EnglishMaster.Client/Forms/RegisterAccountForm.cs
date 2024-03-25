@@ -9,6 +9,8 @@ namespace EnglishMaster.Client.Forms
 
         [Required(ErrorMessage = "This field is required.")]
         public string LastName { get; set; } = null!;
+        [MaxLength(15, ErrorMessage = "Nickname within 15 chars.")]
+        public string? Nickname { get; set; }
 
     }
 }

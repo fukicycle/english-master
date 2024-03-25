@@ -2,7 +2,7 @@
 using EnglishMaster.Shared.Dto.Request;
 using Microsoft.AspNetCore.Mvc;
 
-namespace EnglishMaster.Server.Controllers
+namespace EnglishMaster.Server.Services
 {
     [Route("/api/v1/users")]
     public sealed class UserController : ControllerBase
@@ -19,7 +19,7 @@ namespace EnglishMaster.Server.Controllers
         {
             try
             {
-                _userService.Register(userReqestDto.Username, userReqestDto.Password, userReqestDto.FirstName, userReqestDto.LastName);
+                _userService.Register(userReqestDto.Username, userReqestDto.Password, userReqestDto.FirstName, userReqestDto.LastName, userReqestDto.Nickname);
                 return StatusCode(201);
             }
             catch (Exception ex)

@@ -15,6 +15,8 @@ public partial class User
 
     public string LastName { get; set; } = null!;
 
+    public string? Nickname { get; set; } = null!;
+
     public virtual ICollection<MeaningOfWordLearningHistory> MeaningOfWordLearningHistories { get; set; } = new List<MeaningOfWordLearningHistory>();
 
     public virtual ICollection<RoomUser> RoomUsers { get; set; } = new List<RoomUser>();

@@ -1,8 +1,10 @@
 ﻿@page "/register"
+
 @inherits PageBase
 @inject NavigationManager NavigationManager
 @inject IConfiguration Configuration
 @inject IHttpClientService HttpClientService
+@inject AuthenticationStateProvider AuthenticationStateProvider
 <div class="register-area-wrapper">
     <Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
         <Authorized>
@@ -16,6 +18,9 @@
                 <div>Last name</div>
                 <InputText @bind-Value="@Form.LastName" />
                 <ValidationMessage For="@(() => Form.LastName)" />
+                <div>Nickname</div>
+                <InputText @bind-Value="@Form.Nickname" placeholder="optional" />
+                <ValidationMessage For="@(() => Form.Nickname)" />
                 <input class="btn btn-register" type="submit" value="Register" />
                 <button class="btn btn-cancel" @onclick=@CancelButtonOnClick>Cancel</button>
             </EditForm>
