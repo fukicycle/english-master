@@ -25,6 +25,7 @@ builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddSpeechSynthesis();
 builder.Services.AddScoped<IStateContainer, StateContainer>();
 builder.Services.AddScoped<IHttpClientService, HttpClientService>();
+builder.Services.AddScoped<ISettingService, SettingService>();
 
 builder.Services.AddOidcAuthentication(options =>
 {

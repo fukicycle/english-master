@@ -47,6 +47,10 @@ namespace EnglishMaster.Client.Services
                 {
                     return new HttpResponseResult(string.Empty, System.Net.HttpStatusCode.NotFound, responseContent);
                 }
+                if (httpResponseMessage.StatusCode == System.Net.HttpStatusCode.Created)
+                {
+                    return new HttpResponseResult(string.Empty, System.Net.HttpStatusCode.Created, responseContent);
+                }
                 if (httpResponseMessage.IsSuccessStatusCode)
                 {
                     return new HttpResponseResult(responseContent, System.Net.HttpStatusCode.OK);

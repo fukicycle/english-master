@@ -1,0 +1,18 @@
+﻿@inject IStateContainer StateContainer
+@inject NavigationManager NavigationManager
+<div style="@_display" class="dialog-wrapper">
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="dialog-title">Reload required</div>
+            <button @onclick=@CloseButtonOnClick class="close-btn">
+                <img src="svgs/close.svg" />
+            </button>
+        </div>
+        <div class="dialog-body">
+            @StateContainer.Message
+        </div>
+        <div class="dialog-action">
+            <button class="ok-btn" @onclick=@OkButtonOnClick>OK</button>
+        </div>
+    </div>
+</div>
