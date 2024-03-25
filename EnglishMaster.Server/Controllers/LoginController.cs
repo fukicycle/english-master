@@ -27,7 +27,7 @@ public sealed class LoginController : ControllerBase
     {
         try
         {
-            LoginResponseDto loginResponseDto = _loginService.Login(loginRequestDto.Email);
+            LoginResponseDto loginResponseDto = _loginService.Login(loginRequestDto.Email, loginRequestDto.Password);
             if (loginResponseDto.Token == string.Empty)
             {
                 return NotFound();
