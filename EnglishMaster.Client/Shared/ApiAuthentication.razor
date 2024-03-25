@@ -15,7 +15,8 @@
         {
             StateContainer.IsLoading = true;
             string email = AuthenticationState.User.Claims.FirstOrDefault(a => a.Type == "email")?.Value ?? "";
-            LoginRequestDto loginRequestDto = new LoginRequestDto(email);
+            string subAsPassword = AuthenticationState.User.Claims.FirstOrDefault(a => a.Type == "sub")?.Value ?? "";
+            LoginRequestDto loginRequestDto = new LoginRequestDto(email, subAsPassword);
             HttpResponseResult result = await
             HttpClientService.SendAsync(HttpMethod.Post, "api/v1/login", JsonConvert.SerializeObject(loginRequestDto));
             if (result.StatusCode == System.Net.HttpStatusCode.NotFound)

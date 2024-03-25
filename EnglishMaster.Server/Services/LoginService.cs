@@ -34,9 +34,9 @@ public sealed class LoginService : ILoginService
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
-    public LoginResponseDto Login(string email)
+    public LoginResponseDto Login(string email, string password)
     {
-        User? user = _db.Users.FirstOrDefault(a => a.Username == email);
+        User? user = _db.Users.FirstOrDefault(a => a.Username == email && a.Password == password);
         if (user == null)
         {
             return new LoginResponseDto(string.Empty);

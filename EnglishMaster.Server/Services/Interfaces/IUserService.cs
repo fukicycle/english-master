@@ -2,6 +2,6 @@
 {
     public interface IUserService
     {
-        void Register(string email, string password, string firstName, string lastName);
+        void Register(string email, string password, string firstName, string lastName,string? nickname);
     }
 }

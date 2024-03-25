@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 
 namespace EnglishMaster.Shared.Models;
 
@@ -174,6 +175,7 @@ public partial class DB : DbContext
             entity.Property(e => e.Username)
                 .HasMaxLength(50)
                 .IsUnicode(false);
+            entity.Property(e => e.Nickname).HasMaxLength(15);
         });
 
         modelBuilder.Entity<Word>(entity =>
