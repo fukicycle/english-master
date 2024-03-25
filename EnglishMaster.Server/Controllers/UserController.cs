@@ -20,7 +20,7 @@ namespace EnglishMaster.Server.Controllers
             try
             {
                 _userService.Register(userReqestDto.Username, userReqestDto.Password, userReqestDto.FirstName, userReqestDto.LastName);
-                return Created();
+                return StatusCode(201);
             }
             catch (Exception ex)
             {

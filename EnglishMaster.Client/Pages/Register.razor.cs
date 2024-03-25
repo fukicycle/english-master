@@ -21,14 +21,12 @@ public partial class Register : PageBase
         {
             StateContainer.IsLoading = true;
             var email = context.User.Claims.FirstOrDefault(a => a.Type == "email")?.Value;
-            var aud = context.User.Claims.FirstOrDefault(a => a.Type == "aud")?.Value;
-            if (email == null || aud == null)
+            var sub = context.User.Claims.FirstOrDefault(a => a.Type == "sub")?.Value;
+            if (email == null || sub == null)
             {
                 throw new Exception("Can not get email or aud information. Please re-login your google account.");
             }
-            Form.Email = email;
-            Form.Password = aud;
-            UserReqestDto userReqestDto = new UserReqestDto(Form.Email, Form.Password, Form.FirstName, Form.LastName);
+            UserReqestDto userReqestDto = new UserReqestDto(email, sub, Form.FirstName, Form.LastName);
             HttpResponseResult httpResponseResult = await HttpClientService.SendAsync(HttpMethod.Post, "api/v1/users", JsonConvert.SerializeObject(userReqestDto));
             if (httpResponseResult.StatusCode != System.Net.HttpStatusCode.Created)
             {
