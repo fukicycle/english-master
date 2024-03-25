@@ -10,11 +10,7 @@ namespace EnglishMaster.Client.Forms
         [Required(ErrorMessage = "This field is required.")]
         public string LastName { get; set; } = null!;
 
-        [Required(ErrorMessage = "This field is required.")]
-        public string Password { get; set; } = null!;
-
-        [Required(ErrorMessage = "This field is required.")]
-        [Compare("Password", ErrorMessage = "Re-type password doesn't match.")]
-        public string ConfirmPassword { get; set; } = null!;
+        public string Password { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
     }
 }

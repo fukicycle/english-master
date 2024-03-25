@@ -2,28 +2,23 @@
 @inherits PageBase
 @inject NavigationManager NavigationManager
 @inject IConfiguration Configuration
+@inject IHttpClientService HttpClientService
 <div class="register-area-wrapper">
-    @*     <Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
-    <Authorized> *@
-    @* <div>Hello, @context.User.Identity?.Name!</div> *@
-    <div class="title">Create a account</div>
-    <EditForm class="form" Model="@Form" Context="register_form" OnSubmit="RegisterAccount">
-        <DataAnnotationsValidator />
-        <div>First name</div>
-        <InputText @bind-Value="@Form.FirstName" />
-        <ValidationMessage For="@(() => Form.FirstName)" />
-        <div>Last name</div>
-        <InputText @bind-Value="@Form.LastName" />
-        <ValidationMessage For="@(() => Form.LastName)" />
-        <div>Password</div>
-        <InputText type="password" @bind-Value="@Form.Password" />
-        <ValidationMessage For="@(() => Form.Password)" />
-        <div>Re-type password</div>
-        <InputText type="password" @bind-Value="@Form.ConfirmPassword" />
-        <ValidationMessage For="@(() => Form.ConfirmPassword)" />
-        <button class="btn btn-register" type="submit">Register</button>
-        <button class="btn btn-cancel" @onclick=@CancelButtonOnClick>Cancel</button>
-    </EditForm>
-    @*         </Authorized>
-    </Microsoft.AspNetCore.Components.Authorization.AuthorizeView> *@
+    <Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
+        <Authorized>
+            <div>Hello, @context.User.Identity?.Name!</div>
+            <div class="title">Create a account</div>
+            <EditForm class="form" Model="@Form" Context="register_form" OnSubmit="@(() =>RegisterAccount(context))">
+                <DataAnnotationsValidator />
+                <div>First name</div>
+                <InputText @bind-Value="@Form.FirstName" />
+                <ValidationMessage For="@(() => Form.FirstName)" />
+                <div>Last name</div>
+                <InputText @bind-Value="@Form.LastName" />
+                <ValidationMessage For="@(() => Form.LastName)" />
+                <button class="btn btn-register" type="submit">Register</button>
+                <button class="btn btn-cancel" @onclick=@CancelButtonOnClick>Cancel</button>
+            </EditForm>
+        </Authorized>
+    </Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
 </div>
