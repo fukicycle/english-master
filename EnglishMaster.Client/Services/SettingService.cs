@@ -1,6 +1,6 @@
-﻿using EnglishMaster.Server.Services.Interfaces;
+﻿using EnglishMaster.Client.Services.Interfaces;
 
-namespace EnglishMaster.Server.Services
+namespace EnglishMaster.Client.Services
 {
     public sealed class SettingService : ISettingService
     {

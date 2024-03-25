@@ -1,4 +1,4 @@
-﻿namespace EnglishMaster.Server.Services.Interfaces
+﻿namespace EnglishMaster.Client.Services.Interfaces
 {
     public interface ISettingService
     {
