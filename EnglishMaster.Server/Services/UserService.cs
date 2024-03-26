@@ -31,7 +31,7 @@ namespace EnglishMaster.Server.Services
             _db.Users.Add(user);
             _db.SaveChanges();
         }
-        public UserResponseDto GetUserResponseDto(string email)
+        public UserResponseDto GetUserResponseDtoByEmail(string email)
         {
             User? user = _db.Users.FirstOrDefault(a => a.Username == email);
             if (user == null)
