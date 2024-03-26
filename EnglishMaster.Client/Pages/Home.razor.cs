@@ -12,7 +12,7 @@ namespace EnglishMaster.Client.Pages
             try
             {
                 StateContainer.IsLoading = true;
-                await GetUserInformation();
+                await SetCurrentLoginUserInformation();
             }
             catch (Exception ex)
             {
@@ -24,7 +24,7 @@ namespace EnglishMaster.Client.Pages
             }
         }
 
-        private async Task GetUserInformation()
+        private async Task SetCurrentLoginUserInformation()
         {
             HttpResponseResult httpResponseResult = await HttpClientService.SendAsync(HttpMethod.Get, "api/v1/users");
             if (httpResponseResult.StatusCode != System.Net.HttpStatusCode.OK)
