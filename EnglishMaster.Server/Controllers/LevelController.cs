@@ -1,28 +1,29 @@
 ﻿using EnglishMaster.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace EnglishMaster.Server.Controllers;
-
-[Route("/api/v1/levels")]
-public sealed class LevelController : ControllerBase
+namespace EnglishMaster.Server.Controllers
 {
-    private readonly ILevelService _levelService;
-    public LevelController(ILevelService levelService)
+    [Route("/api/v1/levels")]
+    public sealed class LevelController : ControllerBase
     {
-        _levelService = levelService;
-    }
-
-    [HttpGet]
-    [Route("")]
-    public IActionResult GetLevels()
-    {
-        try
+        private readonly ILevelService _levelService;
+        public LevelController(ILevelService levelService)
         {
-            return Ok(_levelService.GetLevelResponseDtos());
+            _levelService = levelService;
         }
-        catch (Exception ex)
+
+        [HttpGet]
+        [Route("")]
+        public IActionResult GetLevels()
         {
-            return StatusCode(500, ex.Message);
+            try
+            {
+                return Ok(_levelService.GetLevelResponseDtos());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
     }
 }

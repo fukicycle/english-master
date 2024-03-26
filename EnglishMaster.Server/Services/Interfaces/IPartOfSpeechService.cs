@@ -1,9 +1,9 @@
-﻿using EnglishMaster.Shared;
-using EnglishMaster.Shared.Dto.Response;
+﻿using EnglishMaster.Shared.Dto.Response;
 
-namespace EnglishMaster.Server.Services.Interfaces;
-
-public interface IPartOfSpeechService
+namespace EnglishMaster.Server.Services.Interfaces
 {
-    IList<PartOfSpeechResponseDto> GetPartOfSpeechResponseDtos();
+    public interface IPartOfSpeechService
+    {
+        IList<PartOfSpeechResponseDto> GetPartOfSpeechResponseDtos();
+    }
 }

@@ -2,7 +2,7 @@
 using EnglishMaster.Shared.Dto.Request;
 using Microsoft.AspNetCore.Mvc;
 
-namespace EnglishMaster.Server.Services
+namespace EnglishMaster.Server.Controllers
 {
     [Route("/api/v1/users")]
     public sealed class UserController : ControllerBase

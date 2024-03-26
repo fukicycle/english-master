@@ -1,8 +1,5 @@
 ﻿
-using System.Net.NetworkInformation;
-using EnglishMaster.Shared;
 using EnglishMaster.Shared.Dto.Response;
-using EnglishMaster.Shared.Models;
 using Newtonsoft.Json;
 using Toolbelt.Blazor.SpeechSynthesis;
 

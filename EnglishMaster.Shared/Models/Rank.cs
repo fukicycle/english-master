@@ -1,5 +1,4 @@
-﻿using System;
-namespace EnglishMaster.Shared.Models
+﻿namespace EnglishMaster.Shared.Models
 {
     public class Rank
     {

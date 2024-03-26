@@ -1,28 +1,29 @@
 ﻿using EnglishMaster.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace EnglishMaster.Server.Controllers;
-
-[Route("/api/v1/part-of-speeches")]
-public sealed class PartOfSpeechController : ControllerBase
+namespace EnglishMaster.Server.Controllers
 {
-    private readonly IPartOfSpeechService _partOfSpeechService;
-    public PartOfSpeechController(IPartOfSpeechService partOfSpeechService)
+    [Route("/api/v1/part-of-speeches")]
+    public sealed class PartOfSpeechController : ControllerBase
     {
-        _partOfSpeechService = partOfSpeechService;
-    }
-
-    [HttpGet]
-    [Route("")]
-    public IActionResult GetPartOfSpeeches()
-    {
-        try
+        private readonly IPartOfSpeechService _partOfSpeechService;
+        public PartOfSpeechController(IPartOfSpeechService partOfSpeechService)
         {
-            return Ok(_partOfSpeechService.GetPartOfSpeechResponseDtos());
+            _partOfSpeechService = partOfSpeechService;
         }
-        catch (Exception ex)
+
+        [HttpGet]
+        [Route("")]
+        public IActionResult GetPartOfSpeeches()
         {
-            return StatusCode(500, ex.Message);
+            try
+            {
+                return Ok(_partOfSpeechService.GetPartOfSpeechResponseDtos());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
     }
 }

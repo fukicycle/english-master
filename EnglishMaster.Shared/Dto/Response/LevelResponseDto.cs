@@ -1,12 +1,13 @@
-﻿namespace EnglishMaster.Shared.Dto.Response;
-
-public sealed class LevelResponseDto
+﻿namespace EnglishMaster.Shared.Dto.Response
 {
-    public LevelResponseDto(long id, string name)
+    public sealed class LevelResponseDto
     {
-        Id = id;
-        Name = name;
+        public LevelResponseDto(long id, string name)
+        {
+            Id = id;
+            Name = name;
+        }
+        public long Id { get; }
+        public string Name { get; }
     }
-    public long Id { get; }
-    public string Name { get; }
 }

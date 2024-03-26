@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace EnglishMaster.Shared.Models;
-
-public partial class Idiom
+﻿namespace EnglishMaster.Shared.Models
 {
-    public long Id { get; set; }
+    public partial class Idiom
+    {
+        public long Id { get; set; }
 
-    public string Idiom1 { get; set; } = null!;
+        public string Idiom1 { get; set; } = null!;
 
-    public virtual ICollection<MeaningOfIdiom> MeaningOfIdioms { get; set; } = new List<MeaningOfIdiom>();
+        public virtual ICollection<MeaningOfIdiom> MeaningOfIdioms { get; set; } = new List<MeaningOfIdiom>();
+    }
 }

@@ -1,12 +1,14 @@
-﻿namespace EnglishMaster.Shared.Dto.Request;
-
-public sealed class LoginRequestDto
+﻿namespace EnglishMaster.Shared.Dto.Request
 {
-    public LoginRequestDto(string email, string password)
+    public sealed class LoginRequestDto
     {
-        Email = email;
-        Password = password;
+        public LoginRequestDto(string email, string password)
+        {
+            Email = email;
+            Password = password;
+        }
+        public string Email { get; }
+        public string Password { get; }
     }
-    public string Email { get; }
-    public string Password { get; }
+
 }
