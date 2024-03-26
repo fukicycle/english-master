@@ -44,5 +44,15 @@ namespace EnglishMaster.Server.Services
             string token = GenerateJWTToken(email);
             return new LoginResponseDto(token);
         }
+
+        public string GetValueFromClaims(IEnumerable<Claim> claims, string claimType)
+        {
+            string? value = claims.FirstOrDefault(a => a.Type.ToLower() == claimType.ToLower())?.Value;
+            if (value == null)
+            {
+                throw new Exception($"No such claim type:{claimType}, value={value}");
+            }
+            return value;
+        }
     }
 }
