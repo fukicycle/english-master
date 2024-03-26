@@ -1,11 +1,12 @@
 ﻿@page "/"
 @inherits PageBase
 @inject NavigationManager NavigationManager
+@inject IHttpClientService HttpClientService
 
 <PageTitle>Home</PageTitle>
 <Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
     <Authorized>
-        <div>Welcome back, @context.User.Identity?.Name!</div>
+        <div>Welcome back, @_loginUserInfo?.GetDisplayName()!</div>
     </Authorized>
     <NotAuthorized>
         <div class="not-login desc">Log in to record your learning</div>
