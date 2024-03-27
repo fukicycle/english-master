@@ -1,7 +1,4 @@
-﻿using EnglishMaster.Client.Pages;
-using System.Diagnostics;
-
-namespace EnglishMaster.Client.Components
+﻿namespace EnglishMaster.Client.Components
 {
     public partial class MessageBox
     {
@@ -20,7 +17,7 @@ namespace EnglishMaster.Client.Components
             }
             else
             {
-                _display = "display: block;";
+                _display = "display: flex;";
             }
             StateHasChanged();
         }

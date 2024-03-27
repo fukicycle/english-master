@@ -1,12 +1,13 @@
-﻿namespace EnglishMaster.Shared.Dto.Response;
-
-public class AnswerResponseDto
+﻿namespace EnglishMaster.Shared.Dto.Response
 {
-    public AnswerResponseDto(long wordId,string meaning)
+    public class AnswerResponseDto
     {
-        WordId = wordId;
-        Meaning = meaning;
+        public AnswerResponseDto(long wordId, string meaning)
+        {
+            WordId = wordId;
+            Meaning = meaning;
+        }
+        public long WordId { get; }
+        public string Meaning { get; }
     }
-    public long WordId { get; }
-    public string Meaning { get; }
 }

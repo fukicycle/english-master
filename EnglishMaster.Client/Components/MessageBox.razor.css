@@ -3,14 +3,14 @@
     top: 0;
     left: 0;
     z-index: 500;
-    background-color: rgba(33,33,33,.7);
+    background-color: rgba(33, 33, 33, .7);
     height: 100%;
     width: 100%;
-    align-content: space-evenly;
+    justify-content: center;
+    align-items: center;
 }
 
 .dialog-container {
-    margin: auto;
     width: 80%;
     max-width: 400px;
     height: 150px;

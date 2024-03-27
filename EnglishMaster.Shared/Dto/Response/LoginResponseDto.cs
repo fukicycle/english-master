@@ -1,10 +1,11 @@
-﻿namespace EnglishMaster.Shared.Dto.Response;
-
-public class LoginResponseDto
+﻿namespace EnglishMaster.Shared.Dto.Response
 {
-    public LoginResponseDto(string token)
+    public class LoginResponseDto
     {
-        Token = token;
+        public LoginResponseDto(string token)
+        {
+            Token = token;
+        }
+        public string Token { get; }
     }
-    public string Token { get; }
 }

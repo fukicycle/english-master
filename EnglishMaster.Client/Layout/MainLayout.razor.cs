@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
 
-namespace EnglishMaster.Client.Layout;
-
-public partial class MainLayout
+namespace EnglishMaster.Client.Layout
 {
-    private string GetProfilePicture(AuthenticationState context)
+    public partial class MainLayout
     {
-        return context.User.Claims.FirstOrDefault(a => a.Type == "picture")?.Value ?? "";
+        private string GetProfilePicture(AuthenticationState context)
+        {
+            return context.User.Claims.FirstOrDefault(a => a.Type == "picture")?.Value ?? "";
+        }
     }
 }

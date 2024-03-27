@@ -1,5 +1,5 @@
 ﻿using EnglishMaster.Server.Services.Interfaces;
-using EnglishMaster.Shared.Dto.Request;
+using EnglishMaster.Shared.Dto.Response;
 using EnglishMaster.Shared.Models;
 
 namespace EnglishMaster.Server.Services
@@ -14,6 +14,8 @@ namespace EnglishMaster.Server.Services
             _db = db;
             _logger = logger;
         }
+
+
         public void Register(string email, string password, string firstName, string lastName, string? nickname)
         {
             User user = new User();
@@ -28,6 +30,15 @@ namespace EnglishMaster.Server.Services
             }
             _db.Users.Add(user);
             _db.SaveChanges();
+        }
+        public UserResponseDto GetUserResponseDtoByEmail(string email)
+        {
+            User? user = _db.Users.FirstOrDefault(a => a.Username == email);
+            if (user == null)
+            {
+                throw new Exception($"No such user:{email}");
+            }
+            return new UserResponseDto(user.FirstName, user.LastName, user.Nickname);
         }
     }
 }

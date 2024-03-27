@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace EnglishMaster.Shared.Models;
-
-public partial class Level
+﻿namespace EnglishMaster.Shared.Models
 {
-    public long Id { get; set; }
+    public partial class Level
+    {
+        public long Id { get; set; }
 
-    public string Name { get; set; } = null!;
+        public string Name { get; set; } = null!;
 
-    public virtual ICollection<MeaningOfWord> MeaningOfWords { get; set; } = new List<MeaningOfWord>();
+        public virtual ICollection<MeaningOfWord> MeaningOfWords { get; set; } = new List<MeaningOfWord>();
+    }
 }

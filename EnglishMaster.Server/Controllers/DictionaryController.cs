@@ -1,9 +1,10 @@
 ﻿using EnglishMaster.Server.Services.Interfaces;
+using EnglishMaster.Shared;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EnglishMaster.Server.Controllers
 {
-    [Route("/api/v1/dictionaries")]
+    [Route(ApiEndPoint.DICTIONARY)]
     public sealed class DictionaryController : ControllerBase
     {
         private readonly IDictionaryService _dictionaryService;

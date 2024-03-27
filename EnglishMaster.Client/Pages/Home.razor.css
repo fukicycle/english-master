@@ -65,3 +65,31 @@
     color: var(--app-white);
     margin-top: 10px;
 }
+
+.achievement-area {
+    padding: .5rem;
+}
+
+.total-achivement {
+    padding-top: .5rem;
+    display: flex;
+    justify-content: center;
+}
+
+.achievement-item {
+    padding: .5rem 0;
+}
+
+ul {
+    padding-left: .5rem;
+    display: grid;
+    grid-template-rows: auto;
+    grid-template-columns: 1fr 1fr;
+    grid-row-gap: .5rem;
+    grid-column-gap: .5rem;
+}
+
+ul,
+li {
+    list-style: none;
+}

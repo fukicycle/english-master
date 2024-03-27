@@ -1,8 +1,9 @@
 ﻿using EnglishMaster.Shared.Dto.Response;
 
-namespace EnglishMaster.Server.Services.Interfaces;
-
-public interface ILevelService
+namespace EnglishMaster.Server.Services.Interfaces
 {
-    IList<LevelResponseDto> GetLevelResponseDtos();
+    public interface ILevelService
+    {
+        IList<LevelResponseDto> GetLevelResponseDtos();
+    }
 }
