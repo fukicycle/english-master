@@ -1,9 +1,10 @@
 ﻿using EnglishMaster.Server.Services.Interfaces;
+using EnglishMaster.Shared;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EnglishMaster.Server.Controllers
 {
-    [Route("/api/v1/part-of-speeches")]
+    [Route(ApiEndPoint.PART_OF_SPEECH)]
     public sealed class PartOfSpeechController : ControllerBase
     {
         private readonly IPartOfSpeechService _partOfSpeechService;

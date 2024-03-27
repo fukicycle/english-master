@@ -1,9 +1,10 @@
 ﻿using EnglishMaster.Server.Services.Interfaces;
+using EnglishMaster.Shared;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EnglishMaster.Server.Controllers
 {
-    [Route("/api/v1/levels")]
+    [Route(ApiEndPoint.LEVEL)]
     public sealed class LevelController : ControllerBase
     {
         private readonly ILevelService _levelService;

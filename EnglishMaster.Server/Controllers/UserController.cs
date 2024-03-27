@@ -1,4 +1,5 @@
 ﻿using EnglishMaster.Server.Services.Interfaces;
+using EnglishMaster.Shared;
 using EnglishMaster.Shared.Dto.Request;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -6,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EnglishMaster.Server.Controllers
 {
-    [Route("/api/v1/users")]
+    [Route(ApiEndPoint.USER)]
     public sealed class UserController : ControllerBase
     {
         private readonly IUserService _userService;

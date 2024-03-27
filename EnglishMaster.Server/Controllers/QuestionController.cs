@@ -1,9 +1,10 @@
 ﻿using EnglishMaster.Server.Services.Interfaces;
+using EnglishMaster.Shared;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EnglishMaster.Server.Controllers
 {
-    [Route("/api/v1/questions")]
+    [Route(ApiEndPoint.QUESTION)]
     public sealed class QuestionController : ControllerBase
     {
         private readonly IQuestionService _questionService;

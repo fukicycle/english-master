@@ -1,4 +1,5 @@
-﻿using EnglishMaster.Shared.Dto.Response;
+﻿using EnglishMaster.Shared;
+using EnglishMaster.Shared.Dto.Response;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Newtonsoft.Json;
@@ -31,7 +32,7 @@ namespace EnglishMaster.Client.Pages
 
         private async Task SetCurrentLoginUserInformation()
         {
-            HttpResponseResult httpResponseResult = await HttpClientService.SendWithJWTTokenAsync(HttpMethod.Get, "api/v1/users");
+            HttpResponseResult httpResponseResult = await HttpClientService.SendWithJWTTokenAsync(HttpMethod.Get, ApiEndPoint.USER);
             if (httpResponseResult.StatusCode != System.Net.HttpStatusCode.OK)
             {
                 throw new Exception(httpResponseResult.Message);

@@ -78,7 +78,7 @@ namespace EnglishMaster.Client.Services
             string email = authenticationState.User.Claims.FirstOrDefault(a => a.Type == "email")?.Value ?? "";
             string subAsPassword = authenticationState.User.Claims.FirstOrDefault(a => a.Type == "sub")?.Value ?? "";
             LoginRequestDto loginRequestDto = new LoginRequestDto(email, subAsPassword);
-            HttpResponseResult result = await SendAsync(HttpMethod.Post, "api/v1/login", JsonConvert.SerializeObject(loginRequestDto));
+            HttpResponseResult result = await SendAsync(HttpMethod.Post, ApiEndPoint.LOGIN, JsonConvert.SerializeObject(loginRequestDto));
             if (result.StatusCode != System.Net.HttpStatusCode.OK)
             {
                 throw new Exception(result.Message ?? "Unexpected error has occured.");

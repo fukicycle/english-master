@@ -1,4 +1,5 @@
 ﻿using EnglishMaster.Client.Forms;
+using EnglishMaster.Shared;
 using EnglishMaster.Shared.Dto.Request;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -55,7 +56,7 @@ namespace EnglishMaster.Client.Pages
                     throw new Exception("Can not get email or aud information. Please re-login your google account.");
                 }
                 UserReqestDto userReqestDto = new UserReqestDto(email, sub, Form.FirstName, Form.LastName, Form.Nickname);
-                HttpResponseResult httpResponseResult = await HttpClientService.SendAsync(HttpMethod.Post, "api/v1/users", JsonConvert.SerializeObject(userReqestDto));
+                HttpResponseResult httpResponseResult = await HttpClientService.SendAsync(HttpMethod.Post, ApiEndPoint.USER, JsonConvert.SerializeObject(userReqestDto));
                 if (httpResponseResult.StatusCode != System.Net.HttpStatusCode.Created)
                 {
                     throw new Exception("Sorry, registration failed. Please try again later.");

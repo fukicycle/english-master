@@ -1,5 +1,6 @@
 ﻿
 
+using EnglishMaster.Shared;
 using EnglishMaster.Shared.Dto.Response;
 using Microsoft.AspNetCore.Components;
 using Newtonsoft.Json;
@@ -15,7 +16,7 @@ namespace EnglishMaster.Client.Pages
             try
             {
                 StateContainer.IsLoading = true;
-                HttpResponseResult dictionaryResult = await HttpClientService.SendAsync(HttpMethod.Get, "/api/v1/dictionaries");
+                HttpResponseResult dictionaryResult = await HttpClientService.SendAsync(HttpMethod.Get, ApiEndPoint.DICTIONARY);
                 if (dictionaryResult.StatusCode != System.Net.HttpStatusCode.OK)
                 {
                     throw new Exception(dictionaryResult.Message);

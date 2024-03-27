@@ -1,4 +1,5 @@
 ﻿
+using EnglishMaster.Shared;
 using EnglishMaster.Shared.Dto.Response;
 using Newtonsoft.Json;
 using Toolbelt.Blazor.SpeechSynthesis;
@@ -37,7 +38,7 @@ namespace EnglishMaster.Client.Pages
 
         private async Task GetLevelsAsync()
         {
-            HttpResponseResult levelsResponse = await HttpClientService.SendAsync(HttpMethod.Get, "/api/v1/levels");
+            HttpResponseResult levelsResponse = await HttpClientService.SendAsync(HttpMethod.Get, ApiEndPoint.LEVEL);
             if (levelsResponse.StatusCode != System.Net.HttpStatusCode.OK)
             {
                 throw new Exception(levelsResponse.Message);
@@ -52,7 +53,7 @@ namespace EnglishMaster.Client.Pages
 
         private async Task GetPartOfSpeechesAsync()
         {
-            HttpResponseResult partOfSpeechesResponse = await HttpClientService.SendAsync(HttpMethod.Get, "/api/v1/part-of-speeches");
+            HttpResponseResult partOfSpeechesResponse = await HttpClientService.SendAsync(HttpMethod.Get, ApiEndPoint.PART_OF_SPEECH);
             if (partOfSpeechesResponse.StatusCode != System.Net.HttpStatusCode.OK)
             {
                 throw new Exception(partOfSpeechesResponse.Message);
@@ -67,7 +68,7 @@ namespace EnglishMaster.Client.Pages
 
         private async Task GetQuestionsAsync()
         {
-            HttpResponseResult questionResponse = await HttpClientService.SendAsync(HttpMethod.Get, $"/api/v1/questions/part-of-speeches/{_partOfSpeechId}/levels/{_levelId}");
+            HttpResponseResult questionResponse = await HttpClientService.SendAsync(HttpMethod.Get, $"{ApiEndPoint.QUESTION}/part-of-speeches/{_partOfSpeechId}/levels/{_levelId}");
             if (questionResponse.StatusCode != System.Net.HttpStatusCode.OK)
             {
                 throw new Exception(questionResponse.Message);

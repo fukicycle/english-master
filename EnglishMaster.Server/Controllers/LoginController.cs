@@ -1,5 +1,6 @@
 ﻿
 using EnglishMaster.Server.Services.Interfaces;
+using EnglishMaster.Shared;
 using EnglishMaster.Shared.Dto.Request;
 using EnglishMaster.Shared.Dto.Response;
 using Microsoft.AspNetCore.Identity.Data;
@@ -7,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EnglishMaster.Server.Controllers
 {
-    [Route("/api/v1/login")]
+    [Route(ApiEndPoint.LOGIN)]
     public sealed class LoginController : ControllerBase
     {
         private readonly ILoginService _loginService;
