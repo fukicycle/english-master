@@ -66,24 +66,46 @@ namespace EnglishMaster.Client.Services
         {
             if (string.IsNullOrEmpty(_settingService.JWTToken))
             {
-                await ApiAuthentication();
+                try
+                {
+                    HttpResponseResult result = await ApiAuthentication();
+                    if (result.StatusCode == System.Net.HttpStatusCode.NotFound)
+                    {
+                        return new HttpResponseResult(string.Empty, System.Net.HttpStatusCode.NotFound, "ユーザが登録されていません。");
+                    }
+                    if (result.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        SetJWTTokenFromResponse(result.Json);
+                    }
+                    else
+                    {
+                        return new HttpResponseResult(string.Empty, result.StatusCode, result.Message);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex.Message);
+                    return new HttpResponseResult(string.Empty, System.Net.HttpStatusCode.InternalServerError, ex.Message);
+                }
             }
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _settingService.JWTToken);
             return await SendAsync(method, uri, json);
         }
 
-        private async Task ApiAuthentication()
+        private async Task<HttpResponseResult> ApiAuthentication()
         {
             AuthenticationState authenticationState = await _authenticationStateProvider.GetAuthenticationStateAsync();
             string email = authenticationState.User.Claims.FirstOrDefault(a => a.Type == "email")?.Value ?? "";
             string subAsPassword = authenticationState.User.Claims.FirstOrDefault(a => a.Type == "sub")?.Value ?? "";
             LoginRequestDto loginRequestDto = new LoginRequestDto(email, subAsPassword);
             HttpResponseResult result = await SendAsync(HttpMethod.Post, ApiEndPoint.LOGIN, JsonConvert.SerializeObject(loginRequestDto));
-            if (result.StatusCode != System.Net.HttpStatusCode.OK)
-            {
-                throw new Exception(result.Message ?? "Unexpected error has occured.");
-            }
-            LoginResponseDto? loginResponseDto = JsonConvert.DeserializeObject<LoginResponseDto>(result.Json);
+            return result;
+
+        }
+
+        private void SetJWTTokenFromResponse(string json)
+        {
+            LoginResponseDto? loginResponseDto = JsonConvert.DeserializeObject<LoginResponseDto>(json);
             if (loginResponseDto == null)
             {
                 throw new Exception($"Can not deserialize {typeof(LoginResponseDto)}");
