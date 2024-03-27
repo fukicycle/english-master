@@ -1,6 +1,10 @@
 ﻿using EnglishMaster.Client.Services.Interfaces;
 using EnglishMaster.Shared;
+using EnglishMaster.Shared.Dto.Request;
+using EnglishMaster.Shared.Dto.Response;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
+using Newtonsoft.Json;
 
 namespace EnglishMaster.Client.Services
 {
@@ -8,20 +12,20 @@ namespace EnglishMaster.Client.Services
     {
         private readonly HttpClient _httpClient;
         private readonly ISettingService _settingService;
+        private readonly AuthenticationStateProvider _authenticationStateProvider;
         private readonly ILogger<HttpClientService> _logger;
-        private readonly NavigationManager _navigationManager;
-        public HttpClientService(IHttpClientFactory httpClientFactory, ISettingService settingService, ILogger<HttpClientService> logger, NavigationManager navigationManager)
+        public HttpClientService(IHttpClientFactory httpClientFactory, ISettingService settingService, AuthenticationStateProvider authenticationStateProvider, ILogger<HttpClientService> logger)
         {
             _settingService = settingService;
             _httpClient = httpClientFactory.CreateClient(ApplicationSettings.Mode.ToString());
+            _authenticationStateProvider = authenticationStateProvider;
             _logger = logger;
-            _navigationManager = navigationManager;
         }
         public async Task<HttpResponseResult> SendAsync(HttpMethod method, string uri, string? json = null)
         {
             try
             {
-                if (_settingService.JWTToken != null)
+                if (!string.IsNullOrEmpty(_settingService.JWTToken))
                 {
                     _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _settingService.JWTToken);
                 }
@@ -33,15 +37,10 @@ namespace EnglishMaster.Client.Services
                 }
                 HttpResponseMessage httpResponseMessage = await _httpClient.SendAsync(httpRequestMessage);
                 string responseContent = await httpResponseMessage.Content.ReadAsStringAsync();
-                if (httpResponseMessage.StatusCode == System.Net.HttpStatusCode.Forbidden)
-                {
-                    return new HttpResponseResult(string.Empty, System.Net.HttpStatusCode.Forbidden, "ユーザが登録されていません。利用申請してください。");
-                }
                 if (httpResponseMessage.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
-                    _navigationManager.NavigateTo($"?redirect={_navigationManager.Uri}");
-                    //再度認証をかけるのでOKで返す。
-                    return new HttpResponseResult(string.Empty, System.Net.HttpStatusCode.OK);
+                    _logger.LogInformation($"Token[{typeof(HttpClientService)}]:" + _settingService.JWTToken);
+                    return new HttpResponseResult("Token is missing or invalid token.", System.Net.HttpStatusCode.Unauthorized);
                 }
                 if (httpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
@@ -61,6 +60,36 @@ namespace EnglishMaster.Client.Services
             {
                 return new HttpResponseResult(string.Empty, System.Net.HttpStatusCode.InternalServerError, ex.Message);
             }
+        }
+
+        public async Task<HttpResponseResult> SendWithJWTTokenAsync(HttpMethod method, string uri, string? json = null)
+        {
+            if (string.IsNullOrEmpty(_settingService.JWTToken))
+            {
+                await ApiAuthentication();
+            }
+            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _settingService.JWTToken);
+            return await SendAsync(method, uri, json);
+        }
+
+        private async Task ApiAuthentication()
+        {
+            AuthenticationState authenticationState = await _authenticationStateProvider.GetAuthenticationStateAsync();
+            string email = authenticationState.User.Claims.FirstOrDefault(a => a.Type == "email")?.Value ?? "";
+            string subAsPassword = authenticationState.User.Claims.FirstOrDefault(a => a.Type == "sub")?.Value ?? "";
+            LoginRequestDto loginRequestDto = new LoginRequestDto(email, subAsPassword);
+            HttpResponseResult result = await SendAsync(HttpMethod.Post, "api/v1/login", JsonConvert.SerializeObject(loginRequestDto));
+            if (result.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                throw new Exception(result.Message ?? "Unexpected error has occured.");
+            }
+            LoginResponseDto? loginResponseDto = JsonConvert.DeserializeObject<LoginResponseDto>(result.Json);
+            if (loginResponseDto == null)
+            {
+                throw new Exception($"Can not deserialize {typeof(LoginResponseDto)}");
+            }
+            _logger.LogInformation($"Token[{nameof(ApiAuthentication)}]:" + loginResponseDto.Token);
+            _settingService.JWTToken = loginResponseDto.Token;
         }
     }
 }
