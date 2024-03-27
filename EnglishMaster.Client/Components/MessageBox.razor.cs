@@ -17,7 +17,7 @@
             }
             else
             {
-                _display = "display: block;";
+                _display = "display: flex;";
             }
             StateHasChanged();
         }
