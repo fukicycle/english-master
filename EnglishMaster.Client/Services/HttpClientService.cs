@@ -6,12 +6,13 @@ namespace EnglishMaster.Client.Services
 {
     public sealed class HttpClientService : IHttpClientService
     {
-        private static string _token = string.Empty;
         private readonly HttpClient _httpClient;
+        private readonly ISettingService _settingService;
         private readonly ILogger<HttpClientService> _logger;
         private readonly NavigationManager _navigationManager;
-        public HttpClientService(IHttpClientFactory httpClientFactory, ILogger<HttpClientService> logger, NavigationManager navigationManager)
+        public HttpClientService(IHttpClientFactory httpClientFactory, ISettingService settingService, ILogger<HttpClientService> logger, NavigationManager navigationManager)
         {
+            _settingService = settingService;
             _httpClient = httpClientFactory.CreateClient(ApplicationSettings.Mode.ToString());
             _logger = logger;
             _navigationManager = navigationManager;
@@ -20,9 +21,9 @@ namespace EnglishMaster.Client.Services
         {
             try
             {
-                if (_token != string.Empty)
+                if (_settingService.JWTToken != null)
                 {
-                    _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _token);
+                    _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _settingService.JWTToken);
                 }
                 HttpRequestMessage httpRequestMessage = new HttpRequestMessage(method, uri);
                 if (json != null)
