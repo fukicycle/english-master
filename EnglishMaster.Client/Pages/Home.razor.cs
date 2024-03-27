@@ -33,6 +33,11 @@ namespace EnglishMaster.Client.Pages
         private async Task SetCurrentLoginUserInformation()
         {
             HttpResponseResult httpResponseResult = await HttpClientService.SendWithJWTTokenAsync(HttpMethod.Get, ApiEndPoint.USER);
+            if (httpResponseResult.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                NavigationManager.NavigateTo("register");
+                return;
+            }
             if (httpResponseResult.StatusCode != System.Net.HttpStatusCode.OK)
             {
                 throw new Exception(httpResponseResult.Message);
