@@ -1,4 +1,5 @@
 ﻿using EnglishMaster.Shared.Dto.Response;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Newtonsoft.Json;
 
@@ -12,7 +13,11 @@ namespace EnglishMaster.Client.Pages
             try
             {
                 StateContainer.IsLoading = true;
-                await SetCurrentLoginUserInformation();
+                AuthenticationState authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+                if (authenticationState.User.Identity?.IsAuthenticated == true)
+                {
+                    await SetCurrentLoginUserInformation();
+                }
             }
             catch (Exception ex)
             {
