@@ -83,6 +83,7 @@ builder.Services.AddScoped<IPartOfSpeechService, PartOfSpeechService>();
 builder.Services.AddScoped<ILevelService, LevelService>();
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IAchievementService, AchievementService>();
 
 var app = builder.Build();
 
