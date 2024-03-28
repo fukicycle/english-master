@@ -26,7 +26,7 @@ namespace EnglishMaster.Server.Controllers
                 if (HttpContext.User.Identity?.IsAuthenticated == true)
                 {
                     string email = _loginService.GetValueFromClaims(HttpContext.User.Claims, "email");
-                    return Ok(_questionService.GetQuestionResponseDtosWithCredentials(email, partOfSpeechId, levelId, 0));
+                    return Ok(_questionService.GetQuestionResponseDtosWithCredentials(email, partOfSpeechId, levelId));
                 }
                 return Ok(_questionService.GetQuestionResponseDtos(partOfSpeechId, levelId));
             }
