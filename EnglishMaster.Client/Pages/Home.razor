@@ -9,78 +9,35 @@
     <Authorized>
         <div>Welcome back, @_loginUserInfo?.GetDisplayName()!</div>
         <div class="achievement-area">
-            <div class="total-achivement">
-                <ProgressCircle Value="35" />
-            </div>
-            <div class="achievement-item">
-                <div>英検２級</div>
-                <div class="progress">
-                    <ProgressBar Value="0" HasDisplayValue="true" />
+            @if (_achievements != null)
+            {
+                <div class="total-achivement">
+                    <ProgressCircle Value="@GetTotalProgressValue()" />
                 </div>
-                <details>
-                    <summary>Details by part of speech</summary>
-                    <ul>
-                        <li class="achievement-item">
-                            <div>Noun</div>
-                            <div class="progress">
-                                <ProgressBar Value="0" HasDisplayValue="true" />
-                            </div>
-                        </li>
-                        <li class="achievement-item">
-                            <div>Verb</div>
-                            <div class="progress">
-                                <ProgressBar Value="0" HasDisplayValue="true" />
-                            </div>
-                        </li>
-                    </ul>
-                </details>
-            </div>
-            <div class="achievement-item">
-                <div>英検準２級</div>
-                <div class="progress">
-                    <ProgressBar Value="30" HasDisplayValue="true" />
-                </div>
-                <details>
-                    <summary>Details by part of speech</summary>
-                    <ul>
-                        <li class="achievement-item">
-                            <div>Noun</div>
-                            <div class="progress">
-                                <ProgressBar Value="14.555" HasDisplayValue="true" />
-                            </div>
-                        </li>
-                        <li class="achievement-item">
-                            <div>Verb</div>
-                            <div class="progress">
-                                <ProgressBar Value="45.559" HasDisplayValue="true" />
-                            </div>
-                        </li>
-                    </ul>
-                </details>
-            </div>
-            <div class="achievement-item">
-                <div>ITソフト英語</div>
-                <div class="progress">
-                    <ProgressBar Value="100" HasDisplayValue="true" />
-                </div>
-                <details>
-                    <summary>Details by part of speech</summary>
-                    <ul>
-                        <li class="achievement-item">
-                            <div>Noun</div>
-                            <div class="progress">
-                                <ProgressBar Value="100" HasDisplayValue="true" />
-                            </div>
-                        </li>
-                        <li class="achievement-item">
-                            <div>Verb</div>
-                            <div class="progress">
-                                <ProgressBar Value="100" HasDisplayValue="true" />
-                            </div>
-                        </li>
-                    </ul>
-                </details>
-            </div>
+                foreach (AchievementResponseDto achievement in _achievements)
+                {
+                    <div class="achievement-item">
+                        <div>@achievement.LevelName</div>
+                        <div class="progress">
+                            <ProgressBar Value="@achievement.Progress" HasDisplayValue="true" />
+                        </div>
+                        <details>
+                            <summary>Details by part of speech</summary>
+                            <ul>
+                                @foreach (AchievementDetailResponseDto detail in achievement.Details)
+                                {
+                                    <li class="achievement-item">
+                                        <div>@detail.PartOfSpeechName</div>
+                                        <div class="progress">
+                                            <ProgressBar Value="@detail.Progress" HasDisplayValue="true" />
+                                        </div>
+                                    </li>
+                                }
+                            </ul>
+                        </details>
+                    </div>
+                }
+            }
         </div>
     </Authorized>
     <NotAuthorized>

@@ -34,5 +34,18 @@ namespace EnglishMaster.Client.Components
         {
             return GetStrokeDashArray() * ((100 - Value) / 100);
         }
+
+        private int GetTextXLocation()
+        {
+            if (Value >= 0 && Value < 10)
+            {
+                return 84;
+            }
+            if (Value == 100)
+            {
+                return 50;
+            }
+            return 69;
+        }
     }
 }

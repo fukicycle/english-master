@@ -9,5 +9,7 @@
         public const string LOGIN = $"{BASE_PATH_V1}login";
         public const string PART_OF_SPEECH = $"{BASE_PATH_V1}part-of-speeches";
         public const string QUESTION = $"{BASE_PATH_V1}questions";
+        public const string ACHIEVEMENT = $"{BASE_PATH_V1}achievmenets";
+
     }
 }
