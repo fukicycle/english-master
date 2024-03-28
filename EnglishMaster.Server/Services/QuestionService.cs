@@ -15,7 +15,7 @@ namespace EnglishMaster.Server.Services
             _db = db;
             _logger = logger;
         }
-        public IList<QuestionResponseDto> GetQuestionResponseDtos(long partOfSpeechId, long levelId = 0, int numberOfQuestions = 10)
+        public IList<QuestionResponseDto> GetQuestionResponseDtos(long partOfSpeechId = 0, long levelId = 0, int numberOfQuestions = 10)
         {
             IEnumerable<MeaningOfWord> originals = _db.MeaningOfWords.Include(a => a.Word).ToList();
             IEnumerable<MeaningOfWord> meaningOfWords = Filter(originals, partOfSpeechId, levelId).OrderByDescending(a => Guid.NewGuid());
@@ -50,6 +50,44 @@ namespace EnglishMaster.Server.Services
             if (partOfSpeechId != 0) return Filter(items.Where(a => a.PartOfSpeechId == partOfSpeechId), 0, levelId);
             if (levelId != 0) return Filter(items.Where(a => a.LevelId == levelId), partOfSpeechId, 0);
             return items;
+        }
+
+        public IList<QuestionResponseDto> GetQuestionResponseDtosWithCredentials(string email, long partOfSpeechId = 0, long levelId = 0, int numberOfQuestions = 10)
+        {
+            IEnumerable<MeaningOfWord> originals = _db.MeaningOfWords.Include(a => a.Word).ToList();
+            IEnumerable<MeaningOfWord> meaningOfWords = Filter(originals, partOfSpeechId, levelId).OrderByDescending(a => Guid.NewGuid());
+            User user = _db.Users.Single(a => a.Username == email);
+            IList<MeaningOfWordLearningHistory> histories = _db.MeaningOfWordLearningHistories.Where(a => a.UserId == user.Id && a.IsDone).ToList();
+            IEnumerable<MeaningOfWord> questions = GetQuestions(meaningOfWords, histories);
+            int number = 1;
+            IList<QuestionResponseDto> questionResponseDtos = new List<QuestionResponseDto>();
+            foreach (MeaningOfWord meaningOfWord in questions.Take(numberOfQuestions))
+            {
+                IEnumerable<MeaningOfWord> answerTargets = Filter(originals, meaningOfWord.PartOfSpeechId, 0);
+                IEnumerable<MeaningOfWord> randomAnswers = GetRandomChoices(answerTargets, meaningOfWord);
+                IList<AnswerResponseDto> answerResponseDtos = new List<AnswerResponseDto>();
+                foreach (MeaningOfWord answer in randomAnswers)
+                {
+                    AnswerResponseDto answerResponseDto = new AnswerResponseDto(answer.Id, answer.Meaning);
+                    answerResponseDtos.Add(answerResponseDto);
+                }
+                QuestionResponseDto questionResponseDto = new QuestionResponseDto(number, meaningOfWord.Id, meaningOfWord.Word.Word1, meaningOfWord.PartOfSpeechId, meaningOfWord.LevelId, answerResponseDtos);
+                questionResponseDtos.Add(questionResponseDto);
+                number++;
+            }
+            return questionResponseDtos;
+        }
+
+        private IEnumerable<MeaningOfWord> GetQuestions(IEnumerable<MeaningOfWord> meaningOfWords, IList<MeaningOfWordLearningHistory> histories, int numberOfAnswer = 1)
+        {
+            IEnumerable<long> historyIds = histories.GroupBy(a => a.QuestionMeaningOfWordId).Where(a => a.Count() <= numberOfAnswer).Select(a => a.Key);
+            IEnumerable<MeaningOfWord> questions = meaningOfWords.Where(a => !historyIds.Contains(a.Id));
+            _logger.LogInformation($"Run get questions:{numberOfAnswer}");
+            if (questions.Count() < 10)
+            {
+                return GetQuestions(meaningOfWords, histories, numberOfAnswer + 1);
+            }
+            return questions;
         }
     }
 }

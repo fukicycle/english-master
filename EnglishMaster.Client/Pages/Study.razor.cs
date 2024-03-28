@@ -1,6 +1,7 @@
 ﻿
 using EnglishMaster.Shared;
 using EnglishMaster.Shared.Dto.Response;
+using Microsoft.AspNetCore.Components.Authorization;
 using Newtonsoft.Json;
 using Toolbelt.Blazor.SpeechSynthesis;
 
@@ -68,7 +69,15 @@ namespace EnglishMaster.Client.Pages
 
         private async Task GetQuestionsAsync()
         {
-            HttpResponseResult questionResponse = await HttpClientService.SendAsync(HttpMethod.Get, $"{ApiEndPoint.QUESTION}/part-of-speeches/{_partOfSpeechId}/levels/{_levelId}");
+            HttpResponseResult questionResponse;
+            if (string.IsNullOrEmpty(SettingService.JWTToken))
+            {
+                questionResponse = await HttpClientService.SendAsync(HttpMethod.Get, $"{ApiEndPoint.QUESTION}/part-of-speeches/{_partOfSpeechId}/levels/{_levelId}");
+            }
+            else
+            {
+                questionResponse = await HttpClientService.SendWithJWTTokenAsync(HttpMethod.Get, $"{ApiEndPoint.QUESTION}/part-of-speeches/{_partOfSpeechId}/levels/{_levelId}");
+            }
             if (questionResponse.StatusCode != System.Net.HttpStatusCode.OK)
             {
                 throw new Exception(questionResponse.Message);
