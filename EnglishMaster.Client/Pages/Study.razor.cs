@@ -137,10 +137,18 @@ namespace EnglishMaster.Client.Pages
                 _questionIndex++;
                 if (_questionIndex >= _questions.Count)
                 {
-                    StateContainer.IsLoading = true;
-                    int numberOfRegistered = await SubmitResult();
-                    StateContainer.IsLoading = false;
-                    NavigationManager.NavigateTo($"result?count={numberOfRegistered}");
+                    if (!string.IsNullOrEmpty(SettingService.JWTToken))
+                    {
+                        StateContainer.IsLoading = true;
+                        int numberOfRegistered = await SubmitResult();
+                        StateContainer.IsLoading = false;
+                        NavigationManager.NavigateTo($"result?count={numberOfRegistered}");
+                    }
+                    else
+                    {
+                        _question = null;
+                        _questionIndex = 0;
+                    }
                 }
                 else
                 {
