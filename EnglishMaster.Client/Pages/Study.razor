@@ -3,30 +3,38 @@
 @inject IHttpClientService HttpClientService
 @inject ISettingService SettingService
 @inject SpeechSynthesis SpeechSynthesis
+@inject NavigationManager NavigationManager
 
 <PageTitle>Study</PageTitle>
 <div class="study-area">
     <div class="selection-area">
-        <div class="selection-item">
-            <div>Category</div>
-            <select @bind=@_levelId>
-                <option value="0">All</option>
-                @foreach (LevelResponseDto level in _levles)
-                {
-                    <option value="@level.Id">@level.Name</option>
-                }
-            </select>
-        </div>
-        <div class="selection-item">
-            <div>Part of speech</div>
-            <select @bind=@_partOfSpeechId>
-                <option value="0">All</option>
-                @foreach (PartOfSpeechResponseDto partOfSpeech in _partOfSpeeches)
-                {
-                    <option value="@partOfSpeech.Id">@partOfSpeech.Name</option>
-                }
-            </select>
-        </div>
+        @if (_question == null)
+        {
+            <div class="selection-item">
+                <div>Category</div>
+                <select @bind=@_levelId>
+                    <option value="0">All</option>
+                    @foreach (LevelResponseDto level in _levles)
+                    {
+                        <option value="@level.Id">@level.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="selection-item">
+                <div>Part of speech</div>
+                <select @bind=@_partOfSpeechId>
+                    <option value="0">All</option>
+                    @foreach (PartOfSpeechResponseDto partOfSpeech in _partOfSpeeches)
+                    {
+                        <option value="@partOfSpeech.Id">@partOfSpeech.Name</option>
+                    }
+                </select>
+            </div>
+        }
+        else
+        {
+            <ProgressBar Value="@GetProgressValue()" HasDisplayValue="true" />
+        }
     </div>
     <div class="question-card-wrapper">
         @if (_question == null)
@@ -35,44 +43,16 @@
         }
         else
         {
-            @if (_isAnswered)
-            {
-                <div class="answer-card">
-                    <div class="card-header">
-                        <div class="no">No. @_question.Number</div>
-                        <div class="count">@(_questionIndex + 1)/@_questions.Count</div>
-                    </div>
-                    <div class="result-area">
-                        <div class="word">@_question.Word</div>
-                        <div class="result" @onclick=NextButtonOnClick>
-                            @if (_isCorrect)
-                            {
-                                <img src="svgs/correct.svg" />
-                                <audio autoplay src="sounds/correct.mp3" hidden/>
-                            }
-                            else
-                            {
-                                <img src="svgs/incorrect.svg" />
-                                <audio autoplay src="sounds/wrong.mp3" hidden />
-                            }
-                            <div>Tap to next</div>
-                        </div>
-                    </div>
+            <div class="question-card">
+                <div class="card-header">
+                    <div class="no">No. @_question.Number</div>
+                    <div class="count">@(_questionIndex + 1)/@_questions.Count</div>
                 </div>
-            }
-            else
-            {
-                <div class="question-card">
-                    <div class="card-header">
-                        <div class="no">No. @_question.Number</div>
-                        <div class="count">@(_questionIndex + 1)/@_questions.Count</div>
-                    </div>
-                    <div class="word">@_question.Word</div>
-                    <button class="sound-btn" @onclick=SoundButtonOnClick>
-                        <img src="svgs/sound.svg" />
-                    </button>
-                </div>
-            }
+                <div class="word">@_question.Word</div>
+                <button class="sound-btn" @onclick=SoundButtonOnClick>
+                    <img src="svgs/sound.svg" />
+                </button>
+            </div>
         }
     </div>
     <div class="answer-option-area">
@@ -81,6 +61,22 @@
             @foreach (var option in _question.AnswerResponseDtos)
             {
                 <button class="option-btn" @onclick=@(() => OptionButtonOnClick(option.WordId))>@option.Meaning</button>
+            }
+            @if (_isAnswered)
+            {
+                <div class="result" @onclick=NextButtonOnClick>
+                    @if (_isCorrect)
+                    {
+                        <img src="svgs/correct.svg" />
+                        <audio autoplay src="sounds/correct.mp3" hidden />
+                    }
+                    else
+                    {
+                        <img src="svgs/incorrect.svg" />
+                        <audio autoplay src="sounds/wrong.mp3" hidden />
+                    }
+                    <div>Tap to next</div>
+                </div>
             }
         }
     </div>

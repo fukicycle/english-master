@@ -1,8 +1,10 @@
 ﻿
 using EnglishMaster.Shared;
 using EnglishMaster.Shared.Dto.Response;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Newtonsoft.Json;
+using System.Net.NetworkInformation;
 using Toolbelt.Blazor.SpeechSynthesis;
 
 namespace EnglishMaster.Client.Pages
@@ -120,19 +122,27 @@ namespace EnglishMaster.Client.Pages
             _isAnswered = true;
         }
 
-        private void NextButtonOnClick()
+        private async Task NextButtonOnClick()
         {
             _isAnswered = false;
             _questionIndex++;
             if (_questionIndex >= _questions.Count)
             {
-                _questionIndex = 0;
-                _question = null;
+                StateContainer.IsLoading = true;
+                //Submit result
+                await Task.Delay(500);
+                StateContainer.IsLoading = false;
+                NavigationManager.NavigateTo($"result?count={_questions.Count}");
             }
             else
             {
                 _question = _questions[_questionIndex];
             }
+        }
+
+        private double GetProgressValue()
+        {
+            return _questionIndex * 100.0 / _questions.Count;
         }
 
         private async Task SoundButtonOnClick()
