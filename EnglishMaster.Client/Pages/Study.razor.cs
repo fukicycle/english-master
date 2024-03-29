@@ -1,5 +1,6 @@
 ﻿
 using EnglishMaster.Shared;
+using EnglishMaster.Shared.Dto.Request;
 using EnglishMaster.Shared.Dto.Response;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -17,6 +18,7 @@ namespace EnglishMaster.Client.Pages
         private List<QuestionResponseDto> _questions = new List<QuestionResponseDto>();
         private List<PartOfSpeechResponseDto> _partOfSpeeches = new List<PartOfSpeechResponseDto>();
         private List<LevelResponseDto> _levles = new List<LevelResponseDto>();
+        private List<ResultRequestDto> _resultRequestDtos = new List<ResultRequestDto>();
         private int _questionIndex = 0;
         private bool _isAnswered = false;
         private bool _isCorrect = false;
@@ -96,6 +98,7 @@ namespace EnglishMaster.Client.Pages
         {
             try
             {
+                _resultRequestDtos.Clear();
                 StateContainer.IsLoading = true;
                 _questionIndex = 0;
                 await GetQuestionsAsync();
@@ -120,24 +123,49 @@ namespace EnglishMaster.Client.Pages
             }
             _isCorrect = _question.MeaningOfWordId == wordId;
             _isAnswered = true;
+            if (!string.IsNullOrEmpty(SettingService.JWTToken))
+            {
+                _resultRequestDtos.Add(new ResultRequestDto(_question.MeaningOfWordId, wordId));
+            }
         }
 
         private async Task NextButtonOnClick()
         {
-            _isAnswered = false;
-            _questionIndex++;
-            if (_questionIndex >= _questions.Count)
+            try
             {
-                StateContainer.IsLoading = true;
-                //Submit result
-                await Task.Delay(500);
-                StateContainer.IsLoading = false;
-                NavigationManager.NavigateTo($"result?count={_questions.Count}");
+                _isAnswered = false;
+                _questionIndex++;
+                if (_questionIndex >= _questions.Count)
+                {
+                    StateContainer.IsLoading = true;
+                    int numberOfRegistered = await SubmitResult();
+                    StateContainer.IsLoading = false;
+                    NavigationManager.NavigateTo($"result?count={numberOfRegistered}");
+                }
+                else
+                {
+                    _question = _questions[_questionIndex];
+                }
             }
-            else
+            catch (Exception ex)
             {
-                _question = _questions[_questionIndex];
+                StateContainer.Message = ex.Message;
             }
+        }
+
+        private async Task<int> SubmitResult()
+        {
+            HttpResponseResult resultResponse = await HttpClientService.SendWithJWTTokenAsync(HttpMethod.Post, ApiEndPoint.RESULT, JsonConvert.SerializeObject(_resultRequestDtos));
+            if (resultResponse.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                throw new Exception(resultResponse.Message);
+            }
+            int? result = JsonConvert.DeserializeObject<int>(resultResponse.Json);
+            if (result == null)
+            {
+                throw new Exception($"Can not deserialized.{nameof(List<PartOfSpeechResponseDto>)}");
+            }
+            return result.Value;
         }
 
         private double GetProgressValue()

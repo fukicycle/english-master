@@ -34,13 +34,13 @@ namespace EnglishMaster.Server.Services
             return result;
         }
 
-        public int RegisterResult(IEnumerable<ResultRequestDto> results)
+        public int RegisterResult(string email, IEnumerable<ResultRequestDto> results)
         {
             if (!results.Any())
             {
                 return 0;
             }
-            User user = _db.Users.Single(a => a.Username == results.First().Email);
+            User user = _db.Users.Single(a => a.Username == email);
             foreach (ResultRequestDto result in results)
             {
                 _db.MeaningOfWordLearningHistories.Add(new MeaningOfWordLearningHistory

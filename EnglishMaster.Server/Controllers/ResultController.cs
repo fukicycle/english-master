@@ -41,7 +41,7 @@ namespace EnglishMaster.Server.Controllers
             try
             {
                 string email = _loginService.GetValueFromClaims(HttpContext.User.Claims, "email");
-                return Ok(_resultService.RegisterResult(resultRequestDtos));
+                return Ok(_resultService.RegisterResult(email, resultRequestDtos));
             }
             catch (Exception ex)
             {
