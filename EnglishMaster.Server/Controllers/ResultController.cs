@@ -21,12 +21,12 @@ namespace EnglishMaster.Server.Controllers
 
         [HttpGet]
         [Route("")]
-        public IActionResult GetResults()
+        public IActionResult GetResults(int count)
         {
             try
             {
                 string email = _loginService.GetValueFromClaims(HttpContext.User.Claims, "email");
-                return Ok(_resultService.GetResultResponseDtosByEmail(email));
+                return Ok(_resultService.GetResultResponseDtosByEmail(email, count));
             }
             catch (Exception ex)
             {

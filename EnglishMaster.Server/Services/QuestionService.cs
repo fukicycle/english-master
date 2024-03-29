@@ -80,10 +80,10 @@ namespace EnglishMaster.Server.Services
 
         private IEnumerable<MeaningOfWord> GetQuestions(IEnumerable<MeaningOfWord> meaningOfWords, IList<MeaningOfWordLearningHistory> histories, int numberOfAnswer = 1)
         {
-            IEnumerable<long> historyIds = histories.GroupBy(a => a.QuestionMeaningOfWordId).Where(a => a.Count() <= numberOfAnswer).Select(a => a.Key);
+            IEnumerable<long> historyIds = histories.GroupBy(a => a.QuestionMeaningOfWordId).Where(a => a.Count() >= numberOfAnswer).Select(a => a.Key);
             IEnumerable<MeaningOfWord> questions = meaningOfWords.Where(a => !historyIds.Contains(a.Id));
             _logger.LogInformation($"Run get questions:{numberOfAnswer}");
-            if (questions.Count() < 10)
+            if (questions.Count() <= 0)
             {
                 return GetQuestions(meaningOfWords, histories, numberOfAnswer + 1);
             }
