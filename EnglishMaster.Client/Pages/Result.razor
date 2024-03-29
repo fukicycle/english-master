@@ -14,9 +14,9 @@
                 {
                     <li>
                         <div>
-                            <div>@result.Word</div>
-                            <div>You: @result.UserAnswer</div>
-                            <div>Correct: @result.CorrectAnswer</div>
+                            <div class="word">@result.Word</div>
+                            <div class="correct">Correct: @result.CorrectAnswer</div>
+                            <div class="user-answer">Your choice: @result.UserAnswer</div>
                         </div>
                         <div class="status">
                             @if (result.UserAnswer == result.CorrectAnswer)
