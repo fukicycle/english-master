@@ -49,5 +49,16 @@ namespace EnglishMaster.Client.Pages
             }
             _results = resultResponse;
         }
+
+        private string GetScore()
+        {
+            if (_results.Any())
+            {
+                int numberOfCorrect = _results.Count(a => a.UserAnswer == a.CorrectAnswer);
+                int totalCount = _results.Count;
+                return Math.Round(numberOfCorrect * 100.0 / totalCount, 0).ToString("");
+            }
+            return "-";
+        }
     }
 }
