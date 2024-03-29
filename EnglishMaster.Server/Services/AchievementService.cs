@@ -36,7 +36,7 @@ namespace EnglishMaster.Server.Services
                 IList<PartOfSpeech> partOfSpeeches = _db.PartOfSpeeches.Include(a => a.MeaningOfWords).Where(a => a.MeaningOfWords.Count >= 50).ToList();
                 foreach (PartOfSpeech partOfSpeech in partOfSpeeches)
                 {
-                    int total = partOfSpeech.MeaningOfWords.Count;
+                    int total = partOfSpeech.MeaningOfWords.Where(a => a.LevelId == level.Id).Count();
                     int actual = user.MeaningOfWordLearningHistories.Where(a => a.QuestionMeaningOfWord.LevelId == level.Id && a.QuestionMeaningOfWord.PartOfSpeechId == partOfSpeech.Id && a.AnswerMeaningOfWordId == a.QuestionMeaningOfWordId).GroupBy(a => a.QuestionMeaningOfWordId).Count();
                     _logger.LogInformation($"Actual/Total[{partOfSpeech.Name},{level.Name}]:{actual}/{total}");
                     detailResponseDtos.Add(new AchievementDetailResponseDto(partOfSpeech.Name, total, actual));
