@@ -1,0 +1,68 @@
+﻿@page "/result"
+@inherits PageBase
+@inject NavigationManager NavigationManager
+<div class="result-wrapper">
+    <div class="result-container">
+        <div class="congratulations">Congratulations! <img src="svgs/cracker.svg"</div>
+        <div class="score-area">
+            <div class="score">60</div>
+        </div>
+        <div class="answer-area">
+            <ul>
+                <li>
+                    <div>
+                        <div>Word</div>
+                        <div>You: 単語</div>
+                        <div>Correct: 単語</div>
+                    </div>
+                    <div class="status">
+                        <img src="svgs/correct.svg" />
+                    </div>
+                </li>
+                <li>
+                    <div>
+                        <div>Word</div>
+                        <div>You: 単語</div>
+                        <div>Correct: 単語</div>
+                    </div>
+                    <div class="status">
+                        <img src="svgs/incorrect.svg" />
+                    </div>
+                </li>
+                <li>
+                    <div>
+                        <div>Word</div>
+                        <div>You: 単語</div>
+                        <div>Correct: 単語</div>
+                    </div>
+                    <div class="status">
+                        <img src="svgs/correct.svg" />
+                    </div>
+                </li>
+                <li>
+                    <div>
+                        <div>Word</div>
+                        <div>You: 単語</div>
+                        <div>Correct: 単語</div>
+                    </div>
+                    <div class="status">
+                        <img src="svgs/correct.svg" />
+                    </div>
+                </li>
+                <li>
+                    <div>
+                        <div>Word</div>
+                        <div>You: 単語</div>
+                        <div>Correct: 単語</div>
+                    </div>
+                    <div class="status">
+                        <img src="svgs/correct.svg" />
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="action-area">
+            <button class="close-btn" @onclick=@CloseButtonOnClick>Close</button>
+        </div>
+    </div>
+</div>
