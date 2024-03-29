@@ -1,4 +1,5 @@
 ﻿using EnglishMaster.Server.Services.Interfaces;
+using EnglishMaster.Shared;
 using EnglishMaster.Shared.Dto.Response;
 using EnglishMaster.Shared.Models;
 
@@ -16,7 +17,7 @@ namespace EnglishMaster.Server.Services
         }
         public IList<LevelResponseDto> GetLevelResponseDtos()
         {
-            IEnumerable<Level> levels = _db.Levels.Where(a => a.MeaningOfWords.Count >= 50).ToList();
+            IEnumerable<Level> levels = _db.Levels.Where(a => a.MeaningOfWords.Count >= ApplicationSettings.NUMBER_OF_MIN_LIMIT).ToList();
             IList<LevelResponseDto> levelResponseDtos = new List<LevelResponseDto>();
             foreach (Level level in levels)
             {

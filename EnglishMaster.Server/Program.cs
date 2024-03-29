@@ -84,6 +84,7 @@ builder.Services.AddScoped<ILevelService, LevelService>();
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAchievementService, AchievementService>();
+builder.Services.AddScoped<IResultService, ResultService>();
 
 var app = builder.Build();
 

@@ -1,7 +1,11 @@
 ﻿
 using EnglishMaster.Shared;
+using EnglishMaster.Shared.Dto.Request;
 using EnglishMaster.Shared.Dto.Response;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Newtonsoft.Json;
+using System.Net.NetworkInformation;
 using Toolbelt.Blazor.SpeechSynthesis;
 
 namespace EnglishMaster.Client.Pages
@@ -14,6 +18,7 @@ namespace EnglishMaster.Client.Pages
         private List<QuestionResponseDto> _questions = new List<QuestionResponseDto>();
         private List<PartOfSpeechResponseDto> _partOfSpeeches = new List<PartOfSpeechResponseDto>();
         private List<LevelResponseDto> _levles = new List<LevelResponseDto>();
+        private List<ResultRequestDto> _resultRequestDtos = new List<ResultRequestDto>();
         private int _questionIndex = 0;
         private bool _isAnswered = false;
         private bool _isCorrect = false;
@@ -68,7 +73,15 @@ namespace EnglishMaster.Client.Pages
 
         private async Task GetQuestionsAsync()
         {
-            HttpResponseResult questionResponse = await HttpClientService.SendAsync(HttpMethod.Get, $"{ApiEndPoint.QUESTION}/part-of-speeches/{_partOfSpeechId}/levels/{_levelId}");
+            HttpResponseResult questionResponse;
+            if (await AuthenticationService.IsAuthenticatedAsync())
+            {
+                questionResponse = await HttpClientService.SendWithJWTTokenAsync(HttpMethod.Get, $"{ApiEndPoint.QUESTION}/part-of-speeches/{_partOfSpeechId}/levels/{_levelId}");
+            }
+            else
+            {
+                questionResponse = await HttpClientService.SendAsync(HttpMethod.Get, $"{ApiEndPoint.QUESTION}/part-of-speeches/{_partOfSpeechId}/levels/{_levelId}");
+            }
             if (questionResponse.StatusCode != System.Net.HttpStatusCode.OK)
             {
                 throw new Exception(questionResponse.Message);
@@ -85,9 +98,14 @@ namespace EnglishMaster.Client.Pages
         {
             try
             {
+                _resultRequestDtos.Clear();
                 StateContainer.IsLoading = true;
                 _questionIndex = 0;
                 await GetQuestionsAsync();
+                if (!_questions.Any())
+                {
+                    throw new Exception($"Sorry, This combination({_levles.Single(a => a.Id == _levelId).Name},{_partOfSpeeches.Single(a => a.Id == _partOfSpeechId).Name}) does not have enough questions. Try other combinations.");
+                }
                 _question = _questions[_questionIndex];
             }
             catch (Exception ex)
@@ -100,7 +118,7 @@ namespace EnglishMaster.Client.Pages
             }
         }
 
-        private void OptionButtonOnClick(long wordId)
+        private async void OptionButtonOnClick(long wordId)
         {
             if (_question == null)
             {
@@ -109,21 +127,62 @@ namespace EnglishMaster.Client.Pages
             }
             _isCorrect = _question.MeaningOfWordId == wordId;
             _isAnswered = true;
+            if (await AuthenticationService.IsAuthenticatedAsync())
+            {
+                _resultRequestDtos.Add(new ResultRequestDto(_question.MeaningOfWordId, wordId));
+            }
         }
 
-        private void NextButtonOnClick()
+        private async Task NextButtonOnClick()
         {
-            _isAnswered = false;
-            _questionIndex++;
-            if (_questionIndex >= _questions.Count)
+            try
             {
-                _questionIndex = 0;
-                _question = null;
+                _isAnswered = false;
+                _questionIndex++;
+                if (_questionIndex >= _questions.Count)
+                {
+                    if (await AuthenticationService.IsAuthenticatedAsync())
+                    {
+                        StateContainer.IsLoading = true;
+                        int numberOfRegistered = await SubmitResult();
+                        StateContainer.IsLoading = false;
+                        NavigationManager.NavigateTo($"result?count={numberOfRegistered}");
+                    }
+                    else
+                    {
+                        _question = null;
+                        _questionIndex = 0;
+                    }
+                }
+                else
+                {
+                    _question = _questions[_questionIndex];
+                }
             }
-            else
+            catch (Exception ex)
             {
-                _question = _questions[_questionIndex];
+                StateContainer.Message = ex.Message;
             }
+        }
+
+        private async Task<int> SubmitResult()
+        {
+            HttpResponseResult resultResponse = await HttpClientService.SendWithJWTTokenAsync(HttpMethod.Post, ApiEndPoint.RESULT, JsonConvert.SerializeObject(_resultRequestDtos));
+            if (resultResponse.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                throw new Exception(resultResponse.Message);
+            }
+            int? result = JsonConvert.DeserializeObject<int>(resultResponse.Json);
+            if (result == null)
+            {
+                throw new Exception($"Can not deserialized.{nameof(List<PartOfSpeechResponseDto>)}");
+            }
+            return result.Value;
+        }
+
+        private double GetProgressValue()
+        {
+            return _questionIndex * 100.0 / _questions.Count;
         }
 
         private async Task SoundButtonOnClick()

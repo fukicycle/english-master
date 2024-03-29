@@ -1,5 +1,6 @@
 ﻿using EnglishMaster.Server.Services.Interfaces;
 using EnglishMaster.Shared;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EnglishMaster.Server.Controllers
@@ -8,18 +9,26 @@ namespace EnglishMaster.Server.Controllers
     public sealed class QuestionController : ControllerBase
     {
         private readonly IQuestionService _questionService;
-        public QuestionController(IQuestionService questionService)
+        private readonly ILoginService _loginService;
+        public QuestionController(IQuestionService questionService, ILoginService loginService)
         {
             _questionService = questionService;
+            _loginService = loginService;
         }
 
         [HttpGet]
-        [Route("part-of-speeches/{partSpeechId}/levels/{levelId}")]
-        public IActionResult GetQuestions(long partSpeechId, long levelId)
+        [Route("part-of-speeches/{partOfSpeechId}/levels/{levelId}")]
+        [Authorize, AllowAnonymous]
+        public IActionResult GetQuestions(long partOfSpeechId, long levelId)
         {
             try
             {
-                return Ok(_questionService.GetQuestionResponseDtos(partSpeechId, levelId));
+                if (HttpContext.User.Identity?.IsAuthenticated == true)
+                {
+                    string email = _loginService.GetValueFromClaims(HttpContext.User.Claims, "email");
+                    return Ok(_questionService.GetQuestionResponseDtosWithCredentials(email, partOfSpeechId, levelId));
+                }
+                return Ok(_questionService.GetQuestionResponseDtos(partOfSpeechId, levelId));
             }
             catch (Exception ex)
             {
@@ -28,12 +37,12 @@ namespace EnglishMaster.Server.Controllers
         }
 
         [HttpGet]
-        [Route("part-of-speeches/{partSpeechId}/levels/{levelId}/number-of-question/{numberOfQuestion}")]
-        public IActionResult GetQuestionsWithNumberOfQuestions(long partSpeechId, long levelId, int numberOfQuestion)
+        [Route("part-of-speeches/{partOfSpeechId}/levels/{levelId}/number-of-question/{numberOfQuestion}")]
+        public IActionResult GetQuestionsWithNumberOfQuestions(long partOfSpeechId, long levelId, int numberOfQuestion)
         {
             try
             {
-                return Ok(_questionService.GetQuestionResponseDtos(partSpeechId, levelId, numberOfQuestion));
+                return Ok(_questionService.GetQuestionResponseDtos(partOfSpeechId, levelId, numberOfQuestion));
             }
             catch (Exception ex)
             {
