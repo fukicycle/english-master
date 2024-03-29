@@ -74,13 +74,13 @@ namespace EnglishMaster.Client.Pages
         private async Task GetQuestionsAsync()
         {
             HttpResponseResult questionResponse;
-            if (string.IsNullOrEmpty(SettingService.JWTToken))
+            if (await AuthenticationService.IsAuthenticatedAsync())
             {
-                questionResponse = await HttpClientService.SendAsync(HttpMethod.Get, $"{ApiEndPoint.QUESTION}/part-of-speeches/{_partOfSpeechId}/levels/{_levelId}");
+                questionResponse = await HttpClientService.SendWithJWTTokenAsync(HttpMethod.Get, $"{ApiEndPoint.QUESTION}/part-of-speeches/{_partOfSpeechId}/levels/{_levelId}");
             }
             else
             {
-                questionResponse = await HttpClientService.SendWithJWTTokenAsync(HttpMethod.Get, $"{ApiEndPoint.QUESTION}/part-of-speeches/{_partOfSpeechId}/levels/{_levelId}");
+                questionResponse = await HttpClientService.SendAsync(HttpMethod.Get, $"{ApiEndPoint.QUESTION}/part-of-speeches/{_partOfSpeechId}/levels/{_levelId}");
             }
             if (questionResponse.StatusCode != System.Net.HttpStatusCode.OK)
             {
@@ -102,6 +102,10 @@ namespace EnglishMaster.Client.Pages
                 StateContainer.IsLoading = true;
                 _questionIndex = 0;
                 await GetQuestionsAsync();
+                if (!_questions.Any())
+                {
+                    throw new Exception($"Sorry, This combination({_levles.Single(a => a.Id == _levelId).Name},{_partOfSpeeches.Single(a => a.Id == _partOfSpeechId).Name}) does not have enough questions. Try other combinations.");
+                }
                 _question = _questions[_questionIndex];
             }
             catch (Exception ex)
@@ -114,7 +118,7 @@ namespace EnglishMaster.Client.Pages
             }
         }
 
-        private void OptionButtonOnClick(long wordId)
+        private async void OptionButtonOnClick(long wordId)
         {
             if (_question == null)
             {
@@ -123,7 +127,7 @@ namespace EnglishMaster.Client.Pages
             }
             _isCorrect = _question.MeaningOfWordId == wordId;
             _isAnswered = true;
-            if (!string.IsNullOrEmpty(SettingService.JWTToken))
+            if (await AuthenticationService.IsAuthenticatedAsync())
             {
                 _resultRequestDtos.Add(new ResultRequestDto(_question.MeaningOfWordId, wordId));
             }
@@ -137,7 +141,7 @@ namespace EnglishMaster.Client.Pages
                 _questionIndex++;
                 if (_questionIndex >= _questions.Count)
                 {
-                    if (!string.IsNullOrEmpty(SettingService.JWTToken))
+                    if (await AuthenticationService.IsAuthenticatedAsync())
                     {
                         StateContainer.IsLoading = true;
                         int numberOfRegistered = await SubmitResult();

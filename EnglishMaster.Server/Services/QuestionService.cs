@@ -83,6 +83,11 @@ namespace EnglishMaster.Server.Services
             IEnumerable<long> historyIds = histories.GroupBy(a => a.QuestionMeaningOfWordId).Where(a => a.Count() >= numberOfAnswer).Select(a => a.Key);
             IEnumerable<MeaningOfWord> questions = meaningOfWords.Where(a => !historyIds.Contains(a.Id));
             _logger.LogInformation($"Run get questions:{numberOfAnswer}");
+            if (numberOfAnswer >= 1000)
+            {
+                //すべての単語の勉強を1000回以上頑張ってしまうとこのアプリはリセットしない限り問題を提出できなくなる。
+                return questions;
+            }
             if (questions.Count() <= 0)
             {
                 return GetQuestions(meaningOfWords, histories, numberOfAnswer + 1);

@@ -16,8 +16,7 @@ namespace EnglishMaster.Client.Pages
             try
             {
                 StateContainer.IsLoading = true;
-                AuthenticationState authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-                if (authenticationState.User.Identity?.IsAuthenticated == true)
+                if (await AuthenticationService.IsAuthenticatedAsync())
                 {
                     await SetCurrentLoginUserInformation();
                     _achievements = await GetAchievementAsync();
