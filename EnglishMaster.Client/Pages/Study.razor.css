@@ -131,15 +131,3 @@ select {
         color: var(--app-black);
         background-color: var(--app-primary-100);
     }
-
-.start-btn {
-    width: 100%;
-    outline: none;
-    background-color: var(--app-black);
-    color: var(--app-white);
-    border: none;
-    box-shadow: 0 0 4px var(--app-primary-100);
-    border-radius: .5rem;
-    font-size: 1.1rem;
-    padding: .5rem;
-}
