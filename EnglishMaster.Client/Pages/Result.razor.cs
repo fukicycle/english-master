@@ -11,6 +11,14 @@ namespace EnglishMaster.Client.Pages
         [SupplyParameterFromQuery]
         public int Count { get; set; }
 
+        [Parameter]
+        [SupplyParameterFromQuery(Name = "level")]
+        public long LevelId { get; set; }
+
+        [Parameter]
+        [SupplyParameterFromQuery(Name = "part-of-speech")]
+        public long PartOfSpeechId { get; set; }
+
         private List<ResultResponseDto> _results = new List<ResultResponseDto>();
 
         protected override async Task OnInitializedAsync()
@@ -33,6 +41,11 @@ namespace EnglishMaster.Client.Pages
         private void CloseButtonOnClick()
         {
             NavigationManager.NavigateTo("");
+        }
+
+        private void NextButtonOnClick()
+        {
+            NavigationManager.NavigateTo($"study?level={LevelId}&part-of-speech={PartOfSpeechId}&auto-start=true");
         }
 
         private async Task GetResultAsync()
