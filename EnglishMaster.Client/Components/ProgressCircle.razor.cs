@@ -27,7 +27,7 @@ namespace EnglishMaster.Client.Components
 
         private double GetStrokeDashArray()
         {
-            return 2 * Math.PI * 110;
+            return 2 * Math.PI * 100;
         }
 
         private double GetStrokeDashOffset()
