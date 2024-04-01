@@ -36,14 +36,3 @@
         text-align: end;
         border-bottom: solid 1px var(--app-primary-100);
     }
-
-.save-btn {
-    width: 100%;
-    padding: .7rem;
-    outline: none;
-    border-radius: .5rem;
-    border: none;
-    background-color: transparent;
-    color: var(--app-white);
-    box-shadow: 0 0 4px var(--app-primary-100);
-}

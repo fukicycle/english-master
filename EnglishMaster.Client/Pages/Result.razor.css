@@ -83,15 +83,8 @@ li {
 
 .action-area {
     padding: .5rem;
-}
-
-.close-btn {
-    width: 100%;
-    outline: none;
-    border: none;
-    border-radius: .5rem;
-    padding: .5rem;
-    background-color: var(--app-black);
-    color: var(--app-white);
-    box-shadow: 0 0 4px var(--app-primary-100);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+    grid-column-gap: .5rem;
 }

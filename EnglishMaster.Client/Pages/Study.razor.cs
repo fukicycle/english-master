@@ -12,6 +12,18 @@ namespace EnglishMaster.Client.Pages
 {
     public partial class Study : PageBase
     {
+        [Parameter]
+        [SupplyParameterFromQuery(Name = "level")]
+        public long LevelId { get; set; } = 0;
+
+        [Parameter]
+        [SupplyParameterFromQuery(Name = "part-of-speech")]
+        public long PartOfSpeechId { get; set; } = 0;
+
+        [Parameter]
+        [SupplyParameterFromQuery(Name = "auto-start")]
+        public bool AutoStart { get; set; } = false;
+
         private long _partOfSpeechId = 0;
         private long _levelId = 0;
         private QuestionResponseDto? _question = null;
@@ -38,6 +50,16 @@ namespace EnglishMaster.Client.Pages
             finally
             {
                 StateContainer.IsLoading = false;
+            }
+        }
+
+        protected override async Task OnParametersSetAsync()
+        {
+            _partOfSpeechId = PartOfSpeechId;
+            _levelId = LevelId;
+            if (AutoStart)
+            {
+                await StartButtonOnClick();
             }
         }
 
@@ -146,7 +168,7 @@ namespace EnglishMaster.Client.Pages
                         StateContainer.IsLoading = true;
                         int numberOfRegistered = await SubmitResult();
                         StateContainer.IsLoading = false;
-                        NavigationManager.NavigateTo($"result?count={numberOfRegistered}");
+                        NavigationManager.NavigateTo($"result?count={numberOfRegistered}&level={_levelId}&part-of-speech={_partOfSpeechId}");
                     }
                     else
                     {
