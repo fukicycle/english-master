@@ -1,16 +1,10 @@
-﻿using EnglishMaster.Shared.Dto.Response;
-using EnglishMaster.Shared;
-using Microsoft.AspNetCore.Components;
-using Newtonsoft.Json;
+﻿using Microsoft.AspNetCore.Components;
+using EnglishMaster.Client.Entities;
 
 namespace EnglishMaster.Client.Pages
 {
-    public partial class Result : PageBase
+    public partial class Result
     {
-        [Parameter]
-        [SupplyParameterFromQuery]
-        public int Count { get; set; }
-
         [Parameter]
         [SupplyParameterFromQuery(Name = "level")]
         public long LevelId { get; set; }
@@ -19,59 +13,34 @@ namespace EnglishMaster.Client.Pages
         [SupplyParameterFromQuery(Name = "part-of-speech")]
         public long PartOfSpeechId { get; set; }
 
-        private List<ResultResponseDto> _results = new List<ResultResponseDto>();
+        private List<UserAnswer> _userAnswers = new List<UserAnswer>();
 
-        protected override async Task OnInitializedAsync()
+        protected override void OnInitialized()
         {
-            try
-            {
-                StateContainer.IsLoading = true;
-                await GetResultAsync();
-            }
-            catch (Exception ex)
-            {
-                StateContainer.Message = ex.Message;
-            }
-            finally
-            {
-                StateContainer.IsLoading = false;
-            }
+            _userAnswers = Execute(ResultClientService.GetResults);
         }
 
-        private void CloseButtonOnClick()
+        private async Task CloseButtonOnClick()
         {
+            await SaveAsync();
             NavigationManager.NavigateTo("");
         }
 
-        private void NextButtonOnClick()
+        private async Task NextButtonOnClick()
         {
+            await SaveAsync();
             NavigationManager.NavigateTo($"study?level={LevelId}&part-of-speech={PartOfSpeechId}&auto-start=true");
         }
 
-        private async Task GetResultAsync()
+        private async Task SaveAsync()
         {
-            HttpResponseResult resultsResponse = await HttpClientService.SendWithJWTTokenAsync(HttpMethod.Get, ApiEndPoint.RESULT + "?count=" + Count);
-            if (resultsResponse.StatusCode != System.Net.HttpStatusCode.OK)
+            StateContainer.IsLoading = true;
+            bool isAuthenticated = await ExecuteAsync(AuthenticationService.IsAuthenticatedAsync);
+            if (isAuthenticated)
             {
-                throw new Exception(resultsResponse.Message);
+                await ExecuteAsync(ResultClientService.Submit);
             }
-            List<ResultResponseDto>? resultResponse = JsonConvert.DeserializeObject<List<ResultResponseDto>>(resultsResponse.Json);
-            if (resultResponse == null)
-            {
-                throw new Exception($"Can not deserialized.{nameof(List<LevelResponseDto>)}");
-            }
-            _results = resultResponse;
-        }
-
-        private string GetScore()
-        {
-            if (_results.Any())
-            {
-                int numberOfCorrect = _results.Count(a => a.UserAnswer == a.CorrectAnswer);
-                int totalCount = _results.Count;
-                return Math.Round(numberOfCorrect * 100.0 / totalCount, 0).ToString("");
-            }
-            return "-";
+            StateContainer.IsLoading = false;
         }
     }
 }

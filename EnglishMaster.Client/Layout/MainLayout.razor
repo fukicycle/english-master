@@ -1,4 +1,4 @@
-﻿@inherits LayoutComponentBase
+﻿@inherits AppBaseLayoutComponentBase
 <div class="main-content">
     <div class="header-wrapper">
         <header>
@@ -16,6 +16,12 @@
     </article>
     <NavView />
 </div>
-<Loader />
+@if (StateContainer.IsLoading)
+{
+    <Loader />
+}
+@if (StateContainer.DialogContent != null)
+{
+    <MessageBox />
+}
 <EnglishMaster.Client.Shared.UpdateAvailableDetector />
-<MessageBox />

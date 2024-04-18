@@ -2,34 +2,14 @@
 {
     public partial class MessageBox
     {
-        private string _display = "display: none;";
-
-        protected override void OnInitialized()
-        {
-            StateContainer.OnMessageChanged += StateContainer_OnMessageChanged;
-        }
-
-        private void StateContainer_OnMessageChanged()
-        {
-            if (StateContainer.Message == string.Empty)
-            {
-                _display = "display: none;";
-            }
-            else
-            {
-                _display = "display: flex;";
-            }
-            StateHasChanged();
-        }
-
         private void CloseButtonOnClick()
         {
-            StateContainer.Message = string.Empty;
+            StateContainer.DialogContent = null;
         }
 
         private void OkButtonOnClick()
         {
-            StateContainer.Message = string.Empty;
+            StateContainer.DialogContent = null;
             NavigationManager.NavigateTo(NavigationManager.Uri, true);
         }
     }

@@ -1,77 +1,53 @@
 ﻿using EnglishMaster.Client.Forms;
-using EnglishMaster.Shared;
-using EnglishMaster.Shared.Dto.Request;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
-using Newtonsoft.Json;
+using Fukicycle.Tool.AppBase.Components.Dialog;
 
 namespace EnglishMaster.Client.Pages
 {
-    public partial class Register : PageBase
+    public partial class Register
     {
-        public RegisterAccountForm Form { get; set; } = new RegisterAccountForm();
-
-
-        private void CancelButtonOnClick()
-        {
-            NavigationManager.NavigateToLogout("authentication/logout", "");
-        }
+        public UserRegisterForm Form { get; set; } = new UserRegisterForm();
 
         protected override async Task OnInitializedAsync()
         {
-            try
-            {
-                StateContainer.IsLoading = true;
-                AuthenticationState context = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-                var firstName = context.User.Claims.FirstOrDefault(a => a.Type == "given_name")?.Value;
-                var lastName = context.User.Claims.FirstOrDefault(a => a.Type == "family_name")?.Value;
-                if (firstName == null || lastName == null)
-                {
-                    throw new Exception("Can not get first name or last name. Please re-login your google account.");
-                }
-                Form.FirstName = firstName;
-                Form.LastName = lastName;
-                StateHasChanged();
-            }
-            catch (Exception ex)
-            {
-                StateContainer.Message = ex.Message;
-            }
-            finally
-            {
-                StateContainer.IsLoading = false;
-            }
+            StateContainer.IsLoading = true;
+            string? firstName = await ExecuteAsync(AuthenticationService.GetFirstNameAsync);
+            string? lastName = await ExecuteAsync(AuthenticationService.GetLastNameAsync);
+            Form.FirstName = firstName ?? string.Empty;
+            Form.LastName = lastName ?? string.Empty;
+            StateHasChanged();
+            StateContainer.IsLoading = false;
         }
 
         private async Task RegisterAccount(AuthenticationState context)
         {
-            try
+            StateContainer.IsLoading = true;
+            string? email = await ExecuteAsync(AuthenticationService.GetEmailAsync);
+            string? sub = await ExecuteAsync(AuthenticationService.GetSubAsPasswordAsync);
+            if (email == null || sub == null)
             {
-                StateContainer.IsLoading = true;
-                var email = context.User.Claims.FirstOrDefault(a => a.Type == "email")?.Value;
-                var sub = context.User.Claims.FirstOrDefault(a => a.Type == "sub")?.Value;
-                if (email == null || sub == null)
+                StateContainer.DialogContent = new DialogContent("Can't get email information. Please re-login your google account.", DialogType.Error);
+            }
+            else
+            {
+                bool isSuccess = await UserRegisterService.RegisterAsync(email, sub, Form.FirstName, Form.LastName, Form.Nickname);
+                if (isSuccess)
                 {
-                    throw new Exception("Can not get email or aud information. Please re-login your google account.");
+                    NavigationManager.NavigateTo("", true);
                 }
-                UserReqestDto userReqestDto = new UserReqestDto(email, sub, Form.FirstName, Form.LastName, Form.Nickname);
-                HttpResponseResult httpResponseResult = await HttpClientService.SendAsync(HttpMethod.Post, ApiEndPoint.USER, JsonConvert.SerializeObject(userReqestDto));
-                if (httpResponseResult.StatusCode != System.Net.HttpStatusCode.Created)
+                else
                 {
-                    throw new Exception("Sorry, registration failed. Please try again later.");
+                    StateContainer.DialogContent = new DialogContent("Sorry, registration failed. Please try again later.", DialogType.Error);
                 }
-                NavigationManager.NavigateTo("", true);
             }
-            catch (Exception ex)
-            {
-                StateContainer.Message = ex.Message;
-            }
-            finally
-            {
-                StateContainer.IsLoading = false;
-            }
+            StateContainer.IsLoading = false;
+        }
 
+        private void CancelButtonOnClick()
+        {
+            NavigationManager.NavigateToLogout("authentication/logout", "");
         }
     }
 }

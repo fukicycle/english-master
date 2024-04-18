@@ -1,18 +1,19 @@
 ﻿@page "/"
-@inherits PageBase
+@inherits ViewBase
 @inject NavigationManager NavigationManager
-@inject IHttpClientService HttpClientService
 @inject IAuthenticationService AuthenticationService
+@inject AchivementClientService AchivementClientService
+@inject ProgressClientService ProgressClientService
 
 <PageTitle>Home</PageTitle>
 <Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
     <Authorized>
-        <div>Welcome back, @_loginUserInfo?.GetDisplayName()!</div>
+        <div>Welcome back, @_loginUser?.Fullname!</div>
         <div class="achievement-area">
             @if (_achievements != null)
             {
                 <div class="total-achivement">
-                    <ProgressCircle Value="@GetTotalProgressValue()" />
+                    <ProgressCircle Value="@ProgressClientService.GetProgress(_achievements)" />
                 </div>
                 foreach (AchievementResponseDto achievement in _achievements)
                 {

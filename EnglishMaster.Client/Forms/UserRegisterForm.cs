@@ -2,7 +2,7 @@
 
 namespace EnglishMaster.Client.Forms
 {
-    public sealed class RegisterAccountForm
+    public sealed class UserRegisterForm
     {
         [Required(ErrorMessage = "This field is required.")]
         public string FirstName { get; set; } = null!;
