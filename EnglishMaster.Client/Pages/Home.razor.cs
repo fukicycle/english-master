@@ -1,82 +1,28 @@
-﻿using EnglishMaster.Shared;
+﻿using EnglishMaster.Client.Entities;
 using EnglishMaster.Shared.Dto.Response;
-using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
-using Newtonsoft.Json;
 
 namespace EnglishMaster.Client.Pages
 {
-    public partial class Home : PageBase
+    public partial class Home
     {
-        private UserResponseDto? _loginUserInfo = null;
-        private IList<AchievementResponseDto>? _achievements = null;
+        private LoginUser? _loginUser = null;
+        private List<AchievementResponseDto> _achievements = new List<AchievementResponseDto>();
 
         protected override async Task OnInitializedAsync()
         {
-            try
+            StateContainer.IsLoading = true;
+            bool isAuthenticated = await ExecuteAsync(AuthenticationService.IsAuthenticatedAsync);
+            if (isAuthenticated)
             {
-                StateContainer.IsLoading = true;
-                if (await AuthenticationService.IsAuthenticatedAsync())
+                _loginUser = await ExecuteAsync(AuthenticationService.GetLoginUserAsync);
+                if (_loginUser == null)
                 {
-                    await SetCurrentLoginUserInformation();
-                    _achievements = await GetAchievementAsync();
+                    NavigationManager.NavigateTo("register");
                 }
+                _achievements = await ExecuteAsync(AchivementClientService.GetAchievementAsync);
             }
-            catch (Exception ex)
-            {
-                StateContainer.Message = ex.Message;
-            }
-            finally
-            {
-                StateContainer.IsLoading = false;
-            }
-        }
-
-        private async Task SetCurrentLoginUserInformation()
-        {
-            HttpResponseResult httpResponseResult = await HttpClientService.SendWithJWTTokenAsync(HttpMethod.Get, ApiEndPoint.USER);
-            if (httpResponseResult.StatusCode == System.Net.HttpStatusCode.NotFound)
-            {
-                NavigationManager.NavigateTo("register");
-                return;
-            }
-            if (httpResponseResult.StatusCode != System.Net.HttpStatusCode.OK)
-            {
-                throw new Exception(httpResponseResult.Message);
-            }
-            UserResponseDto? userResponseDto = JsonConvert.DeserializeObject<UserResponseDto>(httpResponseResult.Json);
-            if (userResponseDto == null)
-            {
-                throw new Exception($"Can not desirialize object for: {typeof(UserResponseDto)}");
-            }
-            _loginUserInfo = userResponseDto;
-        }
-
-        private async Task<IList<AchievementResponseDto>> GetAchievementAsync()
-        {
-            HttpResponseResult httpResponseResult = await HttpClientService.SendWithJWTTokenAsync(HttpMethod.Get, ApiEndPoint.ACHIEVEMENT);
-            if (httpResponseResult.StatusCode != System.Net.HttpStatusCode.OK)
-            {
-                throw new Exception(httpResponseResult.Message);
-            }
-            IList<AchievementResponseDto>? achievementResponseDto = JsonConvert.DeserializeObject<IList<AchievementResponseDto>>(httpResponseResult.Json);
-            if (achievementResponseDto == null)
-            {
-                throw new Exception($"Can not desirialize object for: {typeof(IList<AchievementResponseDto>)}");
-            }
-            return achievementResponseDto;
-        }
-
-        private double GetTotalProgressValue()
-        {
-            if (_achievements != null)
-            {
-                if (_achievements.Any())
-                {
-                    return Math.Round(_achievements.Average(a => a.Progress), 0);
-                }
-            }
-            return 0;
+            StateContainer.IsLoading = false;
         }
 
         private void LoginButtonOnClick()

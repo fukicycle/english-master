@@ -1,25 +1,26 @@
 ﻿@page "/result"
-@inherits PageBase
+@inherits ViewBase
 @inject NavigationManager NavigationManager
-@inject IHttpClientService HttpClientService
+@inject ResultClientService ResultClientService
+@inject IAuthenticationService AuthenticationService
 <div class="result-wrapper">
     <div class="result-container">
         <div class="congratulations">Congratulations! <img src="svgs/cracker.svg" /></div>
         <div class="score-area">
-            <div class="score">@GetScore()</div>
+            <div class="score">@ResultClientService.GetScore()</div>
         </div>
         <div class="answer-area">
             <ul>
-                @foreach (ResultResponseDto result in _results)
+                @foreach (UserAnswer result in _userAnswers)
                 {
                     <li>
                         <div>
-                            <div class="word">@result.Word</div>
-                            <div class="correct">Correct: @result.CorrectAnswer</div>
-                            <div class="user-answer">Your choice: @result.UserAnswer</div>
+                            <div class="word">@result.QuestionWord</div>
+                            <div class="correct">Correct: @result.QuestionMeaning</div>
+                            <div class="user-answer">Your choice: @result.AnswerMeaning</div>
                         </div>
                         <div class="status">
-                            @if (result.UserAnswer == result.CorrectAnswer)
+                            @if (result.QuestionMeaningOfWordId == result.AnswerMeaningOfWordId)
                             {
                                 <img src="svgs/correct.svg" />
                             }

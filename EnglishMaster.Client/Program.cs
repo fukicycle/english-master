@@ -2,8 +2,8 @@ using Blazored.LocalStorage;
 using EnglishMaster.Client;
 using EnglishMaster.Client.Services;
 using EnglishMaster.Client.Services.Interfaces;
-using EnglishMaster.Client.Stores;
 using EnglishMaster.Shared;
+using Fukicycle.Tool.AppBase;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Toolbelt.Blazor.Extensions.DependencyInjection;
@@ -23,10 +23,18 @@ builder.Services.AddHttpClient(nameof(ApplicationMode.Prod), httpClient =>
 
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddSpeechSynthesis();
-builder.Services.AddScoped<IStateContainer, StateContainer>();
 builder.Services.AddScoped<IHttpClientService, HttpClientService>();
 builder.Services.AddScoped<ISettingService, SettingService>();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+builder.Services.AddScoped<DictionaryClientService>();
+builder.Services.AddScoped<AchivementClientService>();
+builder.Services.AddScoped<ResultClientService>();
+builder.Services.AddScoped<ProgressClientService>();
+builder.Services.AddScoped<QuestionClientService>();
+builder.Services.AddScoped<SpeakService>();
+builder.Services.AddScoped<PartOfSpeechClientService>();
+builder.Services.AddScoped<LevelClientService>();
+builder.Services.AddAppBase();
 
 builder.Services.AddOidcAuthentication(options =>
 {

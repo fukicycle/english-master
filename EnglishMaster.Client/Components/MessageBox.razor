@@ -1,6 +1,6 @@
-﻿@inject IStateContainer StateContainer
+﻿@inherits ViewBase
 @inject NavigationManager NavigationManager
-<div style="@_display" class="dialog-wrapper">
+<div class="dialog-wrapper">
     <div class="dialog-container">
         <div class="dialog-header">
             <div class="dialog-title">Reload required</div>
@@ -9,7 +9,7 @@
             </button>
         </div>
         <div class="dialog-body">
-            @StateContainer.Message
+            @StateContainer.DialogContent?.Message
         </div>
         <div class="dialog-action">
             <button class="ok-btn" @onclick=@OkButtonOnClick>OK</button>

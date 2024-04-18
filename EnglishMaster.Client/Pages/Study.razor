@@ -1,9 +1,11 @@
 ﻿@page "/study"
-@inherits PageBase
-@inject IHttpClientService HttpClientService
-@inject IAuthenticationService AuthenticationService
+@inherits ViewBase
 @inject SpeechSynthesis SpeechSynthesis
 @inject NavigationManager NavigationManager
+@inject PartOfSpeechClientService PartOfSpeechClientService
+@inject LevelClientService LevelClientService
+@inject QuestionClientService QuestionClientService
+@inject SpeakService SpeakService
 
 <PageTitle>Study</PageTitle>
 <div class="study-area">
@@ -31,10 +33,6 @@
                 </select>
             </div>
         }
-        else
-        {
-            <ProgressBar Value="@GetProgressValue()" HasDisplayValue="true" />
-        }
     </div>
     <div class="question-card-wrapper">
         @if (_question == null)
@@ -60,7 +58,7 @@
         {
             @foreach (var option in _question.AnswerResponseDtos)
             {
-                <button class="option-btn" @onclick=@(() => OptionButtonOnClick(option.WordId))>@option.Meaning</button>
+                <button class="option-btn" @onclick=@(() => OptionButtonOnClick(option.WordId,option.Meaning))>@option.Meaning</button>
             }
             @if (_isAnswered)
             {

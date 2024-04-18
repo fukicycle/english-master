@@ -1,10 +1,9 @@
 ﻿@page "/register"
-
-@inherits PageBase
+@inherits ViewBase
 @inject NavigationManager NavigationManager
 @inject IConfiguration Configuration
-@inject IHttpClientService HttpClientService
-@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject AuthenticationService AuthenticationService
+@inject UserRegisterService UserRegisterService
 <div class="register-area-wrapper">
     <Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
         <Authorized>
