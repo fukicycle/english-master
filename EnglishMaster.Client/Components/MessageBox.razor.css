@@ -1,4 +1,5 @@
 ﻿.dialog-wrapper {
+    display: flex;
     position: fixed;
     top: 0;
     left: 0;
@@ -11,9 +12,9 @@
 }
 
 .dialog-container {
-    width: 80%;
+    width: 90%;
     max-width: 400px;
-    height: 150px;
+    height: 200px;
     border-radius: 1rem;
     padding: .5rem;
     background-color: var(--app-black);
@@ -26,12 +27,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-}
-
-.close-btn {
-    outline: none;
-    border: none;
-    background-color: transparent;
 }
 
 .dialog-title {
