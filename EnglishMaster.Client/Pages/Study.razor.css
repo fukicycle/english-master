@@ -45,14 +45,6 @@ select {
     flex-direction: column;
 }
 
-.sound-btn {
-    width: auto;
-    height: auto;
-    background-color: transparent;
-    outline: none;
-    border: none;
-}
-
 .card-header {
     width: 100%;
     display: flex;

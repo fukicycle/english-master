@@ -12,3 +12,10 @@
     button:active {
         box-shadow: none;
     }
+
+.btn-icon {
+    width: auto !important;
+    box-shadow: none !important;
+    border: none !important;
+    background-color: transparent !important;
+}

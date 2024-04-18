@@ -53,6 +53,7 @@ namespace EnglishMaster.Client.Pages
             QuestionClientService.SetLevelId(_levelId);
             await ExecuteAsync(QuestionClientService.InitializeAsync);
             _question = QuestionClientService.GetQuestion(out _questionIndex);
+            await SpeakService.Speak(_question?.Word ?? "");
             StateContainer.IsLoading = false;
         }
 
@@ -67,13 +68,17 @@ namespace EnglishMaster.Client.Pages
             _isAnswered = true;
         }
 
-        private void NextButtonOnClick()
+        private async Task NextButtonOnClick()
         {
             _isAnswered = false;
             _question = QuestionClientService.GetQuestion(out _questionIndex);
             if (_question == null)
             {
                 NavigationManager.NavigateTo($"result?level={_levelId}&part-of-speech={_partOfSpeechId}");
+            }
+            else
+            {
+                await SpeakService.Speak(_question.Word);
             }
         }
 
