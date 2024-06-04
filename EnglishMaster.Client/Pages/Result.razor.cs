@@ -23,6 +23,7 @@ namespace EnglishMaster.Client.Pages
         private async Task CloseButtonOnClick()
         {
             await SaveAsync();
+            ResultClientService.Reset();
             NavigationManager.NavigateTo("");
         }
 
@@ -40,6 +41,7 @@ namespace EnglishMaster.Client.Pages
             {
                 await ExecuteAsync(ResultClientService.Submit);
             }
+            ResultClientService.Reset();
             StateContainer.IsLoading = false;
         }
     }
