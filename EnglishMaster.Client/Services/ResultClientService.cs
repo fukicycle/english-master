@@ -48,5 +48,10 @@ namespace EnglishMaster.Client.Services
             }
             return "-";
         }
+
+        public void Reset()
+        {
+            _userAnswers = new List<UserAnswer>();
+        }
     }
 }
