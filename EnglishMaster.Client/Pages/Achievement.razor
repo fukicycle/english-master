@@ -1,0 +1,20 @@
+@page "/achievement"
+@inherits ViewBase
+@inject NavigationManager NavigationManager
+@inject IAuthenticationService AuthenticationService
+@inject AchivementClientService AchivementClientService
+@inject ProgressClientService ProgressClientService
+<AuthorizeView>
+    <Authorized>
+
+    </Authorized>
+    <NotAuthorized>
+        <div class="not-login desc">Log in to see your achievement</div>
+        <button class="not-login btn-login" @onclick=@LoginButtonOnClick>Login with Google</button>
+    </NotAuthorized>
+    <Authorizing>
+        <div class="loader-wrapper">
+            <div class="loader"></div>
+        </div>
+    </Authorizing>
+</AuthorizeView>
