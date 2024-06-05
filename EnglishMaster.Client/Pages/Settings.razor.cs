@@ -7,8 +7,8 @@ namespace EnglishMaster.Client.Pages
         private bool _isMute = false;
         private int _numberOfQuestion = 10;
 
-        protected override async Task OnInitializedAsync()
-        {
+        // protected override async Task OnInitializedAsync()
+        // {
             //try
             //{
             //    StateContainer.IsLoading = true;
@@ -27,9 +27,9 @@ namespace EnglishMaster.Client.Pages
             //{
             //    StateContainer.IsLoading = false;
             //}
-        }
-        private async Task SaveButtonOnClick()
-        {
+        // }
+        // private async Task SaveButtonOnClick()
+        // {
             //try
             //{
             //    StateContainer.IsLoading = true;
@@ -50,6 +50,6 @@ namespace EnglishMaster.Client.Pages
             //{
             //    StateContainer.IsLoading = false;
             //}
-        }
+        // }
     }
 }
