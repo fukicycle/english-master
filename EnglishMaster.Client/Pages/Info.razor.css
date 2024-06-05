@@ -9,6 +9,7 @@
     display: block;
     margin: 1rem auto;
     width: 80%;
+    max-width: 240px;
     box-shadow: 0 0 8px var(--app-primary-100);
     border-radius: 50%;
 }
@@ -18,13 +19,13 @@
     padding-left: .5rem;
 }
 
-    .desc-area > a {
-        color: var(--app-primary-100);
-    }
+.desc-area>a {
+    color: var(--app-primary-100);
+}
 
-        .desc-area > a:visited {
-            color: var(--app-white);
-        }
+.desc-area>a:visited {
+    color: var(--app-white);
+}
 
 .other-area {
     padding: 1rem 0;
@@ -43,6 +44,6 @@
     padding: .5rem;
 }
 
-    .info-item > span {
-        width: 180px;
-    }
+.info-item>span {
+    width: 180px;
+}
