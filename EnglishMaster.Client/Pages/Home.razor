@@ -42,8 +42,39 @@
         </div>
     </Authorized>
     <NotAuthorized>
-        <div class="not-login desc">Log in to record your learning</div>
-        <button class="not-login btn-login" @onclick=@LoginButtonOnClick>Login with Google</button>
+        <div class="not-authorized-area">
+            <div class="wrapper">
+                <div class="desc">Log in to record your learning</div>
+                <button class="btn-login" @onclick=@LoginButtonOnClick>Login with Google</button>
+            </div>
+            <div class="achievement-area">
+                <div class="total-achivement">
+                    <ProgressCircle Value="65" />
+                </div>
+                <div class="achievement-item">
+                    <div>英検２級</div>
+                    <div class="progress">
+                        <ProgressBar Value="35" HasDisplayValue="true" />
+                    </div>
+                    <details>
+                        <summary>Details by part of speech</summary>
+                        <ul>
+                        </ul>
+                    </details>
+                </div>
+                <div class="achievement-item">
+                    <div>英検準２級</div>
+                    <div class="progress">
+                        <ProgressBar Value="95" HasDisplayValue="true" />
+                    </div>
+                    <details>
+                        <summary>Details by part of speech</summary>
+                        <ul>
+                        </ul>
+                    </details>
+                </div>
+            </div>
+        </div>
     </NotAuthorized>
     <Authorizing>
         <div class="loader-wrapper">

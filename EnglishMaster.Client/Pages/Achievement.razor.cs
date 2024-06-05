@@ -6,29 +6,10 @@ using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 namespace EnglishMaster.Client.Pages;
 public partial class Achievement
 {
-    private LoginUser? _loginUser = null;
-    protected override async Task OnInitializedAsync()
-    {
-        StateContainer.IsLoading = true;
-        bool isAuthenticated = await ExecuteAsync(AuthenticationService.IsAuthenticatedAsync);
-        if (isAuthenticated)
-        {
-            _loginUser = await ExecuteAsync(AuthenticationService.GetLoginUserAsync);
-            if (_loginUser == null)
-            {
-                NavigationManager.NavigateTo("register");
-            }
-            // _achievements = await ExecuteAsync(AchivementClientService.GetAchievementAsync);
-        }
-        StateContainer.IsLoading = false;
-    }
-    private void LoginButtonOnClick()
-    {
-        NavigationManager.NavigateToLogin($"authentication/login?returnUrl={Uri.EscapeDataString(NavigationManager.Uri)}");
-    }
 
-    private LineConfig _config = null!;
-    private LineConfig _config1 = null!;
+    private LineConfig? _config = null;
+    private LineConfig? _config1 = null;
+    private LoginUser? _loginUser = null;
 
     protected override void OnInitialized()
     {
@@ -41,5 +22,24 @@ public partial class Achievement
         Dictionary<DateTime, int> data1 = new Dictionary<DateTime, int>();
         Enumerable.Range(1, 7).ToList().ForEach(a => data1.Add(DateTime.Today.AddDays(a), Random.Shared.Next(0, 100)));
         _config1 = LineChartClientService.Create(data1, "週間正答率", "正答率");
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        StateContainer.IsLoading = true;
+        bool isAuthenticated = await ExecuteAsync(AuthenticationService.IsAuthenticatedAsync);
+        if (isAuthenticated)
+        {
+            _loginUser = await ExecuteAsync(AuthenticationService.GetLoginUserAsync);
+            if (_loginUser == null)
+            {
+                NavigationManager.NavigateTo("register");
+            }
+        }
+        StateContainer.IsLoading = false;
+    }
+    private void LoginButtonOnClick()
+    {
+        NavigationManager.NavigateToLogin($"authentication/login?returnUrl={Uri.EscapeDataString(NavigationManager.Uri)}");
     }
 }
