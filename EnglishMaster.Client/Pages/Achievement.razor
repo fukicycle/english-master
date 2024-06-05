@@ -10,12 +10,18 @@
     </Authorized>
     <NotAuthorized>
         <div class="not-authorized-area">
-            <div class="login">
-                <div class="not-login desc">Log in to see your achievement</div>
+            <div class="wrapper">
+                <div class="desc">Log in to see your achievement</div>
                 <button class="btn-login" @onclick=@LoginButtonOnClick>Login with Google</button>
             </div>
-            <Chart Config="_config"></Chart>
-            <Chart Config="_config1"></Chart>
+            @if (_config != null)
+            {
+                <Chart Config="_config"></Chart>
+            }
+            @if (_config1 != null)
+            {
+                <Chart Config="_config1"></Chart>
+            }
         </div>
     </NotAuthorized>
     <Authorizing>
