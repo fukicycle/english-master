@@ -3,13 +3,20 @@
 @inject NavigationManager NavigationManager
 @inject IAuthenticationService AuthenticationService
 @inject AchivementClientService AchivementClientService
-@inject ProgressClientService ProgressClientService
+@inject LineChartClientService LineChartClientService
 <AuthorizeView>
     <Authorized>
+        <div>頑張って作成中...</div>
     </Authorized>
     <NotAuthorized>
-        <div class="not-login desc">Log in to see your achievement</div>
-        <button class="not-login btn-login" @onclick=@LoginButtonOnClick>Login with Google</button>
+        <div class="not-authorized-area">
+            <div class="login">
+                <div class="not-login desc">Log in to see your achievement</div>
+                <button class="btn-login" @onclick=@LoginButtonOnClick>Login with Google</button>
+            </div>
+            <Chart Config="_config"></Chart>
+            <Chart Config="_config1"></Chart>
+        </div>
     </NotAuthorized>
     <Authorizing>
         <div class="loader-wrapper">
