@@ -37,6 +37,7 @@ builder.Services.AddScoped<LevelClientService>();
 builder.Services.AddScoped<UserRegisterService>();
 builder.Services.AddScoped<LineChartClientService>();
 builder.Services.AddScoped<RadarChartClientService>();
+builder.Services.AddScoped<TreeFarmService>();
 builder.Services.AddAppBase();
 
 builder.Services.AddOidcAuthentication(options =>

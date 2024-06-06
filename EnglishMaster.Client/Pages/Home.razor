@@ -4,6 +4,7 @@
 @inject IAuthenticationService AuthenticationService
 @inject AchivementClientService AchivementClientService
 @inject ProgressClientService ProgressClientService
+@inject TreeFarmService TreeFarmService
 
 <PageTitle>Home</PageTitle>
 <Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
@@ -12,8 +13,9 @@
         <div class="achievement-area">
             @if (_achievements != null)
             {
-                <div class="total-achivement">
-                    <ProgressCircle Value="@ProgressClientService.GetProgress(_achievements)" />
+                <div>学習を続けて木を育てよう！（レベル@_level）</div>
+                <div class="english-tree">
+                    <img src="@_treeImagePath" />
                 </div>
                 foreach (AchievementResponseDto achievement in _achievements)
                 {
@@ -48,8 +50,9 @@
                 <button class="btn-login" @onclick=@LoginButtonOnClick>Login with Google</button>
             </div>
             <div class="achievement-area">
-                <div class="total-achivement">
-                    <ProgressCircle Value="65" />
+                <div>学習を続けて木を育てよう！（レベル3）</div>
+                <div class="english-tree">
+                    <img src="process/tree_03.png" />
                 </div>
                 <div class="achievement-item">
                     <div>英検２級</div>

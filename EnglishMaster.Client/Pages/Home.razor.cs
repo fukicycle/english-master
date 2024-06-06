@@ -8,6 +8,8 @@ namespace EnglishMaster.Client.Pages
     {
         private LoginUser? _loginUser = null;
         private List<AchievementResponseDto> _achievements = new List<AchievementResponseDto>();
+        private string _treeImagePath = "process/tree_01.png";
+        private int _level = 1;
 
         protected override async Task OnInitializedAsync()
         {
@@ -22,6 +24,7 @@ namespace EnglishMaster.Client.Pages
                     return;
                 }
                 _achievements = await ExecuteAsync(AchivementClientService.GetAchievementAsync);
+                await ExecuteAsync(GetTreeImagePathAsync);
             }
             StateContainer.IsLoading = false;
         }
@@ -29,6 +32,16 @@ namespace EnglishMaster.Client.Pages
         private void LoginButtonOnClick()
         {
             NavigationManager.NavigateToLogin($"authentication/login?returnUrl={Uri.EscapeDataString(NavigationManager.Uri)}");
+        }
+
+        private async Task GetTreeImagePathAsync()
+        {
+            if (await TreeFarmService.IsEnabledTreeFarmAsync())
+            {
+                _level = await TreeFarmService.GetTreeLevelAsync();
+                _treeImagePath = TreeFarmService.GenerateTreeImagePath(_level);
+                StateHasChanged();
+            }
         }
     }
 }
