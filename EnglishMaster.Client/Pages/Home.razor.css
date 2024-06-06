@@ -27,26 +27,41 @@
         background-position: 50% -50px, -40px 50%, 50% calc(100% + 50px), calc(100% + 50px) 50%
     }
 
-    20%,
-    25% {
+    20%, 25% {
         background-position: 50% -50px, -50px 50%, 50% calc(100% + 50px), 50% 50%
     }
 
-    45%,
-    50% {
+    45%, 50% {
         background-position: 50% -50px, -50px 50%, 50% 50%, 50% 50%
     }
 
-    75%,
-    75% {
+    75%, 75% {
         background-position: 50% -50px, 50% 50%, 50% 50%, 50% 50%
     }
 
-    95%,
-    100% {
+    95%, 100% {
         background-position: 50% 50%, 50% 50%, 50% 50%, 50% 50%
     }
 }
+
+.english-tree {
+    width: 100%;
+    padding: 8px;
+    height: 240px;
+    display: flex;
+    justify-content: center;
+    align-items: end;
+    background-image: url('process/tree_bg.jpg');
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    border-radius: 8px;
+    box-shadow: 0 0 8px rgba(255,255,255,.5);
+}
+
+    .english-tree > img {
+        max-height: 100%;
+    }
 
 
 .desc {
