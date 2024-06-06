@@ -124,5 +124,20 @@ namespace EnglishMaster.Server.Services
             }
             return achievementResponseDtos;
         }
+
+        public IList<TreeFarmResponseDto> GetTreeFarmData(string email)
+        {
+            List<TreeFarmResponseDto> treeFarmResponseDtos = new List<TreeFarmResponseDto>();
+            List<MeaningOfWordLearningHistory> histories =
+                _db.MeaningOfWordLearningHistories
+                .Include(a => a.User)
+                .Where(a => a.User.Username == email)
+                .ToList();
+            foreach (MeaningOfWordLearningHistory history in histories)
+            {
+                treeFarmResponseDtos.Add(new TreeFarmResponseDto(history.Date));
+            }
+            return treeFarmResponseDtos;
+        }
     }
 }
