@@ -19,6 +19,7 @@ namespace EnglishMaster.Client.Pages
                 if (_loginUser == null)
                 {
                     NavigationManager.NavigateTo("register");
+                    return;
                 }
                 _achievements = await ExecuteAsync(AchivementClientService.GetAchievementAsync);
             }

@@ -1,4 +1,5 @@
 ﻿using EnglishMaster.Client.Entities;
+using Microsoft.AspNetCore.Components.Authorization;
 
 namespace EnglishMaster.Client.Services.Interfaces
 {
@@ -7,5 +8,15 @@ namespace EnglishMaster.Client.Services.Interfaces
         Task<bool> IsAuthenticatedAsync();
 
         Task<LoginUser?> GetLoginUserAsync();
+
+        Task<string?> GetIconUrlAsync();
+
+        Task<string?> GetFirstNameAsync();
+
+        Task<string?> GetLastNameAsync();
+
+        Task<string?> GetEmailAsync();
+
+        Task<string?> GetSubAsPasswordAsync();
     }
 }

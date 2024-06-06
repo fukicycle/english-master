@@ -20,7 +20,7 @@ builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
     {
-        policy.WithOrigins("http://localhost:5261", "https://fukicycle.github.io")
+        policy.WithOrigins("http://localhost:5261", "https://localhost:7132", "https://fukicycle.github.io")
                 .WithMethods("GET", "POST", "OPTIONS")
                 .WithHeaders("Authorization", "Content-Type")
                 .AllowCredentials();
