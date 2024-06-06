@@ -24,7 +24,7 @@ public partial class Achievement
             {
                 NavigationManager.NavigateTo("register");
             }
-            await GenerateUserDataAsync();
+            await ExecuteAsync(GenerateUserDataAsync);
         }
         else
         {
