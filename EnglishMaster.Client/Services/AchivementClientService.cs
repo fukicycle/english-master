@@ -30,5 +30,35 @@ namespace EnglishMaster.Client.Services
             }
             return achievements;
         }
+
+        public async Task<List<AchievementGraphResponseDto>> GetAchievementGraphByWeekAsync()
+        {
+            HttpResponseResult httpResponseResult = await _httpClientService.SendWithJWTTokenAsync(HttpMethod.Get, ApiEndPoint.ACHIEVEMENT + "/car/week");
+            if (httpResponseResult.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                throw new Exception(httpResponseResult.Message);
+            }
+            List<AchievementGraphResponseDto>? achievements = JsonConvert.DeserializeObject<List<AchievementGraphResponseDto>>(httpResponseResult.Json);
+            if (achievements == null)
+            {
+                throw new Exception($"Can not desirialize object for: {typeof(List<AchievementGraphResponseDto>)}");
+            }
+            return achievements;
+        }
+
+        public async Task<List<AchievementGraphResponseDto>> GetAchievementGraphByPartOfSpeechAsync()
+        {
+            HttpResponseResult httpResponseResult = await _httpClientService.SendWithJWTTokenAsync(HttpMethod.Get, ApiEndPoint.ACHIEVEMENT + "/car/part-of-speech");
+            if (httpResponseResult.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                throw new Exception(httpResponseResult.Message);
+            }
+            List<AchievementGraphResponseDto>? achievements = JsonConvert.DeserializeObject<List<AchievementGraphResponseDto>>(httpResponseResult.Json);
+            if (achievements == null)
+            {
+                throw new Exception($"Can not desirialize object for: {typeof(List<AchievementGraphResponseDto>)}");
+            }
+            return achievements;
+        }
     }
 }

@@ -35,6 +35,7 @@ builder.Services.AddScoped<SpeakService>();
 builder.Services.AddScoped<PartOfSpeechClientService>();
 builder.Services.AddScoped<LevelClientService>();
 builder.Services.AddScoped<LineChartClientService>();
+builder.Services.AddScoped<RadarChartClientService>();
 builder.Services.AddAppBase();
 
 builder.Services.AddOidcAuthentication(options =>

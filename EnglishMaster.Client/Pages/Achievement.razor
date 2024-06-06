@@ -4,9 +4,17 @@
 @inject IAuthenticationService AuthenticationService
 @inject AchivementClientService AchivementClientService
 @inject LineChartClientService LineChartClientService
+@inject RadarChartClientService RadarChartClientService
 <AuthorizeView>
     <Authorized>
-        <div>頑張って作成中...</div>
+        @if (_config != null)
+        {
+            <Chart Config="_config"></Chart>
+        }
+        @if (_config1 != null)
+        {
+            <Chart Config="_config1"></Chart>
+        }
     </Authorized>
     <NotAuthorized>
         <div class="not-authorized-area">
