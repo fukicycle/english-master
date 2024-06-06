@@ -24,7 +24,9 @@ public partial class Achievement
             {
                 NavigationManager.NavigateTo("register");
             }
-            await ExecuteAsync(GenerateUserDataAsync);
+            //TODO implementation
+            //await ExecuteAsync(GenerateUserDataAsync);
+            GenerateSampleData();
         }
         else
         {
@@ -39,16 +41,25 @@ public partial class Achievement
 
     private void GenerateSampleData()
     {
-        Dictionary<string, decimal> data = new Dictionary<string, decimal>();
-        data.Add("動詞", 85);
-        data.Add("名詞", 55);
-        data.Add("副詞", 95.3m);
-        data.Add("形容詞", 50m);
-        data.Add("助詞", 53.5m);
+        Dictionary<string, decimal> data = new Dictionary<string, decimal>
+        {
+            { "動詞", GenerateRandomValue() },
+            { "名詞", GenerateRandomValue()},
+            { "副詞", GenerateRandomValue() },
+            { "形容詞", GenerateRandomValue() },
+            { "助詞", GenerateRandomValue() }
+        };
         _config = RadarChartClientService.Create(data, "Correct answer rate by part of speech", "Correct answer rate");
-        Dictionary<DateTime, int> data1 = new Dictionary<DateTime, int>();
-        Enumerable.Range(-8, 7).ToList().ForEach(a => data1.Add(DateTime.Today.AddDays(a), Random.Shared.Next(0, 100)));
+        Dictionary<DateTime, decimal> data1 = new Dictionary<DateTime, decimal>();
+        Enumerable.Range(-8, 7).ToList().ForEach(a => data1.Add(DateTime.Today.AddDays(a), GenerateRandomValue()));
         _config1 = LineChartClientService.Create(data1, "Correct answer rate by last week", "Correct answer rate");
+    }
+
+    private decimal GenerateRandomValue()
+    {
+        int randomValue = Random.Shared.Next(0, 100);
+        decimal rate = decimal.Parse(Random.Shared.NextDouble().ToString());
+        return randomValue * rate;
     }
 
     private async Task GenerateUserDataAsync()

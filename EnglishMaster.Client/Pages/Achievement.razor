@@ -1,12 +1,14 @@
-@page "/achievement"
+﻿@page "/achievement"
 @inherits ViewBase
 @inject NavigationManager NavigationManager
 @inject IAuthenticationService AuthenticationService
 @inject AchivementClientService AchivementClientService
 @inject LineChartClientService LineChartClientService
 @inject RadarChartClientService RadarChartClientService
+<PageTitle>Achievement</PageTitle>
 <AuthorizeView>
     <Authorized>
+        <div>これはサンプルデータです。ただいま移行中につきひょうじできません。</div>
         @if (_config != null)
         {
             <Chart Config="_config"></Chart>
