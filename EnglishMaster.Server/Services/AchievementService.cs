@@ -125,13 +125,13 @@ namespace EnglishMaster.Server.Services
             return achievementResponseDtos;
         }
 
-        public IList<TreeFarmResponseDto> GetTreeFarmData(string email)
+        public IList<TreeFarmResponseDto> GetTreeFarmData(string email, DateTime startDate)
         {
             List<TreeFarmResponseDto> treeFarmResponseDtos = new List<TreeFarmResponseDto>();
             List<MeaningOfWordLearningHistory> histories =
                 _db.MeaningOfWordLearningHistories
                 .Include(a => a.User)
-                .Where(a => a.User.Username == email)
+                .Where(a => a.User.Username == email && a.Date >= startDate)
                 .ToList();
             foreach (MeaningOfWordLearningHistory history in histories)
             {

@@ -67,12 +67,12 @@ namespace EnglishMaster.Server.Controllers
         [HttpGet]
         [Route("tree/farm/data")]
         [Authorize]
-        public IActionResult GetTreeFarmData()
+        public IActionResult GetTreeFarmData(DateTime startDate)
         {
             try
             {
                 string email = _loginService.GetValueFromClaims(HttpContext.User.Claims, "email");
-                return Ok(_achievementService.GetTreeFarmData(email));
+                return Ok(_achievementService.GetTreeFarmData(email,startDate));
             }
             catch (Exception ex)
             {
