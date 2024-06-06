@@ -31,5 +31,37 @@ namespace EnglishMaster.Server.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+
+        [HttpGet]
+        [Route("car/week")]
+        [Authorize]
+        public IActionResult GetAchievementCARByWeek()
+        {
+            try
+            {
+                string email = _loginService.GetValueFromClaims(HttpContext.User.Claims, "email");
+                return Ok(_achievementService.GetAchievementGraphResponseDtosByWeek(email));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("car/part-of-speech")]
+        [Authorize]
+        public IActionResult GetAchievementCARByPartOfSpeech()
+        {
+            try
+            {
+                string email = _loginService.GetValueFromClaims(HttpContext.User.Claims, "email");
+                return Ok(_achievementService.GetAchievementGraphResponseDtosByPartOfSpeech(email));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
     }
 }
