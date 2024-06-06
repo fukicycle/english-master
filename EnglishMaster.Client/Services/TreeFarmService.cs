@@ -17,10 +17,13 @@ namespace EnglishMaster.Client.Services
 
         public async Task<bool> IsEnabledTreeFarmAsync()
         {
-            //TODO sample
-            //bool exsits = await _localStorageService.ContainKeyAsync(TREE_FARM_STORAGE_KEY);
-            //return exsits;
-            return true;
+            bool exsits = await _localStorageService.ContainKeyAsync(TREE_FARM_STORAGE_KEY);
+            return exsits;
+        }
+
+        public async Task SetStartDateAsync()
+        {
+            await _localStorageService.SetItemAsync(TREE_FARM_STORAGE_KEY, DateTime.Today);
         }
 
         public async Task<int> GetTreeLevelAsync()
@@ -28,7 +31,7 @@ namespace EnglishMaster.Client.Services
             //TODO get history data from api
             //Sample data
             //DateTime startDate = await _localStorageService.GetItemAsync<DateTime>(TREE_FARM_STORAGE_KEY);
-            List<DateTime> dateTimes = Enumerable.Range(1, Random.Shared.Next(4, 100)).Select(a => DateTime.Today.AddDays(-a)).ToList();
+            List<DateTime> dateTimes = Enumerable.Range(1, Random.Shared.Next(4, 10)).Select(a => DateTime.Today.AddDays(-a)).ToList();
             return await Task.Run(() => CalcLevel(dateTimes));
         }
 
