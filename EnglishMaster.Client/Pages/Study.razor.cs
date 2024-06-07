@@ -21,12 +21,11 @@ namespace EnglishMaster.Client.Pages
         private long _partOfSpeechId = 0;
         private long _levelId = 0;
         private QuestionResponseDto? _question = null;
-        private List<QuestionResponseDto> _questions = new List<QuestionResponseDto>();
         private List<PartOfSpeechResponseDto> _partOfSpeeches = new List<PartOfSpeechResponseDto>();
         private List<LevelResponseDto> _levles = new List<LevelResponseDto>();
         private bool _isAnswered = false;
         private bool _isCorrect = false;
-        private int _questionIndex = 0;
+        private int _questionNumber = 0;
 
         protected override async Task OnInitializedAsync()
         {
@@ -52,7 +51,7 @@ namespace EnglishMaster.Client.Pages
             QuestionClientService.SetPartOfSpeechId(_partOfSpeechId);
             QuestionClientService.SetLevelId(_levelId);
             await ExecuteAsync(QuestionClientService.InitializeAsync);
-            _question = QuestionClientService.GetQuestion(out _questionIndex);
+            _question = QuestionClientService.GetQuestion(out _questionNumber);
             await SpeakService.Speak(_question?.Word ?? "");
             StateContainer.IsLoading = false;
         }
@@ -71,7 +70,7 @@ namespace EnglishMaster.Client.Pages
         private async Task NextButtonOnClick()
         {
             _isAnswered = false;
-            _question = QuestionClientService.GetQuestion(out _questionIndex);
+            _question = QuestionClientService.GetQuestion(out _questionNumber);
             if (_question == null)
             {
                 NavigationManager.NavigateTo($"result?level={_levelId}&part-of-speech={_partOfSpeechId}");
