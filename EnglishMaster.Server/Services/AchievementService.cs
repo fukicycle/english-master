@@ -136,9 +136,10 @@ namespace EnglishMaster.Server.Services
                 .Include(a => a.User)
                 .Where(a => a.User.Username == email && a.Date >= startDate)
                 .ToList();
-            foreach (MeaningOfWordLearningHistory history in histories)
+            foreach (var history in histories.GroupBy(a => new { a.Date.Year, a.Date.Month, a.Date.Day }))
             {
-                treeFarmResponseDtos.Add(new TreeFarmResponseDto(history.Date));
+                DateTime dateTime = new DateTime(history.Key.Year, history.Key.Month, history.Key.Day);
+                treeFarmResponseDtos.Add(new TreeFarmResponseDto(dateTime));
             }
             return treeFarmResponseDtos;
         }
