@@ -33,7 +33,7 @@ namespace EnglishMaster.Server.Authentication
             {
                 return AuthenticateResult.Fail("Invalid token.");
             }
-            if (accessTokenObj.Expires < DateTime.Now)
+            if (accessTokenObj.Expires < DateTime.UtcNow)
             {
                 return AuthenticateResult.Fail("Expired token.");
             }
