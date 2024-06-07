@@ -30,7 +30,10 @@ namespace EnglishMaster.Server.Services
             {
                 return achievementGraphResponseDtos;
             }
-            IList<PartOfSpeech> partOfSpeeches = _db.PartOfSpeeches.ToList();
+            IList<PartOfSpeech> partOfSpeeches = _db.PartOfSpeeches
+                                                    .Include(a => a.MeaningOfWords)
+                                                    .Where(a => a.MeaningOfWords.Count() >= ApplicationSettings.NUMBER_OF_MIN_LIMIT)
+                                                    .ToList();
             foreach (PartOfSpeech partOfSpeech in partOfSpeeches)
             {
                 int numberOfAnswerWord = user.MeaningOfWordLearningHistories.Count(a => a.QuestionMeaningOfWord.PartOfSpeechId == partOfSpeech.Id);
@@ -69,7 +72,7 @@ namespace EnglishMaster.Server.Services
             {
                 int numberOfAnswerWord = user.MeaningOfWordLearningHistories.Count(a => a.Date == dt);
                 int numberOfCorrectAnswerWord = user.MeaningOfWordLearningHistories
-                                                .Where(a => a.Date == dt)
+                                                .Where(a => a.Date.Date == dt)
                                                 .Count(a => a.AnswerMeaningOfWordId == a.QuestionMeaningOfWordId);
                 if (numberOfAnswerWord == 0)
                 {
