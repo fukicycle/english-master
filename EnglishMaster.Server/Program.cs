@@ -1,4 +1,5 @@
 using EnglishMaster.Server;
+using EnglishMaster.Server.Authentication;
 using EnglishMaster.Server.Services;
 using EnglishMaster.Server.Services.Interfaces;
 using EnglishMaster.Shared;
@@ -22,26 +23,31 @@ builder.Services.AddCors(options =>
     {
         policy.WithOrigins("http://localhost:5261", "https://localhost:7132", "https://fukicycle.github.io")
                 .WithMethods("GET", "POST", "OPTIONS")
-                .WithHeaders("Authorization", "Content-Type")
+                .WithHeaders("Authorization", "AccessToken", "Content-Type")
                 .AllowCredentials();
     });
 });
 
 //Jwt authentication
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
-{
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        ValidIssuer = "sato-home.mydns.jp",
-        ValidAudience = "fukicycle.github.io",
-        IssuerSigningKey = new SymmetricSecurityKey(ApplicationSettings.JWT_KEY),
-        ClockSkew = TimeSpan.Zero
-    };
-});
+//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+//{
+//    options.TokenValidationParameters = new TokenValidationParameters
+//    {
+//        ValidateIssuer = true,
+//        ValidateAudience = true,
+//        ValidateLifetime = true,
+//        ValidateIssuerSigningKey = true,
+//        ValidIssuer = "sato-home.mydns.jp",
+//        ValidAudience = "fukicycle.github.io",
+//        IssuerSigningKey = new SymmetricSecurityKey(ApplicationSettings.JWT_KEY),
+//        ClockSkew = TimeSpan.Zero
+//    };
+//});
+
+//Access token authentication
+builder.Services.AddAuthentication(AccessTokenAuthenticationOptions.DefaultScheme)
+    .AddScheme<AccessTokenAuthenticationOptions, AccessTokenAuthenticationHandler>
+    (AccessTokenAuthenticationOptions.DefaultScheme, options => { });
 
 // Add services to the container.
 
@@ -90,7 +96,7 @@ var app = builder.Build();
 
 //CORS
 app.UseCors();
-//JWT
+//Access token authentication.
 app.UseAuthentication();
 
 // Configure the HTTP request pipeline.
