@@ -36,12 +36,13 @@ namespace EnglishMaster.Client.Pages
 
         private async Task GetTreeImagePathAsync()
         {
-            if (await TreeFarmService.IsEnabledTreeFarmAsync())
+            if (!await TreeFarmService.IsEnabledTreeFarmAsync())
             {
-                _level = await TreeFarmService.GetTreeLevelAsync();
-                _treeImagePath = TreeFarmService.GenerateTreeImagePath(_level);
-                StateHasChanged();
+                await TreeFarmService.SetStartDateAsync();
             }
+            _level = await TreeFarmService.GetTreeLevelAsync();
+            _treeImagePath = TreeFarmService.GenerateTreeImagePath(_level);
+            StateHasChanged();
         }
     }
 }

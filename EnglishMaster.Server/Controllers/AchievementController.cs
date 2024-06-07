@@ -63,5 +63,21 @@ namespace EnglishMaster.Server.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+
+        [HttpGet]
+        [Route("tree/farm/data")]
+        [Authorize]
+        public IActionResult GetTreeFarmData(DateTime startDate)
+        {
+            try
+            {
+                string email = _loginService.GetValueFromClaims(HttpContext.User.Claims, "email");
+                return Ok(_achievementService.GetTreeFarmData(email,startDate));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
     }
 }

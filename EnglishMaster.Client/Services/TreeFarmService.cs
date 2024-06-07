@@ -1,40 +1,66 @@
 ﻿using Blazored.LocalStorage;
+using EnglishMaster.Client.Services.Interfaces;
+using EnglishMaster.Shared;
+using EnglishMaster.Shared.Dto.Response;
+using Newtonsoft.Json;
 
 namespace EnglishMaster.Client.Services
 {
     public sealed class TreeFarmService
     {
         private readonly ILocalStorageService _localStorageService;
+        private readonly IHttpClientService _httpClientService;
         private readonly ILogger<TreeFarmService> _logger;
         private const string TREE_FARM_STORAGE_KEY = "TREE_FARM_START_DATE";
 
-        public TreeFarmService(ILocalStorageService localStorageService, ILogger<TreeFarmService> logger)
+        public TreeFarmService(ILocalStorageService localStorageService, IHttpClientService httpClientService, ILogger<TreeFarmService> logger)
         {
             _localStorageService = localStorageService;
+            _httpClientService = httpClientService;
             _logger = logger;
 
         }
 
         public async Task<bool> IsEnabledTreeFarmAsync()
         {
-            //TODO sample
-            //bool exsits = await _localStorageService.ContainKeyAsync(TREE_FARM_STORAGE_KEY);
-            //return exsits;
-            return true;
+            bool exsits = await _localStorageService.ContainKeyAsync(TREE_FARM_STORAGE_KEY);
+            return exsits;
+        }
+
+        public async Task SetStartDateAsync()
+        {
+            await _localStorageService.SetItemAsync(TREE_FARM_STORAGE_KEY, DateTime.Today);
         }
 
         public async Task<int> GetTreeLevelAsync()
         {
-            //TODO get history data from api
             //Sample data
-            //DateTime startDate = await _localStorageService.GetItemAsync<DateTime>(TREE_FARM_STORAGE_KEY);
-            List<DateTime> dateTimes = Enumerable.Range(1, Random.Shared.Next(4, 100)).Select(a => DateTime.Today.AddDays(-a)).ToList();
-            return await Task.Run(() => CalcLevel(dateTimes));
+            DateTime startDate = await _localStorageService.GetItemAsync<DateTime>(TREE_FARM_STORAGE_KEY);
+            List<TreeFarmResponseDto> treeFarmData = await GetTreeFarmDataAsync(startDate);
+            return await Task.Run(() => CalcLevel(treeFarmData.Select(a => a.DateTime).ToList()));
         }
 
         public string GenerateTreeImagePath(int level)
         {
             return $"process/tree_{level:00}.png";
+        }
+
+        public async Task<List<TreeFarmResponseDto>> GetTreeFarmDataAsync(DateTime startDate)
+        {
+            HttpResponseResult treeFarmResponseResult =
+                await _httpClientService.SendWithJWTTokenAsync(
+                    HttpMethod.Get,
+                    ApiEndPoint.ACHIEVEMENT + "/tree/farm/data?startDate=" + startDate);
+            if (treeFarmResponseResult.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                throw new Exception(treeFarmResponseResult.Message);
+            }
+            List<TreeFarmResponseDto>? treeFarmResponses = JsonConvert.DeserializeObject<List<TreeFarmResponseDto>>(treeFarmResponseResult.Json);
+            if (treeFarmResponses == null)
+            {
+                throw new Exception($"Can not deserialized.{nameof(List<TreeFarmResponseDto>)}");
+            }
+            return treeFarmResponses;
         }
 
         private int CalcLevel(List<DateTime> dateTimes)
