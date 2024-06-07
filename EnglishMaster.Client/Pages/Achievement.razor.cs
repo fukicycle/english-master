@@ -25,7 +25,6 @@ public partial class Achievement
                 NavigationManager.NavigateTo("register");
             }
             await ExecuteAsync(GenerateUserDataAsync);
-            GenerateSampleData();
         }
         else
         {
