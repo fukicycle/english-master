@@ -32,6 +32,7 @@ namespace EnglishMaster.Shared.Models
         public virtual DbSet<User> Users { get; set; }
 
         public virtual DbSet<Word> Words { get; set; }
+        public virtual DbSet<AccessToken> AccessTokens { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
             => optionsBuilder.UseSqlServer("Name=ConnectionStrings:DB");
@@ -182,6 +183,13 @@ namespace EnglishMaster.Shared.Models
                     .HasMaxLength(50)
                     .IsUnicode(false)
                     .HasColumnName("Word");
+            });
+
+            modelBuilder.Entity<AccessToken>(entity =>
+            {
+                entity.Property(e => e.Token).HasMaxLength(64);
+                entity.Property(e => e.UserId).HasColumnName("UserID");
+                entity.Property(e => e.Expires).HasColumnType("datetime");
             });
 
             OnModelCreatingPartial(modelBuilder);
