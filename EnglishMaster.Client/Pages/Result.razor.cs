@@ -39,7 +39,7 @@ namespace EnglishMaster.Client.Pages
             bool isAuthenticated = await ExecuteAsync(AuthenticationService.IsAuthenticatedAsync);
             if (isAuthenticated)
             {
-                await ExecuteAsync(ResultClientService.Submit);
+                await ExecuteAsync(ResultClientService.SubmitAsync);
             }
             ResultClientService.Reset();
             StateContainer.IsLoading = false;

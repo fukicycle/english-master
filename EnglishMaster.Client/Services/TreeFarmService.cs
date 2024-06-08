@@ -3,22 +3,25 @@ using EnglishMaster.Client.Services.Interfaces;
 using EnglishMaster.Shared;
 using EnglishMaster.Shared.Dto.Response;
 using Newtonsoft.Json;
+using System.Net.Http.Json;
 
 namespace EnglishMaster.Client.Services
 {
     public sealed class TreeFarmService
     {
         private readonly ILocalStorageService _localStorageService;
-        private readonly IHttpClientService _httpClientService;
+        private readonly HttpClient _httpClient;
         private readonly ILogger<TreeFarmService> _logger;
         private const string TREE_FARM_STORAGE_KEY = "TREE_FARM_START_DATE";
 
-        public TreeFarmService(ILocalStorageService localStorageService, IHttpClientService httpClientService, ILogger<TreeFarmService> logger)
+        public TreeFarmService(
+            ILocalStorageService localStorageService,
+            HttpClient httpClient,
+            ILogger<TreeFarmService> logger)
         {
             _localStorageService = localStorageService;
-            _httpClientService = httpClientService;
+            _httpClient = httpClient;
             _logger = logger;
-
         }
 
         public async Task<bool> IsEnabledTreeFarmAsync()
@@ -47,15 +50,14 @@ namespace EnglishMaster.Client.Services
 
         public async Task<List<TreeFarmResponseDto>> GetTreeFarmDataAsync(DateTime startDate)
         {
-            HttpResponseResult treeFarmResponseResult =
-                await _httpClientService.SendWithJWTTokenAsync(
-                    HttpMethod.Get,
-                    ApiEndPoint.ACHIEVEMENT + "/tree/farm/data?startDate=" + startDate);
-            if (treeFarmResponseResult.StatusCode != System.Net.HttpStatusCode.OK)
+            HttpResponseMessage httpResponseMessage =
+                await _httpClient.GetAsync(ApiEndPoint.ACHIEVEMENT + "/tree/farm/data?startDate=" + startDate);
+            if (!httpResponseMessage.IsSuccessStatusCode)
             {
-                throw new Exception(treeFarmResponseResult.Message);
+                throw new Exception(await httpResponseMessage.Content.ReadAsStringAsync());
             }
-            List<TreeFarmResponseDto>? treeFarmResponses = JsonConvert.DeserializeObject<List<TreeFarmResponseDto>>(treeFarmResponseResult.Json);
+            List<TreeFarmResponseDto>? treeFarmResponses =
+                await httpResponseMessage.Content.ReadFromJsonAsync<List<TreeFarmResponseDto>>();
             if (treeFarmResponses == null)
             {
                 throw new Exception($"Can not deserialized.{nameof(List<TreeFarmResponseDto>)}");

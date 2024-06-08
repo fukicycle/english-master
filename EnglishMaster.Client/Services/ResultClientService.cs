@@ -1,20 +1,20 @@
 ﻿using EnglishMaster.Client.Entities;
-using EnglishMaster.Client.Services.Interfaces;
 using EnglishMaster.Shared;
 using EnglishMaster.Shared.Dto.Request;
 using Newtonsoft.Json;
+using System.Net.Http.Json;
 
 namespace EnglishMaster.Client.Services
 {
     public sealed class ResultClientService
     {
-        private readonly IHttpClientService _httpClientService;
+        private readonly HttpClient _httpClient;
         private readonly ILogger<ResultClientService> _logger;
         private List<UserAnswer> _userAnswers = new List<UserAnswer>();
 
-        public ResultClientService(IHttpClientService httpClientService, ILogger<ResultClientService> logger)
+        public ResultClientService(HttpClient httpClient, ILogger<ResultClientService> logger)
         {
-            _httpClientService = httpClientService;
+            _httpClient = httpClient;
             _logger = logger;
         }
 
@@ -23,13 +23,16 @@ namespace EnglishMaster.Client.Services
             _userAnswers.Add(userAnswer);
         }
 
-        public async Task Submit()
+        public async Task SubmitAsync()
         {
-            List<ResultRequestDto> resultRequestDtos = _userAnswers.Select(a => new ResultRequestDto(a.QuestionMeaningOfWordId, a.AnswerMeaningOfWordId)).ToList();
-            HttpResponseResult resultResponse = await _httpClientService.SendWithJWTTokenAsync(HttpMethod.Post, ApiEndPoint.RESULT, JsonConvert.SerializeObject(_userAnswers));
-            if (resultResponse.StatusCode != System.Net.HttpStatusCode.OK)
+            List<ResultRequestDto> resultRequestDtos =
+                _userAnswers.Select(a => new ResultRequestDto(a.QuestionMeaningOfWordId, a.AnswerMeaningOfWordId))
+                            .ToList();
+            HttpResponseMessage httpResponseMessage =
+                await _httpClient.PostAsJsonAsync(ApiEndPoint.RESULT, _userAnswers);
+            if (!httpResponseMessage.IsSuccessStatusCode)
             {
-                throw new Exception(resultResponse.Message);
+                throw new Exception(await httpResponseMessage.Content.ReadAsStringAsync());
             }
         }
 

@@ -2,31 +2,32 @@
 using EnglishMaster.Shared;
 using EnglishMaster.Shared.Dto.Response;
 using Newtonsoft.Json;
+using System.Net.Http.Json;
 
 namespace EnglishMaster.Client.Services
 {
     public sealed class DictionaryClientService
     {
-        private readonly IHttpClientService _httpClientService;
+        private readonly HttpClient _httpClient;
         private readonly ILogger<DictionaryClientService> _logger;
         private readonly List<DictionaryWordResponseDto> _dictionaries = new List<DictionaryWordResponseDto>();
 
-        public DictionaryClientService(IHttpClientService httpClientService, ILogger<DictionaryClientService> logger)
+        public DictionaryClientService(HttpClient httpClientService, ILogger<DictionaryClientService> logger)
         {
-            _httpClientService = httpClientService;
+            _httpClient = httpClientService;
             _logger = logger;
         }
 
         public async Task<List<DictionaryWordResponseDto>> GetDictionariesAsync()
         {
             _dictionaries.Clear();
-            HttpResponseResult dictionaryResult = await _httpClientService.SendAsync(HttpMethod.Get, ApiEndPoint.DICTIONARY);
-            if (dictionaryResult.StatusCode != System.Net.HttpStatusCode.OK)
+            HttpResponseMessage httpResponseMessage = await _httpClient.GetAsync(ApiEndPoint.DICTIONARY);
+            if (!httpResponseMessage.IsSuccessStatusCode)
             {
-                _logger.LogError("Error: {0},Status Code: {1}", dictionaryResult.Message, dictionaryResult.StatusCode);
-                throw new Exception(dictionaryResult.Message);
+                throw new Exception(await httpResponseMessage.Content.ReadAsStringAsync());
             }
-            List<DictionaryWordResponseDto>? dictionaries = JsonConvert.DeserializeObject<List<DictionaryWordResponseDto>>(dictionaryResult.Json);
+            List<DictionaryWordResponseDto>? dictionaries =
+                await httpResponseMessage.Content.ReadFromJsonAsync<List<DictionaryWordResponseDto>>();
             if (dictionaries == null)
             {
                 _logger.LogError("Can not desirialized.");
@@ -39,7 +40,10 @@ namespace EnglishMaster.Client.Services
         public List<DictionaryWordResponseDto> Filter(string searchString)
         {
             string searchLowerString = searchString.ToLower();
-            return _dictionaries.Where(a => a.Word.ToLower().StartsWith(searchLowerString)).OrderBy(a => a.Word).ToList();
+            return _dictionaries
+                        .Where(a => a.Word.ToLower().StartsWith(searchLowerString))
+                        .OrderBy(a => a.Word)
+                        .ToList();
         }
 
     }

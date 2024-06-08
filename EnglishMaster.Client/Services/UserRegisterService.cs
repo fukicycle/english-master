@@ -2,25 +2,27 @@
 using EnglishMaster.Shared;
 using EnglishMaster.Shared.Dto.Request;
 using Newtonsoft.Json;
+using System.Net.Http.Json;
 
 namespace EnglishMaster.Client.Services
 {
     public sealed class UserRegisterService
     {
-        private readonly IHttpClientService _httpClientService;
+        private readonly HttpClient _httpClient;
         private readonly ILogger<UserRegisterService> _logger;
 
-        public UserRegisterService(IHttpClientService httpClientService, ILogger<UserRegisterService> logger)
+        public UserRegisterService(HttpClient httpClient, ILogger<UserRegisterService> logger)
         {
-            _httpClientService = httpClientService;
+            _httpClient = httpClient;
             _logger = logger;
         }
 
         public async Task<bool> RegisterAsync(string email, string sub, string firstName, string lastName, string? nickname, string? iconUrl)
         {
             UserReqestDto userReqestDto = new UserReqestDto(email, sub, firstName, lastName, nickname, iconUrl);
-            HttpResponseResult httpResponseResult = await _httpClientService.SendAsync(HttpMethod.Post, ApiEndPoint.USER, JsonConvert.SerializeObject(userReqestDto));
-            return httpResponseResult.StatusCode == System.Net.HttpStatusCode.Created;
+            HttpResponseMessage httpResponseMessage =
+                await _httpClient.PostAsJsonAsync(ApiEndPoint.USER, userReqestDto);
+            return httpResponseMessage.StatusCode == System.Net.HttpStatusCode.Created;
         }
     }
 }

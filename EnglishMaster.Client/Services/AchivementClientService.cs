@@ -2,28 +2,30 @@
 using EnglishMaster.Shared.Dto.Response;
 using EnglishMaster.Shared;
 using Newtonsoft.Json;
+using System.Net.Http.Json;
 
 namespace EnglishMaster.Client.Services
 {
     public sealed class AchivementClientService
     {
-        private readonly IHttpClientService _httpClientService;
+        private readonly HttpClient _httpClient;
         private readonly ILogger<AchivementClientService> _logger;
 
-        public AchivementClientService(IHttpClientService httpClientService, ILogger<AchivementClientService> logger)
+        public AchivementClientService(HttpClient httpClient, ILogger<AchivementClientService> logger)
         {
-            _httpClientService = httpClientService;
+            _httpClient = httpClient;
             _logger = logger;
         }
 
         public async Task<List<AchievementResponseDto>> GetAchievementAsync()
         {
-            HttpResponseResult httpResponseResult = await _httpClientService.SendWithJWTTokenAsync(HttpMethod.Get, ApiEndPoint.ACHIEVEMENT);
-            if (httpResponseResult.StatusCode != System.Net.HttpStatusCode.OK)
+            HttpResponseMessage httpResponseMessage = await _httpClient.GetAsync(ApiEndPoint.ACHIEVEMENT);
+            if (!httpResponseMessage.IsSuccessStatusCode)
             {
-                throw new Exception(httpResponseResult.Message);
+                throw new Exception(await httpResponseMessage.Content.ReadAsStringAsync());
             }
-            List<AchievementResponseDto>? achievements = JsonConvert.DeserializeObject<List<AchievementResponseDto>>(httpResponseResult.Json);
+            List<AchievementResponseDto>? achievements = 
+                await httpResponseMessage.Content.ReadFromJsonAsync<List<AchievementResponseDto>>();
             if (achievements == null)
             {
                 throw new Exception($"Can not desirialize object for: {typeof(List<AchievementResponseDto>)}");
@@ -33,12 +35,14 @@ namespace EnglishMaster.Client.Services
 
         public async Task<List<AchievementGraphResponseDto>> GetAchievementGraphByWeekAsync()
         {
-            HttpResponseResult httpResponseResult = await _httpClientService.SendWithJWTTokenAsync(HttpMethod.Get, ApiEndPoint.ACHIEVEMENT + "/car/week");
-            if (httpResponseResult.StatusCode != System.Net.HttpStatusCode.OK)
+            HttpResponseMessage httpResponseMessage = 
+                await _httpClient.GetAsync(ApiEndPoint.ACHIEVEMENT + "/car/week");
+            if (!httpResponseMessage.IsSuccessStatusCode)
             {
-                throw new Exception(httpResponseResult.Message);
+                throw new Exception(await httpResponseMessage.Content.ReadAsStringAsync());
             }
-            List<AchievementGraphResponseDto>? achievements = JsonConvert.DeserializeObject<List<AchievementGraphResponseDto>>(httpResponseResult.Json);
+            List<AchievementGraphResponseDto>? achievements = 
+                await httpResponseMessage.Content.ReadFromJsonAsync<List<AchievementGraphResponseDto>>();
             if (achievements == null)
             {
                 throw new Exception($"Can not desirialize object for: {typeof(List<AchievementGraphResponseDto>)}");
@@ -48,12 +52,14 @@ namespace EnglishMaster.Client.Services
 
         public async Task<List<AchievementGraphResponseDto>> GetAchievementGraphByPartOfSpeechAsync()
         {
-            HttpResponseResult httpResponseResult = await _httpClientService.SendWithJWTTokenAsync(HttpMethod.Get, ApiEndPoint.ACHIEVEMENT + "/car/part-of-speech");
-            if (httpResponseResult.StatusCode != System.Net.HttpStatusCode.OK)
+            HttpResponseMessage httpResponseMessage = 
+                await _httpClient.GetAsync(ApiEndPoint.ACHIEVEMENT + "/car/part-of-speech");
+            if (!httpResponseMessage.IsSuccessStatusCode)
             {
-                throw new Exception(httpResponseResult.Message);
+                throw new Exception(await httpResponseMessage.Content.ReadAsStringAsync());
             }
-            List<AchievementGraphResponseDto>? achievements = JsonConvert.DeserializeObject<List<AchievementGraphResponseDto>>(httpResponseResult.Json);
+            List<AchievementGraphResponseDto>? achievements = 
+                await httpResponseMessage.Content.ReadFromJsonAsync<List<AchievementGraphResponseDto>>();
             if (achievements == null)
             {
                 throw new Exception($"Can not desirialize object for: {typeof(List<AchievementGraphResponseDto>)}");

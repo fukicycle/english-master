@@ -26,7 +26,6 @@ builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().Cre
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddSpeechSynthesis();
 builder.Services.AddScoped<ISettingService, SettingService>();
-builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<DictionaryClientService>();
 builder.Services.AddScoped<AchivementClientService>();
 builder.Services.AddScoped<ResultClientService>();
