@@ -25,7 +25,6 @@ builder.Services.AddHttpClient(nameof(ApplicationMode.Prod), httpClient =>
 builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient(nameof(ApplicationMode.Dev)));
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddSpeechSynthesis();
-builder.Services.AddScoped<IHttpClientService, HttpClientService>();
 builder.Services.AddScoped<ISettingService, SettingService>();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<DictionaryClientService>();
