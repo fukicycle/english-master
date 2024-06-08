@@ -13,6 +13,8 @@ namespace EnglishMaster.Shared.Models
         {
         }
 
+        public virtual DbSet<AccessToken> AccessTokens { get; set; }
+
         public virtual DbSet<Idiom> Idioms { get; set; }
 
         public virtual DbSet<Level> Levels { get; set; }
@@ -32,13 +34,29 @@ namespace EnglishMaster.Shared.Models
         public virtual DbSet<User> Users { get; set; }
 
         public virtual DbSet<Word> Words { get; set; }
-        public virtual DbSet<AccessToken> AccessTokens { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
             => optionsBuilder.UseSqlServer("Name=ConnectionStrings:DB");
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<AccessToken>(entity =>
+            {
+                entity.HasKey(e => e.Token);
+
+                entity.Property(e => e.Token)
+                    .HasMaxLength(64)
+                    .IsUnicode(false)
+                    .IsFixedLength();
+                entity.Property(e => e.Expires).HasColumnType("datetime");
+                entity.Property(e => e.UserId).HasColumnName("UserID");
+
+                entity.HasOne(d => d.User).WithMany(p => p.AccessTokens)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_AccessTokens_Users");
+            });
+
             modelBuilder.Entity<Idiom>(entity =>
             {
                 entity.Property(e => e.Id).HasColumnName("ID");
@@ -106,6 +124,7 @@ namespace EnglishMaster.Shared.Models
 
                 entity.HasOne(d => d.AnswerMeaningOfWord).WithMany(p => p.MeaningOfWordLearningHistoryAnswerMeaningOfWords)
                     .HasForeignKey(d => d.AnswerMeaningOfWordId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_MeaningOfWordHistories_MeaningOfWords1");
 
                 entity.HasOne(d => d.QuestionMeaningOfWord).WithMany(p => p.MeaningOfWordLearningHistoryQuestionMeaningOfWords)
@@ -166,14 +185,17 @@ namespace EnglishMaster.Shared.Models
 
                 entity.Property(e => e.Id).HasColumnName("ID");
                 entity.Property(e => e.FirstName).HasMaxLength(50);
+                entity.Property(e => e.IconUrl)
+                    .HasMaxLength(1024)
+                    .IsUnicode(false);
                 entity.Property(e => e.LastName).HasMaxLength(50);
+                entity.Property(e => e.Nickname).HasMaxLength(15);
                 entity.Property(e => e.Password)
-                    .HasMaxLength(50)
+                    .HasMaxLength(100)
                     .IsUnicode(false);
                 entity.Property(e => e.Username)
-                    .HasMaxLength(50)
+                    .HasMaxLength(254)
                     .IsUnicode(false);
-                entity.Property(e => e.Nickname).HasMaxLength(15);
             });
 
             modelBuilder.Entity<Word>(entity =>
@@ -183,13 +205,6 @@ namespace EnglishMaster.Shared.Models
                     .HasMaxLength(50)
                     .IsUnicode(false)
                     .HasColumnName("Word");
-            });
-
-            modelBuilder.Entity<AccessToken>(entity =>
-            {
-                entity.Property(e => e.Token).HasMaxLength(64);
-                entity.Property(e => e.UserId).HasColumnName("UserID");
-                entity.Property(e => e.Expires).HasColumnType("datetime");
             });
 
             OnModelCreatingPartial(modelBuilder);
