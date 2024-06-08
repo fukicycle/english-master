@@ -3,6 +3,7 @@
     public enum AccessTokenAuthenticationResultCode
     {
         SUCCESS,
-        INVALID_CREDENTIAL
+        INVALID_CREDENTIAL,
+        UNREGISTERED_USER
     }
 }

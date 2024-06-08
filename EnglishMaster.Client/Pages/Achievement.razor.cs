@@ -34,7 +34,7 @@ public partial class Achievement
     }
     private void LoginButtonOnClick()
     {
-        NavigationManager.NavigateToLogin($"authentication/login?returnUrl={Uri.EscapeDataString(NavigationManager.Uri)}");
+        NavigationManager.NavigateToLogin("authentication/login");
     }
 
     private void GenerateSampleData()

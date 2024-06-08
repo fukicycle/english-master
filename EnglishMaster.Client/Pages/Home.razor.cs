@@ -31,7 +31,7 @@ namespace EnglishMaster.Client.Pages
 
         private void LoginButtonOnClick()
         {
-            NavigationManager.NavigateToLogin($"authentication/login?returnUrl={Uri.EscapeDataString(NavigationManager.Uri)}");
+            NavigationManager.NavigateToLogin("authentication/login");
         }
 
         private async Task GetTreeImagePathAsync()

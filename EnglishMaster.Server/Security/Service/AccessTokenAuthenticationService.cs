@@ -14,6 +14,11 @@ namespace EnglishMaster.Server.Security.Service
 
         public AccessTokenAuthenticationResult Authenticate(string username, string password)
         {
+            if (!_db.Users.Any(a => a.Username == username))
+            {
+                return new AccessTokenAuthenticationResult(AccessTokenAuthenticationResultCode.UNREGISTERED_USER, null);
+            }
+
             User? user = _db.Users.FirstOrDefault(a =>
                             a.Username == username &&
                             a.Password == password);

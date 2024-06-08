@@ -32,7 +32,7 @@ namespace EnglishMaster.Client.Pages
             }
             else
             {
-                bool isSuccess = await UserRegisterService.RegisterAsync(email, sub, Form.FirstName, Form.LastName, Form.Nickname);
+                bool isSuccess = await UserRegisterService.RegisterAsync(email, sub, Form.FirstName, Form.LastName, Form.Nickname, null);
                 if (isSuccess)
                 {
                     NavigationManager.NavigateTo("", true);
