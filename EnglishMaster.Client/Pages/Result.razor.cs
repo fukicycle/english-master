@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using EnglishMaster.Client.Entities;
+using EnglishMaster.Client.Authentication;
 
 namespace EnglishMaster.Client.Pages
 {
@@ -36,7 +37,7 @@ namespace EnglishMaster.Client.Pages
         private async Task SaveAsync()
         {
             StateContainer.IsLoading = true;
-            bool isAuthenticated = await ExecuteAsync(AuthenticationService.IsAuthenticatedAsync);
+            bool isAuthenticated = await ExecuteAsync(AuthenticationStateProvider.IsAuthenticatedAsync);
             if (isAuthenticated)
             {
                 await ExecuteAsync(ResultClientService.SubmitAsync);

@@ -16,14 +16,9 @@ public partial class Achievement
     protected override async Task OnInitializedAsync()
     {
         StateContainer.IsLoading = true;
-        bool isAuthenticated = await ExecuteAsync(AuthenticationService.IsAuthenticatedAsync);
+        bool isAuthenticated = await ExecuteAsync(AuthenticationStateProvider.IsAuthenticatedAsync);
         if (isAuthenticated)
         {
-            _loginUser = await ExecuteAsync(AuthenticationService.GetLoginUserAsync);
-            if (_loginUser == null)
-            {
-                NavigationManager.NavigateTo("register");
-            }
             await ExecuteAsync(GenerateUserDataAsync);
         }
         else

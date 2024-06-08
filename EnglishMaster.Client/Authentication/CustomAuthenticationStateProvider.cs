@@ -84,5 +84,15 @@ namespace EnglishMaster.Client.Authentication
                 new ClaimsPrincipal(
                     new ClaimsIdentity(anonymouseRoleClaims, nameof(CustomAuthenticationStateProvider))));
         }
+
+        public async Task<bool> IsAuthenticatedAsync()
+        {
+            AuthenticationState state = await GetAuthenticationStateAsync();
+            if (state.User.Identity == null)
+            {
+                return false;
+            }
+            return state.User.Identity.IsAuthenticated;
+        }
     }
 }

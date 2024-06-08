@@ -1,10 +1,10 @@
 ﻿@page "/achievement"
 @inherits ViewBase
 @inject NavigationManager NavigationManager
-@inject IAuthenticationService AuthenticationService
 @inject AchivementClientService AchivementClientService
 @inject LineChartClientService LineChartClientService
 @inject RadarChartClientService RadarChartClientService
+@inject CustomAuthenticationStateProvider AuthenticationStateProvider
 <PageTitle>Achievement</PageTitle>
 <AuthorizeView>
     <Authorized>

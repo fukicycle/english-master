@@ -13,8 +13,11 @@ namespace EnglishMaster.Client.Pages
         protected override async Task OnInitializedAsync()
         {
             StateContainer.IsLoading = true;
-            string? firstName = await ExecuteAsync(AuthenticationService.GetFirstNameAsync);
-            string? lastName = await ExecuteAsync(AuthenticationService.GetLastNameAsync);
+            //string? firstName = await ExecuteAsync(AuthenticationService.GetFirstNameAsync);
+            //string? lastName = await ExecuteAsync(AuthenticationService.GetLastNameAsync);
+            //TODO
+            string? firstName = null;
+            string? lastName = null;
             Form.FirstName = firstName ?? string.Empty;
             Form.LastName = lastName ?? string.Empty;
             StateHasChanged();
@@ -24,8 +27,11 @@ namespace EnglishMaster.Client.Pages
         private async Task RegisterAccount(AuthenticationState context)
         {
             StateContainer.IsLoading = true;
-            string? email = await ExecuteAsync(AuthenticationService.GetEmailAsync);
-            string? sub = await ExecuteAsync(AuthenticationService.GetSubAsPasswordAsync);
+            //string? email = await ExecuteAsync(AuthenticationService.GetEmailAsync);
+            //string? sub = await ExecuteAsync(AuthenticationService.GetSubAsPasswordAsync);
+            //TODO
+            string? email = "";
+            string sub = "";
             if (email == null || sub == null)
             {
                 StateContainer.DialogContent = new DialogContent("Can't get email information. Please re-login your google account.", DialogType.Error);

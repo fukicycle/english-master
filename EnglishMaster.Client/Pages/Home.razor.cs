@@ -14,18 +14,9 @@ namespace EnglishMaster.Client.Pages
         protected override async Task OnInitializedAsync()
         {
             StateContainer.IsLoading = true;
-            bool isAuthenticated = await ExecuteAsync(AuthenticationService.IsAuthenticatedAsync);
-            if (isAuthenticated)
-            {
-                _loginUser = await ExecuteAsync(AuthenticationService.GetLoginUserAsync);
-                if (_loginUser == null)
-                {
-                    NavigationManager.NavigateTo("register");
-                    return;
-                }
-                _achievements = await ExecuteAsync(AchivementClientService.GetAchievementAsync);
-                await ExecuteAsync(GetTreeImagePathAsync);
-            }
+            bool isAuthenticated = await ExecuteAsync(AuthenticationStateProvider.IsAuthenticatedAsync);
+            _achievements = await ExecuteAsync(AchivementClientService.GetAchievementAsync);
+            await ExecuteAsync(GetTreeImagePathAsync);
             StateContainer.IsLoading = false;
         }
 

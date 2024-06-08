@@ -2,7 +2,7 @@
 @inherits ViewBase
 @inject NavigationManager NavigationManager
 @inject IConfiguration Configuration
-@inject IAuthenticationService AuthenticationService
+@inject CustomAuthenticationStateProvider AuthenticationStateProvider
 @inject UserRegisterService UserRegisterService
 <div class="register-area-wrapper">
     <Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
