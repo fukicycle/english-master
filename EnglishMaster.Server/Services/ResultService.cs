@@ -15,9 +15,9 @@ namespace EnglishMaster.Server.Services
             _db = db;
             _logger = logger;
         }
-        public IList<ResultResponseDto> GetResultResponseDtosByEmail(string email, int count)
+        public IList<ResultResponseDto> GetResultResponseDtos(long userId, int count)
         {
-            User user = _db.Users.Single(a => a.Username == email);
+            User user = _db.Users.Single(a => a.Id == userId);
             IList<MeaningOfWordLearningHistory> histories = _db.MeaningOfWordLearningHistories
                                                                 .Include(a => a.QuestionMeaningOfWord)
                                                                 .ThenInclude(a => a.Word)
@@ -39,14 +39,14 @@ namespace EnglishMaster.Server.Services
             return result;
         }
 
-        public int RegisterResult(string email, IEnumerable<ResultRequestDto> results)
+        public int RegisterResult(long userId, IEnumerable<ResultRequestDto> results)
         {
             if (!results.Any())
             {
                 _logger.LogWarning("Empty results.");
                 return 0;
             }
-            User user = _db.Users.Single(a => a.Username == email);
+            User user = _db.Users.Single(a => a.Id == userId);
             foreach (ResultRequestDto result in results)
             {
                 _db.MeaningOfWordLearningHistories.Add(new MeaningOfWordLearningHistory

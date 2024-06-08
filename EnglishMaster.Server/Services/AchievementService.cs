@@ -16,7 +16,7 @@ namespace EnglishMaster.Server.Services
             _logger = logger;
         }
 
-        public IList<AchievementGraphResponseDto> GetAchievementGraphResponseDtosByPartOfSpeech(string email)
+        public IList<AchievementGraphResponseDto> GetAchievementGraphResponseDtosByPartOfSpeech(long userId)
         {
             List<AchievementGraphResponseDto> achievementGraphResponseDtos = new List<AchievementGraphResponseDto>();
             User? user = _db.Users
@@ -25,7 +25,7 @@ namespace EnglishMaster.Server.Services
                             .ThenInclude(a => a.PartOfSpeech)
                             .Include(a => a.MeaningOfWordLearningHistories)
                             .ThenInclude(a => a.QuestionMeaningOfWord)
-                            .FirstOrDefault(a => a.Username == email);
+                            .FirstOrDefault(a => a.Id == userId);
             if (user == null)
             {
                 return achievementGraphResponseDtos;
@@ -53,7 +53,7 @@ namespace EnglishMaster.Server.Services
             return achievementGraphResponseDtos;
         }
 
-        public IList<AchievementGraphResponseDto> GetAchievementGraphResponseDtosByWeek(string email)
+        public IList<AchievementGraphResponseDto> GetAchievementGraphResponseDtosByWeek(long userId)
         {
             List<AchievementGraphResponseDto> achievementGraphResponseDtos = new List<AchievementGraphResponseDto>();
             User? user = _db.Users
@@ -62,7 +62,7 @@ namespace EnglishMaster.Server.Services
                             .ThenInclude(a => a.PartOfSpeech)
                             .Include(a => a.MeaningOfWordLearningHistories)
                             .ThenInclude(a => a.QuestionMeaningOfWord)
-                            .FirstOrDefault(a => a.Username == email);
+                            .FirstOrDefault(a => a.Id == userId);
             if (user == null)
             {
                 return achievementGraphResponseDtos;
@@ -87,7 +87,7 @@ namespace EnglishMaster.Server.Services
             return achievementGraphResponseDtos;
         }
 
-        public IList<AchievementResponseDto> GetAchievementResponseDtosByEmail(string email)
+        public IList<AchievementResponseDto> GetAchievementResponseDtos(long userId)
         {
             List<AchievementResponseDto> achievementResponseDtos = new List<AchievementResponseDto>();
             User? user = _db.Users
@@ -97,7 +97,7 @@ namespace EnglishMaster.Server.Services
                             .Include(a => a.MeaningOfWordLearningHistories)
                             .ThenInclude(a => a.QuestionMeaningOfWord)
                             .ThenInclude(a => a.Level)
-                            .FirstOrDefault(a => a.Username == email);
+                            .FirstOrDefault(a => a.Id == userId);
             if (user == null)
             {
                 return achievementResponseDtos;
@@ -128,13 +128,12 @@ namespace EnglishMaster.Server.Services
             return achievementResponseDtos;
         }
 
-        public IList<TreeFarmResponseDto> GetTreeFarmData(string email, DateTime startDate)
+        public IList<TreeFarmResponseDto> GetTreeFarmData(long userId, DateTime startDate)
         {
             List<TreeFarmResponseDto> treeFarmResponseDtos = new List<TreeFarmResponseDto>();
             List<MeaningOfWordLearningHistory> histories =
                 _db.MeaningOfWordLearningHistories
-                .Include(a => a.User)
-                .Where(a => a.User.Username == email && a.Date >= startDate)
+                .Where(a => a.UserId == userId && a.Date >= startDate)
                 .ToList();
             foreach (var history in histories.GroupBy(a => new { a.Date.Year, a.Date.Month, a.Date.Day }))
             {

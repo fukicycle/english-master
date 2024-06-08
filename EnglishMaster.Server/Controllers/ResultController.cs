@@ -11,11 +11,9 @@ namespace EnglishMaster.Server.Controllers
     public sealed class ResultController : ControllerBase
     {
         private readonly IResultService _resultService;
-        private readonly ILoginService _loginService;
-        public ResultController(IResultService resultService, ILoginService loginService)
+        public ResultController(IResultService resultService)
         {
             _resultService = resultService;
-            _loginService = loginService;
 
         }
 
@@ -25,8 +23,8 @@ namespace EnglishMaster.Server.Controllers
         {
             try
             {
-                string email = _loginService.GetValueFromClaims(HttpContext.User.Claims, "email");
-                return Ok(_resultService.GetResultResponseDtosByEmail(email, count));
+                long userId = HttpContext.GetUserId();
+                return Ok(_resultService.GetResultResponseDtos(userId, count));
             }
             catch (Exception ex)
             {
@@ -40,8 +38,8 @@ namespace EnglishMaster.Server.Controllers
         {
             try
             {
-                string email = _loginService.GetValueFromClaims(HttpContext.User.Claims, "email");
-                return Ok(_resultService.RegisterResult(email, resultRequestDtos));
+                long userId = HttpContext.GetUserId();
+                return Ok(_resultService.RegisterResult(userId, resultRequestDtos));
             }
             catch (Exception ex)
             {

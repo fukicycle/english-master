@@ -1,4 +1,6 @@
 ﻿
+using EnglishMaster.Server.Security;
+using EnglishMaster.Server.Security.Service;
 using EnglishMaster.Server.Services.Interfaces;
 using EnglishMaster.Shared;
 using EnglishMaster.Shared.Dto.Request;
@@ -11,11 +13,11 @@ namespace EnglishMaster.Server.Controllers
     [Route(ApiEndPoint.LOGIN)]
     public sealed class LoginController : ControllerBase
     {
-        private readonly ILoginService _loginService;
+        private readonly IAccessTokenAuthenticationService _accessTokenAuthenticationService;
 
-        public LoginController(ILoginService loginService)
+        public LoginController(IAccessTokenAuthenticationService accessTokenAuthenticationService)
         {
-            _loginService = loginService;
+            _accessTokenAuthenticationService = accessTokenAuthenticationService;
         }
 
         [Route("")]
@@ -28,11 +30,17 @@ namespace EnglishMaster.Server.Controllers
         {
             try
             {
-                LoginResponseDto loginResponseDto = _loginService.Login(loginRequestDto.Email, loginRequestDto.Password);
-                if (loginResponseDto.Token == string.Empty)
+                var result = _accessTokenAuthenticationService
+                                .Authenticate(loginRequestDto.Email, loginRequestDto.Password);
+                if (result.ResultCode == AccessTokenAuthenticationResultCode.INVALID_CREDENTIAL)
                 {
-                    return NotFound();
+                    return Unauthorized();
                 }
+                if (result.Token == null)
+                {
+                    return StatusCode(500, "Token generation failed.");
+                }
+                LoginResponseDto loginResponseDto = new LoginResponseDto(result.Token);
                 return Ok(loginResponseDto);
             }
             catch (Exception ex)

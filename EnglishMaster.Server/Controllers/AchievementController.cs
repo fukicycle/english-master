@@ -1,4 +1,5 @@
-﻿using EnglishMaster.Server.Services.Interfaces;
+﻿using EnglishMaster.Server.Security.Service;
+using EnglishMaster.Server.Services.Interfaces;
 using EnglishMaster.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,11 +11,9 @@ namespace EnglishMaster.Server.Controllers
     public sealed class AchievementController : ControllerBase
     {
         private readonly IAchievementService _achievementService;
-        private readonly ILoginService _loginService;
-        public AchievementController(IAchievementService achievementService, ILoginService loginService)
+        public AchievementController(IAchievementService achievementService)
         {
             _achievementService = achievementService;
-            _loginService = loginService;
         }
 
         [HttpGet]
@@ -23,8 +22,8 @@ namespace EnglishMaster.Server.Controllers
         {
             try
             {
-                string email = _loginService.GetValueFromClaims(HttpContext.User.Claims, "email");
-                return Ok(_achievementService.GetAchievementResponseDtosByEmail(email));
+                long userId = HttpContext.GetUserId();
+                return Ok(_achievementService.GetAchievementResponseDtos(userId));
             }
             catch (Exception ex)
             {
@@ -39,8 +38,8 @@ namespace EnglishMaster.Server.Controllers
         {
             try
             {
-                string email = _loginService.GetValueFromClaims(HttpContext.User.Claims, "email");
-                return Ok(_achievementService.GetAchievementGraphResponseDtosByWeek(email));
+                long userId = HttpContext.GetUserId();
+                return Ok(_achievementService.GetAchievementGraphResponseDtosByWeek(userId));
             }
             catch (Exception ex)
             {
@@ -55,8 +54,8 @@ namespace EnglishMaster.Server.Controllers
         {
             try
             {
-                string email = _loginService.GetValueFromClaims(HttpContext.User.Claims, "email");
-                return Ok(_achievementService.GetAchievementGraphResponseDtosByPartOfSpeech(email));
+                long userId = HttpContext.GetUserId();
+                return Ok(_achievementService.GetAchievementGraphResponseDtosByPartOfSpeech(userId));
             }
             catch (Exception ex)
             {
@@ -71,8 +70,8 @@ namespace EnglishMaster.Server.Controllers
         {
             try
             {
-                string email = _loginService.GetValueFromClaims(HttpContext.User.Claims, "email");
-                return Ok(_achievementService.GetTreeFarmData(email,startDate));
+                long userId = HttpContext.GetUserId();
+                return Ok(_achievementService.GetTreeFarmData(userId, startDate));
             }
             catch (Exception ex)
             {

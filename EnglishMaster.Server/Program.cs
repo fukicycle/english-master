@@ -40,7 +40,6 @@ builder.Services.AddScoped<IDictionaryService, DictionaryService>();
 builder.Services.AddScoped<IQuestionService, QuestionService>();
 builder.Services.AddScoped<IPartOfSpeechService, PartOfSpeechService>();
 builder.Services.AddScoped<ILevelService, LevelService>();
-builder.Services.AddScoped<ILoginService, AccessTokenLoginService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAchievementService, AchievementService>();
 builder.Services.AddScoped<IResultService, ResultService>();

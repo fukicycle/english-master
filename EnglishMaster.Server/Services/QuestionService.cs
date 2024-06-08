@@ -52,11 +52,11 @@ namespace EnglishMaster.Server.Services
             return items;
         }
 
-        public IList<QuestionResponseDto> GetQuestionResponseDtosWithCredentials(string email, long partOfSpeechId = 0, long levelId = 0, int numberOfQuestions = 10)
+        public IList<QuestionResponseDto> GetQuestionResponseDtos(long userId, long partOfSpeechId = 0, long levelId = 0, int numberOfQuestions = 10)
         {
             IEnumerable<MeaningOfWord> originals = _db.MeaningOfWords.Include(a => a.Word).ToList();
             IEnumerable<MeaningOfWord> meaningOfWords = Filter(originals, partOfSpeechId, levelId).OrderByDescending(a => Guid.NewGuid());
-            User user = _db.Users.Single(a => a.Username == email);
+            User user = _db.Users.Single(a => a.Id == userId);
             IList<MeaningOfWordLearningHistory> histories = _db.MeaningOfWordLearningHistories.Where(a => a.UserId == user.Id && a.IsDone).ToList();
             IEnumerable<MeaningOfWord> questions = GetQuestions(meaningOfWords, histories);
             int number = 1;

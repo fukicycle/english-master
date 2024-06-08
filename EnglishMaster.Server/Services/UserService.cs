@@ -31,12 +31,12 @@ namespace EnglishMaster.Server.Services
             _db.Users.Add(user);
             _db.SaveChanges();
         }
-        public UserResponseDto GetUserResponseDtoByEmail(string email)
+        public UserResponseDto GetUserResponseDto(long userId)
         {
-            User? user = _db.Users.FirstOrDefault(a => a.Username == email);
+            User? user = _db.Users.Find(userId);
             if (user == null)
             {
-                throw new Exception($"No such user:{email}");
+                throw new Exception($"No such user:{userId}");
             }
             return new UserResponseDto(user.FirstName, user.LastName, user.Nickname);
         }

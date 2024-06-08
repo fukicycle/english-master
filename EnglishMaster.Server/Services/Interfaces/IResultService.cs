@@ -5,7 +5,7 @@ namespace EnglishMaster.Server.Services.Interfaces
 {
     public interface IResultService
     {
-        IList<ResultResponseDto> GetResultResponseDtosByEmail(string email, int count);
-        int RegisterResult(string email, IEnumerable<ResultRequestDto> results);
+        IList<ResultResponseDto> GetResultResponseDtos(long userId, int count);
+        int RegisterResult(long userId, IEnumerable<ResultRequestDto> results);
     }
 }
