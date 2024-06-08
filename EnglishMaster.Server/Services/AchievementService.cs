@@ -134,7 +134,7 @@ namespace EnglishMaster.Server.Services
             List<MeaningOfWordLearningHistory> histories =
                 _db.MeaningOfWordLearningHistories
                 .Include(a => a.User)
-                .Where(a => a.User.Username == email && a.Date >= startDate)
+                .Where(a => a.User.Username == email && a.Date.Date >= startDate)
                 .ToList();
             foreach (var history in histories.GroupBy(a => new { a.Date.Year, a.Date.Month, a.Date.Day }))
             {
