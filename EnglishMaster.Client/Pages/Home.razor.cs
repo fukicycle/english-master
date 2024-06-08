@@ -15,8 +15,11 @@ namespace EnglishMaster.Client.Pages
         {
             StateContainer.IsLoading = true;
             bool isAuthenticated = await ExecuteAsync(AuthenticationStateProvider.IsAuthenticatedAsync);
-            _achievements = await ExecuteAsync(AchivementClientService.GetAchievementAsync);
-            await ExecuteAsync(GetTreeImagePathAsync);
+            if (isAuthenticated)
+            {
+                _achievements = await ExecuteAsync(AchivementClientService.GetAchievementAsync);
+                await ExecuteAsync(GetTreeImagePathAsync);
+            }
             StateContainer.IsLoading = false;
         }
 
