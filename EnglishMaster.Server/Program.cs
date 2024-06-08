@@ -1,5 +1,5 @@
 using EnglishMaster.Server;
-using EnglishMaster.Server.Authentication;
+using EnglishMaster.Server.Security.Authentication;
 using EnglishMaster.Server.Services;
 using EnglishMaster.Server.Services.Interfaces;
 using EnglishMaster.Shared;

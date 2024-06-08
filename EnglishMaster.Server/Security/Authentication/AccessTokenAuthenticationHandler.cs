@@ -5,7 +5,7 @@ using Microsoft.Extensions.Options;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
 
-namespace EnglishMaster.Server.Authentication
+namespace EnglishMaster.Server.Security.Authentication
 {
     public sealed class AccessTokenAuthenticationHandler : AuthenticationHandler<AccessTokenAuthenticationOptions>
     {
@@ -38,13 +38,13 @@ namespace EnglishMaster.Server.Authentication
                 return AuthenticateResult.Fail("Expired token.");
             }
 
-            var claims = new List<Claim>()
+            IEnumerable<Claim> claims = new List<Claim>()
             {
                 new Claim(ClaimTypes.NameIdentifier,accessTokenObj.UserId.ToString())
             };
 
-            var claimsIdentity = new ClaimsIdentity(claims, Scheme.Name);
-            var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+            ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, Scheme.Name);
+            ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
             return AuthenticateResult.Success(
                 new AuthenticationTicket(claimsPrincipal, Scheme.Name));

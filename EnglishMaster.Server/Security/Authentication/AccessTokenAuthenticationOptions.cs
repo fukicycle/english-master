@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 
-namespace EnglishMaster.Server.Authentication
+namespace EnglishMaster.Server.Security.Authentication
 {
     public sealed class AccessTokenAuthenticationOptions : AuthenticationSchemeOptions
     {
