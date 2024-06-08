@@ -30,7 +30,10 @@ namespace EnglishMaster.Server.Services
             {
                 return achievementGraphResponseDtos;
             }
-            IList<PartOfSpeech> partOfSpeeches = _db.PartOfSpeeches.ToList();
+            IList<PartOfSpeech> partOfSpeeches = _db.PartOfSpeeches
+                                                    .Include(a => a.MeaningOfWords)
+                                                    .Where(a => a.MeaningOfWords.Count() >= ApplicationSettings.NUMBER_OF_MIN_LIMIT)
+                                                    .ToList();
             foreach (PartOfSpeech partOfSpeech in partOfSpeeches)
             {
                 int numberOfAnswerWord = user.MeaningOfWordLearningHistories.Count(a => a.QuestionMeaningOfWord.PartOfSpeechId == partOfSpeech.Id);
@@ -69,7 +72,7 @@ namespace EnglishMaster.Server.Services
             {
                 int numberOfAnswerWord = user.MeaningOfWordLearningHistories.Count(a => a.Date == dt);
                 int numberOfCorrectAnswerWord = user.MeaningOfWordLearningHistories
-                                                .Where(a => a.Date == dt)
+                                                .Where(a => a.Date.Date == dt)
                                                 .Count(a => a.AnswerMeaningOfWordId == a.QuestionMeaningOfWordId);
                 if (numberOfAnswerWord == 0)
                 {
@@ -133,9 +136,10 @@ namespace EnglishMaster.Server.Services
                 .Include(a => a.User)
                 .Where(a => a.User.Username == email && a.Date >= startDate)
                 .ToList();
-            foreach (MeaningOfWordLearningHistory history in histories)
+            foreach (var history in histories.GroupBy(a => new { a.Date.Year, a.Date.Month, a.Date.Day }))
             {
-                treeFarmResponseDtos.Add(new TreeFarmResponseDto(history.Date));
+                DateTime dateTime = new DateTime(history.Key.Year, history.Key.Month, history.Key.Day);
+                treeFarmResponseDtos.Add(new TreeFarmResponseDto(dateTime));
             }
             return treeFarmResponseDtos;
         }
