@@ -70,7 +70,7 @@ namespace EnglishMaster.Server.Services
             DateTime startDate = DateTime.Today.AddDays(-7);
             for (DateTime dt = startDate; dt < DateTime.Today; dt = dt.AddDays(1))
             {
-                int numberOfAnswerWord = user.MeaningOfWordLearningHistories.Count(a => a.Date == dt);
+                int numberOfAnswerWord = user.MeaningOfWordLearningHistories.Count(a => a.Date.Date == dt);
                 int numberOfCorrectAnswerWord = user.MeaningOfWordLearningHistories
                                                 .Where(a => a.Date.Date == dt)
                                                 .Count(a => a.AnswerMeaningOfWordId == a.QuestionMeaningOfWordId);
