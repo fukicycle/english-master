@@ -133,7 +133,7 @@ namespace EnglishMaster.Server.Services
             List<TreeFarmResponseDto> treeFarmResponseDtos = new List<TreeFarmResponseDto>();
             List<MeaningOfWordLearningHistory> histories =
                 _db.MeaningOfWordLearningHistories
-                .Where(a => a.UserId == userId && a.Date >= startDate)
+                .Where(a => a.UserId == userId && a.Date.Date >= startDate)
                 .ToList();
             foreach (var history in histories.GroupBy(a => new { a.Date.Year, a.Date.Month, a.Date.Day }))
             {
