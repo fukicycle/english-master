@@ -21,6 +21,7 @@ body,
     color: var(--app-white);
     font-size: 16px;
     overflow: hidden;
+    touch-action: manipulation;
 }
 
 body .pwa-updater[b-pwa-updater] {
