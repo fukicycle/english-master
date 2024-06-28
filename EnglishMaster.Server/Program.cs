@@ -21,7 +21,7 @@ builder.Services.AddCors(options =>
     {
         policy.WithOrigins("http://localhost:5261", "https://localhost:7132", "https://fukicycle.github.io")
                 .WithMethods("GET", "POST", "OPTIONS")
-                .WithHeaders("AccessToken", "Content-Type")
+                .WithHeaders(HttpHeaders.ACCESS_TOKEN_HEADER, "Content-Type")
                 .AllowCredentials();
     });
 });

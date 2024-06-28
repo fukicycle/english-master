@@ -59,15 +59,15 @@ namespace EnglishMaster.Client.Authentication
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            if (_httpClient.DefaultRequestHeaders.Any(a => a.Key == "AccessToken"))
+            if (_httpClient.DefaultRequestHeaders.Any(a => a.Key == HttpHeaders.ACCESS_TOKEN_HEADER))
             {
-                _httpClient.DefaultRequestHeaders.Remove("AccessToken");
+                _httpClient.DefaultRequestHeaders.Remove(HttpHeaders.ACCESS_TOKEN_HEADER);
             }
             if (await _localStorageService.ContainKeyAsync(LocalStorageKeyConst.ACCESS_TOKEN_KEY))
             {
                 string? accessTokenKey =
                     await _localStorageService.GetItemAsync<string>(LocalStorageKeyConst.ACCESS_TOKEN_KEY);
-                _httpClient.DefaultRequestHeaders.Add("AccessToken", accessTokenKey);
+                _httpClient.DefaultRequestHeaders.Add(HttpHeaders.ACCESS_TOKEN_HEADER, accessTokenKey);
                 IEnumerable<Claim> generalRoleClaims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Role,AccessRole.General)
