@@ -1,0 +1,97 @@
+/* _content/Fukicycle.Tool.AppBase/Components/Dialog/Dialog.razor.rz.scp.css */
+.dialog-wrapper[b-z5nmfwlko2] {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    background-color: rgba(33, 33, 33, .7);
+    height: 100%;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+}
+
+.dialog-container[b-z5nmfwlko2] {
+    width: 80%;
+    max-width: 400px;
+    height: 150px;
+    border-radius: 1rem;
+    padding: 1rem;
+    background-color: #212121;
+    box-shadow: 0 0 8px rgba(0,0,0,.25);
+    display: flex;
+    flex-direction: column;
+    color: #F2F2F2;
+}
+
+.dialog-header[b-z5nmfwlko2] {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 16px;
+}
+
+.close-btn[b-z5nmfwlko2] {
+    outline: none;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.dialog-title[b-z5nmfwlko2] {
+    font-size: 16px;
+}
+
+.dialog-body[b-z5nmfwlko2] {
+    flex: 1;
+    align-content: center;
+    overflow: auto;
+    font-size: 20px;
+}
+
+.dialog-action[b-z5nmfwlko2] {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+}
+
+.ok-btn[b-z5nmfwlko2] {
+    outline: none;
+    border: none;
+    width: 100px;
+    box-shadow: 0 0 8px rgba(0,0,0,.50);
+    background-color: transparent;
+    color: #F2F2F2;
+    padding: .5rem;
+    border-radius: 10px;
+    cursor: pointer;
+}
+/* _content/Fukicycle.Tool.AppBase/Components/Loader.razor.rz.scp.css */
+.loader-wrapper[b-p3yon4mh1e] {
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(33,33,33,.7);
+}
+
+.loader[b-p3yon4mh1e] {
+    width: 50px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(farthest-side,#F2F2F2 94%,#0000) top/8px 8px no-repeat, conic-gradient(#0000 30%,#F2F2F2);
+    -webkit-mask: radial-gradient(farthest-side,#0000 calc(100% - 8px),#000 0);
+    animation: l13-b-p3yon4mh1e 1s infinite linear;
+}
+
+@keyframes l13-b-p3yon4mh1e {
+    100% {
+        transform: rotate(1turn)
+    }
+}

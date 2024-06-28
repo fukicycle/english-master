@@ -1,0 +1,21 @@
+﻿button {
+    background-color: var(--app-primary-800);
+    border: none;
+    border-radius: .5rem;
+    box-shadow: 0 .3rem .1rem -.2rem rgba(0,0,0,.2),0 .2rem .2rem 0 rgba(0,0,0,.14), 0 .1rem .5rem 0 rgba(0,0,0,.12);
+    color: var(--app-white);
+    font-size: inherit;
+    width: 100%;
+    padding: .7rem;
+}
+
+    button:active {
+        box-shadow: none;
+    }
+
+.btn-icon {
+    width: auto !important;
+    box-shadow: none !important;
+    border: none !important;
+    background-color: transparent !important;
+}
