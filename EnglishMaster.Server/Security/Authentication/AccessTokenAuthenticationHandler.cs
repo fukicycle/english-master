@@ -36,9 +36,9 @@ namespace EnglishMaster.Server.Security.Authentication
                 _logger.LogInformation("Invalid token.");
                 return AuthenticateResult.Fail("Invalid token.");
             }
-            if (accessTokenObj.Expires.Date < DateTime.UtcNow.Date)
+            if (accessTokenObj.Expires < DateTime.UtcNow)
             {
-                _logger.LogInformation($"Expired token. Expires:{accessTokenObj.Expires.Date:yyyy-MM-dd}, Current: {DateTime.UtcNow.Date:yyyy-MM-dd}");
+                _logger.LogInformation($"Expired token. Expires:{accessTokenObj.Expires:yyyy-MM-dd HH:mm:ss}, Current: {DateTime.UtcNow:yyyy-MM-dd HH:mm:ss}");
                 return AuthenticateResult.Fail("Expired token.");
             }
 

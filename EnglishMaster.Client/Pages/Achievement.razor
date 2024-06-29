@@ -6,7 +6,7 @@
 @inject RadarChartClientService RadarChartClientService
 @inject CustomAuthenticationStateProvider AuthenticationStateProvider
 <PageTitle>Achievement</PageTitle>
-<AuthorizeView>
+<AuthorizeView Roles="@nameof(AccessRole.General)">
     <Authorized>
         @if (_config != null)
         {

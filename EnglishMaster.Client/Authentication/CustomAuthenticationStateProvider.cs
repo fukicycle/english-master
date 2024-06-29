@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using System.Net.Http.Json;
+using System.Net.NetworkInformation;
 using System.Security.Claims;
 
 namespace EnglishMaster.Client.Authentication
@@ -17,6 +18,7 @@ namespace EnglishMaster.Client.Authentication
         private readonly HttpClient _httpClientWithGoogle;
         private readonly HttpClient _httpClient;
         private readonly ILogger<CustomAuthenticationStateProvider> _logger;
+        public AuthenticationState CurrentAuthenticationState { get; private set; }
 
         public CustomAuthenticationStateProvider(
                 ILocalStorageService localStorageService,
@@ -30,6 +32,7 @@ namespace EnglishMaster.Client.Authentication
             _httpClient = httpClient;
             _navigationManager = navigationManager;
             _logger = logger;
+            CurrentAuthenticationState = Create(AccessRole.Anonymouse);
         }
 
         public async Task SignInWithGoogleAsync(string accessToken)
@@ -63,11 +66,10 @@ namespace EnglishMaster.Client.Authentication
                         storedAccessToken);
                 }
             }
-            NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
+            await SetAuthenticationStateAsync();
         }
 
-
-        public override async Task<AuthenticationState> GetAuthenticationStateAsync()
+        private async Task SetAuthenticationStateAsync()
         {
             if (_httpClient.DefaultRequestHeaders.Any(a => a.Key == HttpHeaders.ACCESS_TOKEN_HEADER))
             {
@@ -79,16 +81,30 @@ namespace EnglishMaster.Client.Authentication
                 StoredAccessToken? accessToken =
                     await _localStorageService.GetItemAsync<StoredAccessToken>(LocalStorageKeyConst.ACCESS_TOKEN_KEY);
                 _logger.LogInformation("Verify stored access token.");
-                if (accessToken!.Expires.Date <= DateTime.UtcNow.Date.AddDays(1))
+                if (accessToken!.Expires.Date <= DateTime.UtcNow.Date)
                 {
                     _logger.LogInformation("Expired token.");
-                    return Create(AccessRole.Anonymouse);
+                    CurrentAuthenticationState = Create(AccessRole.Anonymouse);
                 }
-                _httpClient.DefaultRequestHeaders.Add(HttpHeaders.ACCESS_TOKEN_HEADER, accessToken!.Token);
-                return Create(AccessRole.General);
+                else
+                {
+                    _httpClient.DefaultRequestHeaders.Add(HttpHeaders.ACCESS_TOKEN_HEADER, accessToken!.Token);
+                    CurrentAuthenticationState = Create(AccessRole.General);
+                }
             }
-            _logger.LogInformation("Unauthorized. Access as anonymouse role.");
-            return Create(AccessRole.Anonymouse);
+            else
+            {
+                _logger.LogInformation("Unauthorized. Access as anonymouse role.");
+                CurrentAuthenticationState = Create(AccessRole.Anonymouse);
+            }
+            NotifyAuthenticationStateChanged(Task.FromResult(CurrentAuthenticationState));
+        }
+
+
+        public override async Task<AuthenticationState> GetAuthenticationStateAsync()
+        {
+            await SetAuthenticationStateAsync();
+            return CurrentAuthenticationState;
         }
 
         private AuthenticationState Create(AccessRole accessRole)

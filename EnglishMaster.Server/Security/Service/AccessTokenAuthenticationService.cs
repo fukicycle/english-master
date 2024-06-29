@@ -35,7 +35,11 @@ namespace EnglishMaster.Server.Security.Service
             if (accessToken == default)
             {
                 string newToken = GenerateToken();
+#if DEBUG
+                DateTime expires = DateTime.UtcNow.AddSeconds(10);
+#else
                 DateTime expires = DateTime.UtcNow.AddMonths(1);
+#endif
                 accessToken = new AccessToken
                 {
                     Expires = expires,
