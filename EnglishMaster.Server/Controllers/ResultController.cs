@@ -17,21 +17,6 @@ namespace EnglishMaster.Server.Controllers
 
         }
 
-        [HttpGet]
-        [Route("")]
-        public IActionResult GetResults(int count)
-        {
-            try
-            {
-                long userId = HttpContext.GetUserId();
-                return Ok(_resultService.GetResultResponseDtos(userId, count));
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
-        }
-
         [HttpPost]
         [Route("")]
         public IActionResult PostResults([FromBody] IEnumerable<ResultRequestDto> resultRequestDtos)

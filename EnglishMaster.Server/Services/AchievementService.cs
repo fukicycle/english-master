@@ -39,7 +39,7 @@ namespace EnglishMaster.Server.Services
                 int numberOfAnswerWord = user.MeaningOfWordLearningHistories.Count(a => a.QuestionMeaningOfWord.PartOfSpeechId == partOfSpeech.Id);
                 int numberOfCoorectAnswerWord = user.MeaningOfWordLearningHistories
                                                  .Where(a => a.QuestionMeaningOfWord.PartOfSpeechId == partOfSpeech.Id)
-                                                 .Count(a => a.QuestionMeaningOfWordId == a.AnswerMeaningOfWordId);
+                                                 .Count(a => a.IsCorrect);
                 if (numberOfAnswerWord == 0)
                 {
                     //Parts of speech with no answer will not be displayed.
@@ -73,7 +73,7 @@ namespace EnglishMaster.Server.Services
                 int numberOfAnswerWord = user.MeaningOfWordLearningHistories.Count(a => a.Date.Date == dt);
                 int numberOfCorrectAnswerWord = user.MeaningOfWordLearningHistories
                                                 .Where(a => a.Date.Date == dt)
-                                                .Count(a => a.AnswerMeaningOfWordId == a.QuestionMeaningOfWordId);
+                                                .Count(a => a.IsCorrect);
                 if (numberOfAnswerWord == 0)
                 {
                     achievementGraphResponseDtos.Add(new AchievementGraphResponseDto(dt.ToString("MM/dd"), null));
@@ -119,7 +119,7 @@ namespace EnglishMaster.Server.Services
                         continue;
                     }
                     int total = partOfSpeech.MeaningOfWords.Where(a => a.LevelId == level.Id).Count();
-                    int actual = user.MeaningOfWordLearningHistories.Where(a => a.QuestionMeaningOfWord.LevelId == level.Id && a.QuestionMeaningOfWord.PartOfSpeechId == partOfSpeech.Id && a.AnswerMeaningOfWordId == a.QuestionMeaningOfWordId).GroupBy(a => a.QuestionMeaningOfWordId).Count();
+                    int actual = user.MeaningOfWordLearningHistories.Where(a => a.QuestionMeaningOfWord.LevelId == level.Id && a.QuestionMeaningOfWord.PartOfSpeechId == partOfSpeech.Id && a.IsCorrect).GroupBy(a => a.QuestionMeaningOfWordId).Count();
                     _logger.LogInformation($"Actual/Total[{partOfSpeech.Name},{level.Name}]:{actual}/{total}");
                     detailResponseDtos.Add(new AchievementDetailResponseDto(partOfSpeech.Name, total, actual));
                 }

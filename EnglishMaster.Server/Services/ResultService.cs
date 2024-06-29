@@ -15,29 +15,6 @@ namespace EnglishMaster.Server.Services
             _db = db;
             _logger = logger;
         }
-        public IList<ResultResponseDto> GetResultResponseDtos(long userId, int count)
-        {
-            User user = _db.Users.Single(a => a.Id == userId);
-            IList<MeaningOfWordLearningHistory> histories = _db.MeaningOfWordLearningHistories
-                                                                .Include(a => a.QuestionMeaningOfWord)
-                                                                .ThenInclude(a => a.Word)
-                                                                .Include(a => a.AnswerMeaningOfWord)
-                                                                .ThenInclude(a => a.Word)
-                                                                .Where(a => a.UserId == user.Id)
-                                                                .OrderByDescending(a => a.Date)
-                                                                .Take(count)
-                                                                .ToList();
-            IList<ResultResponseDto> result = new List<ResultResponseDto>();
-            foreach (MeaningOfWordLearningHistory history in histories)
-            {
-                result.Add(new ResultResponseDto(
-                    history.QuestionMeaningOfWordId,
-                    history.QuestionMeaningOfWord.Word.Word1,
-                    history.AnswerMeaningOfWord?.Meaning ?? "",
-                    history.QuestionMeaningOfWord.Meaning));
-            }
-            return result;
-        }
 
         public int RegisterResult(long userId, IEnumerable<ResultRequestDto> results)
         {
@@ -53,7 +30,6 @@ namespace EnglishMaster.Server.Services
                 {
                     UserId = user.Id,
                     QuestionMeaningOfWordId = result.QuestionMeaningOfWordId,
-                    AnswerMeaningOfWordId = result.AnswerMeaningOfWordId,
                     Date = DateTime.Now,
                     IsCorrect = result.QuestionMeaningOfWordId == result.AnswerMeaningOfWordId
                 });
