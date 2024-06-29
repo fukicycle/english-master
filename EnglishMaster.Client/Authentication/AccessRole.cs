@@ -1,9 +1,9 @@
 ﻿namespace EnglishMaster.Client.Authentication
 {
-    public class AccessRole
+    public enum AccessRole
     {
-        public const string General = "General";
-        public const string Anonymouse = "Anonymouse";
-        public const string Unregistered = "Unregistered";
+        General,
+        Anonymouse,
+        Unregistered
     }
 }

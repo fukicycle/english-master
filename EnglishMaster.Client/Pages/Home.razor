@@ -7,7 +7,7 @@
 @inject TreeFarmService TreeFarmService
 
 <PageTitle>Home</PageTitle>
-<Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
+<Microsoft.AspNetCore.Components.Authorization.AuthorizeView Roles="@nameof(AccessRole.General)">
     <Authorized>
         <div>Welcome back, @_loginUser?.Fullname!</div>
         <div class="achievement-area">

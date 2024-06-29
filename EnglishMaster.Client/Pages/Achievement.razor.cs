@@ -1,8 +1,10 @@
 
 using ChartJs.Blazor.LineChart;
 using ChartJs.Blazor.RadarChart;
+using EnglishMaster.Client.Authentication;
 using EnglishMaster.Client.Entities;
 using EnglishMaster.Shared.Dto.Response;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 
 namespace EnglishMaster.Client.Pages;
@@ -16,8 +18,8 @@ public partial class Achievement
     protected override async Task OnInitializedAsync()
     {
         StateContainer.IsLoading = true;
-        bool isAuthenticated = await ExecuteAsync(AuthenticationStateProvider.IsAuthenticatedAsync);
-        if (isAuthenticated)
+        AuthenticationState authState = await ExecuteAsync(AuthenticationStateProvider.GetAuthenticationStateAsync);
+        if (authState.User.IsInRole(nameof(AccessRole.General)))
         {
             await ExecuteAsync(GenerateUserDataAsync);
         }

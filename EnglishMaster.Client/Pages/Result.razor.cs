@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using EnglishMaster.Client.Entities;
 using EnglishMaster.Client.Authentication;
+using Microsoft.AspNetCore.Components.Authorization;
 
 namespace EnglishMaster.Client.Pages
 {
@@ -37,8 +38,8 @@ namespace EnglishMaster.Client.Pages
         private async Task SaveAsync()
         {
             StateContainer.IsLoading = true;
-            bool isAuthenticated = await ExecuteAsync(AuthenticationStateProvider.IsAuthenticatedAsync);
-            if (isAuthenticated)
+            AuthenticationState authState = await ExecuteAsync(AuthenticationStateProvider.GetAuthenticationStateAsync);
+            if (authState.User.IsInRole(nameof(AccessRole.General)))
             {
                 await ExecuteAsync(ResultClientService.SubmitAsync);
             }

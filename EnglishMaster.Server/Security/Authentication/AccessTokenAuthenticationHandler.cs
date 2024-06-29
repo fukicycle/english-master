@@ -10,6 +10,7 @@ namespace EnglishMaster.Server.Security.Authentication
     public sealed class AccessTokenAuthenticationHandler : AuthenticationHandler<AccessTokenAuthenticationOptions>
     {
         private readonly DB _db;
+        private readonly ILogger<AccessTokenAuthenticationHandler> _logger;
         public AccessTokenAuthenticationHandler(
                 IOptionsMonitor<AccessTokenAuthenticationOptions> options,
                 ILoggerFactory logger,
@@ -17,6 +18,7 @@ namespace EnglishMaster.Server.Security.Authentication
                 DB db) : base(options, logger, encoder)
         {
             _db = db;
+            _logger = logger.CreateLogger<AccessTokenAuthenticationHandler>();
         }
 
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
@@ -31,10 +33,12 @@ namespace EnglishMaster.Server.Security.Authentication
                 await _db.AccessTokens.FirstOrDefaultAsync(a => a.Token == accessToken);
             if (accessTokenObj == null)
             {
+                _logger.LogInformation("Invalid token.");
                 return AuthenticateResult.Fail("Invalid token.");
             }
-            if (accessTokenObj.Expires < DateTime.UtcNow)
+            if (accessTokenObj.Expires.Date < DateTime.UtcNow.Date)
             {
+                _logger.LogInformation($"Expired token. Expires:{accessTokenObj.Expires.Date:yyyy-MM-dd}, Current: {DateTime.UtcNow.Date:yyyy-MM-dd}");
                 return AuthenticateResult.Fail("Expired token.");
             }
 

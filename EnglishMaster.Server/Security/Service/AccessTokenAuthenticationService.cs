@@ -16,7 +16,7 @@ namespace EnglishMaster.Server.Security.Service
         {
             if (!_db.Users.Any(a => a.Username == username))
             {
-                return new AccessTokenAuthenticationResult(AccessTokenAuthenticationResultCode.UNREGISTERED_USER, null);
+                return new AccessTokenAuthenticationResult(AccessTokenAuthenticationResultCode.UNREGISTERED_USER, null, null);
             }
 
             User? user = _db.Users.FirstOrDefault(a =>
@@ -25,7 +25,7 @@ namespace EnglishMaster.Server.Security.Service
 
             if (user == default)
             {
-                return new AccessTokenAuthenticationResult(AccessTokenAuthenticationResultCode.INVALID_CREDENTIAL, null);
+                return new AccessTokenAuthenticationResult(AccessTokenAuthenticationResultCode.INVALID_CREDENTIAL, null, null);
             }
             AccessToken? accessToken = _db.AccessTokens
                                         .OrderByDescending(a => a.Expires)
@@ -46,7 +46,7 @@ namespace EnglishMaster.Server.Security.Service
                 _db.SaveChanges();
             }
 
-            return new AccessTokenAuthenticationResult(AccessTokenAuthenticationResultCode.SUCCESS, accessToken.Token);
+            return new AccessTokenAuthenticationResult(AccessTokenAuthenticationResultCode.SUCCESS, accessToken.Token, accessToken.Expires);
         }
 
         private string GenerateToken()

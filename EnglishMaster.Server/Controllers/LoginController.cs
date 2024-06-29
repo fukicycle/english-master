@@ -40,11 +40,11 @@ namespace EnglishMaster.Server.Controllers
                 {
                     return Unauthorized();
                 }
-                if (result.Token == null)
+                if (result.Token == null || result.Expires == null)
                 {
                     return StatusCode(500, "Token generation failed.");
                 }
-                LoginResponseDto loginResponseDto = new LoginResponseDto(result.Token);
+                LoginResponseDto loginResponseDto = new LoginResponseDto(result.Token, result.Expires.Value);
                 return Ok(loginResponseDto);
             }
             catch (Exception ex)
