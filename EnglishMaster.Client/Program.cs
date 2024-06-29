@@ -39,6 +39,7 @@ builder.Services.AddScoped<LineChartClientService>();
 builder.Services.AddScoped<RadarChartClientService>();
 builder.Services.AddScoped<TreeFarmService>();
 builder.Services.AddScoped<OAuthConfigurationService>();
+builder.Services.AddScoped<ModeClientService>();
 builder.Services.AddAppBase();
 builder.Services.AddScoped<CustomAuthenticationStateProvider>();
 builder.Services.AddScoped<AuthenticationStateProvider>(service => service.GetRequiredService<CustomAuthenticationStateProvider>());

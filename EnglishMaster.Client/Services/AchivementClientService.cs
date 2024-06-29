@@ -10,21 +10,23 @@ namespace EnglishMaster.Client.Services
     {
         private readonly HttpClient _httpClient;
         private readonly ILogger<AchivementClientService> _logger;
+        private readonly ModeClientService _modeClientService;
 
-        public AchivementClientService(HttpClient httpClient, ILogger<AchivementClientService> logger)
+        public AchivementClientService(HttpClient httpClient, ModeClientService modeClientService, ILogger<AchivementClientService> logger)
         {
             _httpClient = httpClient;
+            _modeClientService = modeClientService;
             _logger = logger;
         }
 
         public async Task<List<AchievementResponseDto>> GetAchievementAsync()
         {
-            HttpResponseMessage httpResponseMessage = await _httpClient.GetAsync(ApiEndPoint.ACHIEVEMENT);
+            HttpResponseMessage httpResponseMessage = await _httpClient.GetAsync($"{ApiEndPoint.ACHIEVEMENT}/{_modeClientService.CurrentModeId}");
             if (!httpResponseMessage.IsSuccessStatusCode)
             {
                 throw new Exception(await httpResponseMessage.Content.ReadAsStringAsync());
             }
-            List<AchievementResponseDto>? achievements = 
+            List<AchievementResponseDto>? achievements =
                 await httpResponseMessage.Content.ReadFromJsonAsync<List<AchievementResponseDto>>();
             if (achievements == null)
             {
@@ -35,13 +37,13 @@ namespace EnglishMaster.Client.Services
 
         public async Task<List<AchievementGraphResponseDto>> GetAchievementGraphByWeekAsync()
         {
-            HttpResponseMessage httpResponseMessage = 
-                await _httpClient.GetAsync(ApiEndPoint.ACHIEVEMENT + "/car/week");
+            HttpResponseMessage httpResponseMessage =
+                await _httpClient.GetAsync(ApiEndPoint.ACHIEVEMENT + $"/car/week/{_modeClientService.CurrentModeId}");
             if (!httpResponseMessage.IsSuccessStatusCode)
             {
                 throw new Exception(await httpResponseMessage.Content.ReadAsStringAsync());
             }
-            List<AchievementGraphResponseDto>? achievements = 
+            List<AchievementGraphResponseDto>? achievements =
                 await httpResponseMessage.Content.ReadFromJsonAsync<List<AchievementGraphResponseDto>>();
             if (achievements == null)
             {
@@ -52,13 +54,13 @@ namespace EnglishMaster.Client.Services
 
         public async Task<List<AchievementGraphResponseDto>> GetAchievementGraphByPartOfSpeechAsync()
         {
-            HttpResponseMessage httpResponseMessage = 
-                await _httpClient.GetAsync(ApiEndPoint.ACHIEVEMENT + "/car/part-of-speech");
+            HttpResponseMessage httpResponseMessage =
+                await _httpClient.GetAsync(ApiEndPoint.ACHIEVEMENT + $"/car/part-of-speech/{_modeClientService.CurrentModeId}");
             if (!httpResponseMessage.IsSuccessStatusCode)
             {
                 throw new Exception(await httpResponseMessage.Content.ReadAsStringAsync());
             }
-            List<AchievementGraphResponseDto>? achievements = 
+            List<AchievementGraphResponseDto>? achievements =
                 await httpResponseMessage.Content.ReadFromJsonAsync<List<AchievementGraphResponseDto>>();
             if (achievements == null)
             {

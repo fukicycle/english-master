@@ -6,11 +6,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EnglishMaster.Server.Services
 {
-    public sealed class AchievementService : IAchievementService
+    public sealed class FlushAchievementService : IAchievementService
     {
         private readonly DB _db;
-        private readonly ILogger<AchievementService> _logger;
-        public AchievementService(DB db, ILogger<AchievementService> logger)
+        private readonly ILogger<FlushAchievementService> _logger;
+        public FlushAchievementService(DB db, ILogger<FlushAchievementService> logger)
         {
             _db = db;
             _logger = logger;
@@ -36,9 +36,9 @@ namespace EnglishMaster.Server.Services
                                                     .ToList();
             foreach (PartOfSpeech partOfSpeech in partOfSpeeches)
             {
-                int numberOfAnswerWord = user.MeaningOfWordLearningHistories.Count(a => a.QuestionMeaningOfWord.PartOfSpeechId == partOfSpeech.Id);
+                int numberOfAnswerWord = user.MeaningOfWordLearningHistories.Where(a => a.ModeId == 1).Count(a => a.QuestionMeaningOfWord.PartOfSpeechId == partOfSpeech.Id);
                 int numberOfCoorectAnswerWord = user.MeaningOfWordLearningHistories
-                                                 .Where(a => a.QuestionMeaningOfWord.PartOfSpeechId == partOfSpeech.Id)
+                                                 .Where(a => a.QuestionMeaningOfWord.PartOfSpeechId == partOfSpeech.Id && a.ModeId == 1)
                                                  .Count(a => a.IsCorrect);
                 if (numberOfAnswerWord == 0)
                 {
@@ -70,9 +70,9 @@ namespace EnglishMaster.Server.Services
             DateTime startDate = DateTime.Today.AddDays(-7);
             for (DateTime dt = startDate; dt < DateTime.Today; dt = dt.AddDays(1))
             {
-                int numberOfAnswerWord = user.MeaningOfWordLearningHistories.Count(a => a.Date.Date == dt);
+                int numberOfAnswerWord = user.MeaningOfWordLearningHistories.Count(a => a.Date.Date == dt && a.ModeId == 1);
                 int numberOfCorrectAnswerWord = user.MeaningOfWordLearningHistories
-                                                .Where(a => a.Date.Date == dt)
+                                                .Where(a => a.Date.Date == dt && a.ModeId == 1)
                                                 .Count(a => a.IsCorrect);
                 if (numberOfAnswerWord == 0)
                 {
@@ -119,7 +119,13 @@ namespace EnglishMaster.Server.Services
                         continue;
                     }
                     int total = partOfSpeech.MeaningOfWords.Where(a => a.LevelId == level.Id).Count();
-                    int actual = user.MeaningOfWordLearningHistories.Where(a => a.QuestionMeaningOfWord.LevelId == level.Id && a.QuestionMeaningOfWord.PartOfSpeechId == partOfSpeech.Id && a.IsCorrect).GroupBy(a => a.QuestionMeaningOfWordId).Count();
+                    int actual = user.MeaningOfWordLearningHistories
+                                .Where(a => a.QuestionMeaningOfWord.LevelId == level.Id &&
+                                            a.QuestionMeaningOfWord.PartOfSpeechId == partOfSpeech.Id &&
+                                            a.IsCorrect &&
+                                            a.ModeId == 1)
+                                .GroupBy(a => a.QuestionMeaningOfWordId)
+                                .Count();
                     _logger.LogInformation($"Actual/Total[{partOfSpeech.Name},{level.Name}]:{actual}/{total}");
                     detailResponseDtos.Add(new AchievementDetailResponseDto(partOfSpeech.Name, total, actual));
                 }

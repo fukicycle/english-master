@@ -64,7 +64,6 @@ namespace EnglishMaster.Client.Services
                         _currentQuestion.Word,
                         answerMeaning,
                         questionMeaning,
-                        answerMeaingOfWordId,
                         _currentQuestion.MeaningOfWordId));
             }
             return isCorrect;

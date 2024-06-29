@@ -10,20 +10,52 @@ namespace EnglishMaster.Server.Controllers
     [Route(ApiEndPoint.ACHIEVEMENT)]
     public sealed class AchievementController : ControllerBase
     {
-        private readonly IAchievementService _achievementService;
-        public AchievementController(IAchievementService achievementService)
+        private readonly IAchievementService _choiceAchievementService;
+        private readonly IAchievementService _flushAchievementService;
+        public AchievementController([FromKeyedServices("Choice")] IAchievementService choiceAchievementService, [FromKeyedServices("Flush")] IAchievementService flushAchievementService)
         {
-            _achievementService = achievementService;
+            _choiceAchievementService = choiceAchievementService;
+            _flushAchievementService = flushAchievementService;
         }
 
-        [HttpGet]
+        [HttpGet("{mode}")]
         [Route("")]
-        public IActionResult GetAchievements()
+        public IActionResult GetAchievements(long mode)
         {
             try
             {
                 long userId = HttpContext.GetUserId();
-                return Ok(_achievementService.GetAchievementResponseDtos(userId));
+                switch (mode)
+                {
+                    case 1:
+                        return Ok(_flushAchievementService.GetAchievementResponseDtos(userId));
+                    case 2:
+                        return Ok(_choiceAchievementService.GetAchievementResponseDtos(userId));
+                }
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpGet()]
+        [Route("car/week/{mode}")]
+        [Authorize]
+        public IActionResult GetAchievementCARByWeek(long mode)
+        {
+            try
+            {
+                long userId = HttpContext.GetUserId();
+                switch (mode)
+                {
+                    case 1:
+                        return Ok(_flushAchievementService.GetAchievementGraphResponseDtosByWeek(userId));
+                    case 2:
+                        return Ok(_choiceAchievementService.GetAchievementGraphResponseDtosByWeek(userId));
+                }
+                return BadRequest();
             }
             catch (Exception ex)
             {
@@ -32,30 +64,21 @@ namespace EnglishMaster.Server.Controllers
         }
 
         [HttpGet]
-        [Route("car/week")]
+        [Route("car/part-of-speech/{mode}")]
         [Authorize]
-        public IActionResult GetAchievementCARByWeek()
+        public IActionResult GetAchievementCARByPartOfSpeech(long mode)
         {
             try
             {
                 long userId = HttpContext.GetUserId();
-                return Ok(_achievementService.GetAchievementGraphResponseDtosByWeek(userId));
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
-        }
-
-        [HttpGet]
-        [Route("car/part-of-speech")]
-        [Authorize]
-        public IActionResult GetAchievementCARByPartOfSpeech()
-        {
-            try
-            {
-                long userId = HttpContext.GetUserId();
-                return Ok(_achievementService.GetAchievementGraphResponseDtosByPartOfSpeech(userId));
+                switch (mode)
+                {
+                    case 1:
+                        return Ok(_flushAchievementService.GetAchievementGraphResponseDtosByPartOfSpeech(userId));
+                    case 2:
+                        return Ok(_choiceAchievementService.GetAchievementGraphResponseDtosByPartOfSpeech(userId));
+                }
+                return BadRequest();
             }
             catch (Exception ex)
             {
@@ -71,7 +94,7 @@ namespace EnglishMaster.Server.Controllers
             try
             {
                 long userId = HttpContext.GetUserId();
-                return Ok(_achievementService.GetTreeFarmData(userId, startDate));
+                return Ok(_choiceAchievementService.GetTreeFarmData(userId, startDate));
             }
             catch (Exception ex)
             {
