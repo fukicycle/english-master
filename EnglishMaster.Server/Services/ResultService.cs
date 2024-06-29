@@ -31,7 +31,8 @@ namespace EnglishMaster.Server.Services
                     UserId = user.Id,
                     QuestionMeaningOfWordId = result.QuestionMeaningOfWordId,
                     Date = DateTime.Now,
-                    IsCorrect = result.QuestionMeaningOfWordId == result.AnswerMeaningOfWordId
+                    IsCorrect = result.IsCorrect,
+                    ModeId = result.ModeId
                 });
             }
             return _db.SaveChanges();

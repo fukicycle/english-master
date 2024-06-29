@@ -11,10 +11,12 @@ namespace EnglishMaster.Client.Services
         private readonly HttpClient _httpClient;
         private readonly ILogger<ResultClientService> _logger;
         private List<UserAnswer> _userAnswers = new List<UserAnswer>();
+        private readonly ModeClientService _modeClientService;
 
-        public ResultClientService(HttpClient httpClient, ILogger<ResultClientService> logger)
+        public ResultClientService(HttpClient httpClient, ModeClientService modeClientService, ILogger<ResultClientService> logger)
         {
             _httpClient = httpClient;
+            _modeClientService = modeClientService;
             _logger = logger;
         }
 
@@ -26,7 +28,7 @@ namespace EnglishMaster.Client.Services
         public async Task SubmitAsync()
         {
             List<ResultRequestDto> resultRequestDtos =
-                _userAnswers.Select(a => new ResultRequestDto(a.QuestionMeaningOfWordId, a.AnswerMeaningOfWordId))
+                _userAnswers.Select(a => new ResultRequestDto(a.QuestionMeaningOfWordId, a.QuestionMeaning == a.AnswerMeaning, _modeClientService.CurrentModeId))
                             .ToList();
             HttpResponseMessage httpResponseMessage =
                 await _httpClient.PostAsJsonAsync(ApiEndPoint.RESULT, _userAnswers);
@@ -45,7 +47,7 @@ namespace EnglishMaster.Client.Services
         {
             if (_userAnswers.Any())
             {
-                int numberOfCorrect = _userAnswers.Count(a => a.QuestionMeaningOfWordId == a.AnswerMeaningOfWordId);
+                int numberOfCorrect = _userAnswers.Count(a => a.AnswerMeaning == a.QuestionMeaning);
                 int totalCount = _userAnswers.Count;
                 return Math.Round(numberOfCorrect * 100.0 / totalCount, 0).ToString("");
             }

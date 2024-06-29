@@ -2,12 +2,14 @@
 {
     public sealed class ResultRequestDto
     {
-        public ResultRequestDto(long questionMeaningOfWordId, long answerMeaningOfWordId)
+        public ResultRequestDto(long questionMeaningOfWordId, bool isCorrect, long modeId)
         {
             QuestionMeaningOfWordId = questionMeaningOfWordId;
-            AnswerMeaningOfWordId = answerMeaningOfWordId;
+            IsCorrect = isCorrect;
+            ModeId = modeId;
         }
         public long QuestionMeaningOfWordId { get; }
-        public long AnswerMeaningOfWordId { get; }
+        public bool IsCorrect { get; }
+        public long ModeId { get; }
     }
 }
