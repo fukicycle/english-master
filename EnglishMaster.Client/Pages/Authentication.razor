@@ -16,8 +16,11 @@
             if (NavigationManager.Uri.Contains("#"))
             {
                 string accessToken = Regex.Match(NavigationManager.Uri, "#.*&").Value.Split('=')[1];
-                await CustomAuthenticationStateProvider.SignInWithGoogleAsync(accessToken);
-                NavigationManager.NavigateTo("", true);
+                bool isRedirect = await CustomAuthenticationStateProvider.SignInWithGoogleAsync(accessToken);
+                if (!isRedirect)
+                {
+                    NavigationManager.NavigateTo("", true);
+                }
                 return;
             }
             StateContainer.DialogContent =

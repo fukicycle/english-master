@@ -5,9 +5,9 @@
 @inject CustomAuthenticationStateProvider AuthenticationStateProvider
 @inject UserRegisterService UserRegisterService
 <div class="register-area-wrapper">
-    <Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
+    <Microsoft.AspNetCore.Components.Authorization.AuthorizeView Roles="@nameof(AccessRole.Unregistered)">
         <Authorized>
-            <div>Hello, @context.User.Identity?.Name!</div>
+            <div>Hello, @Name!</div>
             <div class="title">Create an account</div>
             <EditForm class="form" Model="@Form" Context="register_form" OnValidSubmit="@(() => RegisterAccount(context))">
                 <DataAnnotationsValidator />

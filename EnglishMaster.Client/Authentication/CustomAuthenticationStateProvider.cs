@@ -5,6 +5,7 @@ using EnglishMaster.Shared.Dto.Response;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
+using Microsoft.AspNetCore.WebUtilities;
 using System.Net.Http.Json;
 using System.Net.NetworkInformation;
 using System.Security.Claims;
@@ -18,7 +19,7 @@ namespace EnglishMaster.Client.Authentication
         private readonly HttpClient _httpClientWithGoogle;
         private readonly HttpClient _httpClient;
         private readonly ILogger<CustomAuthenticationStateProvider> _logger;
-        public AuthenticationState CurrentAuthenticationState { get; private set; }
+        private AuthenticationState _currentAuthenticationState;
 
         public CustomAuthenticationStateProvider(
                 ILocalStorageService localStorageService,
@@ -32,10 +33,10 @@ namespace EnglishMaster.Client.Authentication
             _httpClient = httpClient;
             _navigationManager = navigationManager;
             _logger = logger;
-            CurrentAuthenticationState = Create(AccessRole.Anonymouse);
+            _currentAuthenticationState = Create(AccessRole.Anonymouse);
         }
 
-        public async Task SignInWithGoogleAsync(string accessToken)
+        public async Task<bool> SignInWithGoogleAsync(string accessToken)
         {
             GoogleUser? googleUser = await _httpClientWithGoogle.GetFromJsonAsync<GoogleUser>($"https://www.googleapis.com/userinfo/v2/me?access_token={accessToken}");
             if (googleUser != null)
@@ -46,11 +47,23 @@ namespace EnglishMaster.Client.Authentication
                     await _httpClient.PostAsJsonAsync(
                                         ApiEndPoint.LOGIN,
                                         new LoginRequestDto(googleUser.Email, googleUser.Id));
-                if (responseMesage.StatusCode == System.Net.HttpStatusCode.Redirect)
+                if (responseMesage.StatusCode == System.Net.HttpStatusCode.TemporaryRedirect)
                 {
                     string redirectPath = await responseMesage.Content.ReadAsStringAsync();
                     _logger.LogInformation("Redirect to register page.");
-                    _navigationManager.NavigateToLogin(redirectPath);
+                    List<KeyValuePair<string, string?>> queries = new List<KeyValuePair<string, string?>>();
+                    queries.Add(new KeyValuePair<string, string?>(nameof(GoogleUser.GivenName), googleUser.GivenName));
+                    queries.Add(new KeyValuePair<string, string?>(nameof(GoogleUser.FamilyName), googleUser.FamilyName));
+                    queries.Add(new KeyValuePair<string, string?>(nameof(GoogleUser.Picture), googleUser.Picture));
+                    queries.Add(new KeyValuePair<string, string?>(nameof(GoogleUser.Name), googleUser.Name));
+                    queries.Add(new KeyValuePair<string, string?>(nameof(GoogleUser.Email), googleUser.Email));
+                    queries.Add(new KeyValuePair<string, string?>(nameof(GoogleUser.Id), googleUser.Id));
+                    string uri = QueryHelpers.AddQueryString(redirectPath, queries);
+                    _currentAuthenticationState = Create(AccessRole.Unregistered);
+                    NotifyAuthenticationStateChanged(Task.FromResult(_currentAuthenticationState));
+                    _logger.LogInformation($"Access as unregistered. {_currentAuthenticationState.User.IsInRole(nameof(AccessRole.Unregistered))}");
+                    _navigationManager.NavigateTo(uri);
+                    return true;
                 }
                 else
                 {
@@ -67,6 +80,36 @@ namespace EnglishMaster.Client.Authentication
                 }
             }
             await SetAuthenticationStateAsync();
+            return false;
+        }
+
+        public async Task UserRegisteredAsync(string email, string password)
+        {
+            _logger.LogInformation("Api authentication.");
+            //Api authentication
+            HttpResponseMessage responseMesage =
+                await _httpClient.PostAsJsonAsync(
+                                    ApiEndPoint.LOGIN,
+                                    new LoginRequestDto(email, password));
+            if (responseMesage.StatusCode == System.Net.HttpStatusCode.TemporaryRedirect)
+            {
+                throw new Exception("Unexpected error has occured. Please contact administrator.");
+            }
+            else
+            {
+                LoginResponseDto? loginResponseDto =
+                    await responseMesage.Content.ReadFromJsonAsync<LoginResponseDto>();
+                if (loginResponseDto == null)
+                {
+                    throw new Exception("Unexpected error has occured. Please contact administrator.");
+                }
+                StoredAccessToken storedAccessToken = new StoredAccessToken(loginResponseDto.Token, loginResponseDto.Expires);
+                await _localStorageService.SetItemAsync(
+                    LocalStorageKeyConst.ACCESS_TOKEN_KEY,
+                    storedAccessToken);
+            }
+            _currentAuthenticationState = Create(AccessRole.General);
+            NotifyAuthenticationStateChanged(Task.FromResult(_currentAuthenticationState));
         }
 
         private async Task SetAuthenticationStateAsync()
@@ -76,6 +119,11 @@ namespace EnglishMaster.Client.Authentication
                 _logger.LogInformation("Remove access token header.");
                 _httpClient.DefaultRequestHeaders.Remove(HttpHeaders.ACCESS_TOKEN_HEADER);
             }
+            if (_currentAuthenticationState.User.IsInRole(nameof(AccessRole.Unregistered)))
+            {
+                _logger.LogInformation("Unregisterd user.");
+                return;
+            }
             if (await _localStorageService.ContainKeyAsync(LocalStorageKeyConst.ACCESS_TOKEN_KEY))
             {
                 StoredAccessToken? accessToken =
@@ -84,27 +132,27 @@ namespace EnglishMaster.Client.Authentication
                 if (accessToken!.Expires.Date <= DateTime.UtcNow.Date)
                 {
                     _logger.LogInformation("Expired token.");
-                    CurrentAuthenticationState = Create(AccessRole.Anonymouse);
+                    _currentAuthenticationState = Create(AccessRole.Anonymouse);
                 }
                 else
                 {
                     _httpClient.DefaultRequestHeaders.Add(HttpHeaders.ACCESS_TOKEN_HEADER, accessToken!.Token);
-                    CurrentAuthenticationState = Create(AccessRole.General);
+                    _currentAuthenticationState = Create(AccessRole.General);
                 }
             }
             else
             {
                 _logger.LogInformation("Unauthorized. Access as anonymouse role.");
-                CurrentAuthenticationState = Create(AccessRole.Anonymouse);
+                _currentAuthenticationState = Create(AccessRole.Anonymouse);
             }
-            NotifyAuthenticationStateChanged(Task.FromResult(CurrentAuthenticationState));
+            NotifyAuthenticationStateChanged(Task.FromResult(_currentAuthenticationState));
         }
 
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
             await SetAuthenticationStateAsync();
-            return CurrentAuthenticationState;
+            return _currentAuthenticationState;
         }
 
         private AuthenticationState Create(AccessRole accessRole)
@@ -127,6 +175,14 @@ namespace EnglishMaster.Client.Authentication
                     return new AuthenticationState(
                         new ClaimsPrincipal(
                             new ClaimsIdentity(generalRoleClaims, nameof(CustomAuthenticationStateProvider))));
+                case AccessRole.Unregistered:
+                    IEnumerable<Claim> unregisteredRoleClaims = new List<Claim>
+                    {
+                        new Claim(ClaimTypes.Role,nameof(AccessRole.Unregistered))
+                    };
+                    return new AuthenticationState(
+                        new ClaimsPrincipal(
+                            new ClaimsIdentity(unregisteredRoleClaims, nameof(CustomAuthenticationStateProvider))));
                 default:
                     return new AuthenticationState(
                         new ClaimsPrincipal(

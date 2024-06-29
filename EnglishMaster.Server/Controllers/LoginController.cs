@@ -34,7 +34,7 @@ namespace EnglishMaster.Server.Controllers
                                 .Authenticate(loginRequestDto.Email, loginRequestDto.Password);
                 if (result.ResultCode == AccessTokenAuthenticationResultCode.UNREGISTERED_USER)
                 {
-                    return StatusCode(302, "Register");
+                    return StatusCode(StatusCodes.Status307TemporaryRedirect, "Register");
                 }
                 if (result.ResultCode == AccessTokenAuthenticationResultCode.INVALID_CREDENTIAL)
                 {

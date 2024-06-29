@@ -36,7 +36,7 @@ namespace EnglishMaster.Server.Security.Service
             {
                 string newToken = GenerateToken();
 #if DEBUG
-                DateTime expires = DateTime.UtcNow.AddSeconds(10);
+                DateTime expires = DateTime.UtcNow.AddDays(10);
 #else
                 DateTime expires = DateTime.UtcNow.AddMonths(1);
 #endif

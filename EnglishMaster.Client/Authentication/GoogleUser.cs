@@ -1,4 +1,5 @@
 ﻿using System.Security.Principal;
+using System.Text.Json.Serialization;
 
 namespace EnglishMaster.Client.Authentication
 {
@@ -16,9 +17,12 @@ namespace EnglishMaster.Client.Authentication
         }
         public string Id { get; }
         public string Email { get; }
+        [JsonPropertyName("verified_email")]
         public bool VerifiedEmail { get; }
         public string Name { get; }
+        [JsonPropertyName("given_name")]
         public string GivenName { get; }
+        [JsonPropertyName("family_name")]
         public string FamilyName { get; }
         public string Picture { get; }
     }
