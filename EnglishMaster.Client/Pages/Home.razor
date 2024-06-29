@@ -9,7 +9,7 @@
 <PageTitle>Home</PageTitle>
 <Microsoft.AspNetCore.Components.Authorization.AuthorizeView Roles="@nameof(AccessRole.General)">
     <Authorized>
-        <div>Welcome back, @_loginUser?.Fullname!</div>
+        <div>Welcome back, @_displayName!</div>
         <div class="achievement-area">
             @if (_achievements != null)
             {

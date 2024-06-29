@@ -8,10 +8,10 @@ namespace EnglishMaster.Client.Pages
 {
     public partial class Home
     {
-        private LoginUser? _loginUser = null;
         private List<AchievementResponseDto> _achievements = new List<AchievementResponseDto>();
         private string _treeImagePath = "process/tree_01.png";
         private int _level = 1;
+        private string _displayName = "";
 
         protected override async Task OnInitializedAsync()
         {
@@ -19,6 +19,9 @@ namespace EnglishMaster.Client.Pages
             AuthenticationState authState = await ExecuteAsync(AuthenticationStateProvider.GetAuthenticationStateAsync);
             if (authState.User.IsInRole(nameof(AccessRole.General)))
             {
+                string fullName = AuthenticationStateProvider.LoginUser!.FirstName + " " + AuthenticationStateProvider.LoginUser!.LastName;
+                string? nickName = AuthenticationStateProvider.LoginUser!.Nickname;
+                _displayName = nickName ?? fullName;
                 _achievements = await ExecuteAsync(AchivementClientService.GetAchievementAsync);
                 await ExecuteAsync(GetTreeImagePathAsync);
             }

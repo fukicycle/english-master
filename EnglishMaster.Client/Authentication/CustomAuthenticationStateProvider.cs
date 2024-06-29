@@ -20,6 +20,7 @@ namespace EnglishMaster.Client.Authentication
         private readonly HttpClient _httpClient;
         private readonly ILogger<CustomAuthenticationStateProvider> _logger;
         private AuthenticationState _currentAuthenticationState;
+        public UserResponseDto? LoginUser { get; private set; }
 
         public CustomAuthenticationStateProvider(
                 ILocalStorageService localStorageService,
@@ -109,7 +110,7 @@ namespace EnglishMaster.Client.Authentication
                     storedAccessToken);
             }
             _currentAuthenticationState = Create(AccessRole.General);
-            NotifyAuthenticationStateChanged(Task.FromResult(_currentAuthenticationState));
+            await SetAuthenticationStateAsync();
         }
 
         private async Task SetAuthenticationStateAsync()
@@ -138,6 +139,7 @@ namespace EnglishMaster.Client.Authentication
                 {
                     _httpClient.DefaultRequestHeaders.Add(HttpHeaders.ACCESS_TOKEN_HEADER, accessToken!.Token);
                     _currentAuthenticationState = Create(AccessRole.General);
+                    await SetLoginUserInfoAsync();
                 }
             }
             else
@@ -153,6 +155,12 @@ namespace EnglishMaster.Client.Authentication
         {
             await SetAuthenticationStateAsync();
             return _currentAuthenticationState;
+        }
+
+        private async Task SetLoginUserInfoAsync()
+        {
+            LoginUser = await _httpClient.GetFromJsonAsync<UserResponseDto>(ApiEndPoint.USER);
+
         }
 
         private AuthenticationState Create(AccessRole accessRole)

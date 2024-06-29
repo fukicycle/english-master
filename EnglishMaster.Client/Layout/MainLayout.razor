@@ -1,12 +1,13 @@
 ﻿@inherits AppBaseLayoutComponentBase
+@inject CustomAuthenticationStateProvider AuthenticationStateProvider
 <div class="main-content">
     <div class="header-wrapper">
         <header>
             <img src="svgs/logo.svg" />
             <div>English Master</div>
-            <Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
+            <Microsoft.AspNetCore.Components.Authorization.AuthorizeView Roles="@nameof(AccessRole.General)">
                 <Authorized>
-                    <img class="profile-picture" src="@GetProfilePicture(context)" />
+                    <img class="profile-picture" src="@AuthenticationStateProvider.LoginUser?.IconUrl" />
                 </Authorized>
             </Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
         </header>
