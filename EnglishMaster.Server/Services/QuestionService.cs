@@ -57,7 +57,7 @@ namespace EnglishMaster.Server.Services
             IEnumerable<MeaningOfWord> originals = _db.MeaningOfWords.Include(a => a.Word).ToList();
             IEnumerable<MeaningOfWord> meaningOfWords = Filter(originals, partOfSpeechId, levelId).OrderByDescending(a => Guid.NewGuid());
             User user = _db.Users.Single(a => a.Id == userId);
-            IList<MeaningOfWordLearningHistory> histories = _db.MeaningOfWordLearningHistories.Where(a => a.UserId == user.Id && a.IsDone).ToList();
+            IList<MeaningOfWordLearningHistory> histories = _db.MeaningOfWordLearningHistories.Where(a => a.UserId == user.Id && a.IsCorrect).ToList();
             IEnumerable<MeaningOfWord> questions = GetQuestions(meaningOfWords, histories);
             int number = 1;
             IList<QuestionResponseDto> questionResponseDtos = new List<QuestionResponseDto>();

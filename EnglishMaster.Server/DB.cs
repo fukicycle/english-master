@@ -34,6 +34,7 @@ namespace EnglishMaster.Shared.Models
         public virtual DbSet<User> Users { get; set; }
 
         public virtual DbSet<Word> Words { get; set; }
+        public virtual DbSet<Mode> Modes { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
             => optionsBuilder.UseSqlServer("Name=ConnectionStrings:DB");
@@ -117,15 +118,9 @@ namespace EnglishMaster.Shared.Models
                 entity.HasKey(e => e.Id).HasName("PK_MeaningOfWordHistories");
 
                 entity.Property(e => e.Id).HasColumnName("ID");
-                entity.Property(e => e.AnswerMeaningOfWordId).HasColumnName("AnswerMeaningOfWordID");
                 entity.Property(e => e.Date).HasColumnType("datetime");
                 entity.Property(e => e.QuestionMeaningOfWordId).HasColumnName("QuestionMeaningOfWordID");
                 entity.Property(e => e.UserId).HasColumnName("UserID");
-
-                entity.HasOne(d => d.AnswerMeaningOfWord).WithMany(p => p.MeaningOfWordLearningHistoryAnswerMeaningOfWords)
-                    .HasForeignKey(d => d.AnswerMeaningOfWordId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_MeaningOfWordHistories_MeaningOfWords1");
 
                 entity.HasOne(d => d.QuestionMeaningOfWord).WithMany(p => p.MeaningOfWordLearningHistoryQuestionMeaningOfWords)
                     .HasForeignKey(d => d.QuestionMeaningOfWordId)
@@ -136,6 +131,11 @@ namespace EnglishMaster.Shared.Models
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_MeaningOfWordHistories_Users");
+
+                entity.HasOne(d => d.Mode).WithMany(p => p.MeaningOfWordLearningHistories)
+                    .HasForeignKey(d => d.ModeId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_MeaningOfWordLearningHistories_Modes");
             });
 
             modelBuilder.Entity<PartOfSpeech>(entity =>
@@ -205,6 +205,12 @@ namespace EnglishMaster.Shared.Models
                     .HasMaxLength(50)
                     .IsUnicode(false)
                     .HasColumnName("Word");
+            });
+
+            modelBuilder.Entity<Mode>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
+                entity.Property(e => e.Name).HasMaxLength(50);
             });
 
             OnModelCreatingPartial(modelBuilder);

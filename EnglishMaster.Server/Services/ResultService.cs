@@ -55,7 +55,7 @@ namespace EnglishMaster.Server.Services
                     QuestionMeaningOfWordId = result.QuestionMeaningOfWordId,
                     AnswerMeaningOfWordId = result.AnswerMeaningOfWordId,
                     Date = DateTime.Now,
-                    IsDone = result.QuestionMeaningOfWordId == result.AnswerMeaningOfWordId
+                    IsCorrect = result.QuestionMeaningOfWordId == result.AnswerMeaningOfWordId
                 });
             }
             return _db.SaveChanges();

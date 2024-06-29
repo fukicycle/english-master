@@ -14,8 +14,6 @@
 
         public virtual Level Level { get; set; } = null!;
 
-        public virtual ICollection<MeaningOfWordLearningHistory> MeaningOfWordLearningHistoryAnswerMeaningOfWords { get; set; } = new List<MeaningOfWordLearningHistory>();
-
         public virtual ICollection<MeaningOfWordLearningHistory> MeaningOfWordLearningHistoryQuestionMeaningOfWords { get; set; } = new List<MeaningOfWordLearningHistory>();
 
         public virtual PartOfSpeech PartOfSpeech { get; set; } = null!;
