@@ -13,7 +13,6 @@ public partial class Achievement
 
     private RadarConfig? _config = null;
     private LineConfig? _config1 = null;
-    private LoginUser? _loginUser = null;
 
     protected override async Task OnInitializedAsync()
     {
