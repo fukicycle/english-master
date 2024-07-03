@@ -1,7 +1,7 @@
 ﻿namespace EnglishMaster.Shared;
 
-public enum StudyMode
+public sealed class StudyMode
 {
-    Flush = 1,
-    Choice = 2
+    public const long Flush = 1;
+    public const long Choice = 2;
 }

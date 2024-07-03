@@ -6,50 +6,32 @@ namespace EnglishMaster.Client.Pages
     {
         private bool _isMute = false;
         private int _numberOfQuestion = 10;
+        private long _mode = StudyMode.Choice;
 
-        // protected override async Task OnInitializedAsync()
-        // {
-            //try
-            //{
-            //    StateContainer.IsLoading = true;
-            //    EnglishMaster.Shared.Settings? settings = await LocalStorageService.GetItemAsync<EnglishMaster.Shared.Settings>(ApplicationSettings.APPLICATION_ID);
-            //    if (settings != null)
-            //    {
-            //        _isMute = settings.IsMute;
-            //        _numberOfQuestion = settings.NumberOfQuestion;
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    StateContainer.Message = ex.Message;
-            //}
-            //finally
-            //{
-            //    StateContainer.IsLoading = false;
-            //}
-        // }
-        // private async Task SaveButtonOnClick()
-        // {
-            //try
-            //{
-            //    StateContainer.IsLoading = true;
-            //    SettingService.IsMute = _isMute;
-            //    SettingService.NumberOfQuestion = _numberOfQuestion;
-            //    EnglishMaster.Shared.Settings settings = new EnglishMaster.Shared.Settings
-            //    {
-            //        IsMute = SettingService.IsMute,
-            //        NumberOfQuestion = SettingService.NumberOfQuestion
-            //    };
-            //    await LocalStorageService.SetItemAsync(ApplicationSettings.APPLICATION_ID, settings);
-            //}
-            //catch (Exception ex)
-            //{
-            //    StateContainer.Message = ex.Message;
-            //}
-            //finally
-            //{
-            //    StateContainer.IsLoading = false;
-            //}
-        // }
+        protected override async Task OnInitializedAsync()
+        {
+            StateContainer.IsLoading = true;
+            UserSettings userSettings = await SettingService.LoadAsync();
+            _isMute = userSettings.IsMute;
+            _numberOfQuestion = userSettings.NumberOfQuestion;
+            _mode = userSettings.Mode;
+            StateContainer.IsLoading = false;
+        }
+
+        private async Task SaveButtonOnClick()
+        {
+            UserSettings userSettings = new UserSettings(_isMute, _numberOfQuestion, _mode);
+            if (userSettings.NumberOfQuestion < 10)
+            {
+                StateContainer.DialogContent =
+                    new Fukicycle.Tool.AppBase.Components.Dialog.DialogContent(
+                            "The number of questions must be greater than 10.",
+                            Fukicycle.Tool.AppBase.Components.Dialog.DialogType.Info);
+            }
+            else
+            {
+                await SettingService.SaveAsync(userSettings);
+            }
+        }
     }
 }
