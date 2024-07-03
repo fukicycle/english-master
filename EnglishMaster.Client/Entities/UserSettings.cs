@@ -2,13 +2,13 @@
 
 public sealed class UserSettings
 {
-    public UserSettings(bool isMute, int numberOfQuestion, long mode)
+    public UserSettings(string? voiceIdentity, int numberOfQuestion, long mode)
     {
-        IsMute = isMute;
+        VoiceIdentity = voiceIdentity;
         NumberOfQuestion = numberOfQuestion;
         Mode = mode;
     }
-    public bool IsMute { get; set; }
+    public string? VoiceIdentity { get; set; }
     public int NumberOfQuestion { get; set; }
     public long Mode { get; set; }
 }

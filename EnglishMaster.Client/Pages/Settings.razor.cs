@@ -1,18 +1,23 @@
 ﻿using EnglishMaster.Shared;
+using Toolbelt.Blazor.SpeechSynthesis;
 
 namespace EnglishMaster.Client.Pages
 {
     public partial class Settings
     {
-        private bool _isMute = false;
+        private string? _voiceIdentity = null;
         private int _numberOfQuestion = 10;
         private long _mode = StudyMode.Choice;
+        private string _buttonContent = "Save changes";
+
+        private IEnumerable<SpeechSynthesisVoice> _voices = Enumerable.Empty<SpeechSynthesisVoice>();
 
         protected override async Task OnInitializedAsync()
         {
             StateContainer.IsLoading = true;
+            _voices = await SpeakService.GetVoicesAsync();
             UserSettings userSettings = await SettingService.LoadAsync();
-            _isMute = userSettings.IsMute;
+            _voiceIdentity = userSettings.VoiceIdentity;
             _numberOfQuestion = userSettings.NumberOfQuestion;
             _mode = userSettings.Mode;
             StateContainer.IsLoading = false;
@@ -20,7 +25,7 @@ namespace EnglishMaster.Client.Pages
 
         private async Task SaveButtonOnClick()
         {
-            UserSettings userSettings = new UserSettings(_isMute, _numberOfQuestion, _mode);
+            UserSettings userSettings = new UserSettings(_voiceIdentity, _numberOfQuestion, _mode);
             if (userSettings.NumberOfQuestion < 10)
             {
                 StateContainer.DialogContent =
@@ -31,6 +36,11 @@ namespace EnglishMaster.Client.Pages
             else
             {
                 await SettingService.SaveAsync(userSettings);
+                _buttonContent = "Saved!";
+                StateHasChanged();
+                await Task.Delay(1000);
+                _buttonContent = "Save changes";
+                StateHasChanged();
             }
         }
     }

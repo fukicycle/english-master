@@ -1,17 +1,37 @@
 ﻿@page "/settings"
 @inject ISettingService SettingService
+@inject SpeakService SpeakService
 @inherits ViewBase
 <div class="setting-wrapper">
     <div class="title">Settings</div>
     <ul class="setting-items">
         <li class="setting-item">
-            <span>Silent mode</span>
-            <ToggleSwitch @bind-IsSelected=@_isMute />
+            <span>Speak mode</span>
+            <div>
+                <select class="select-mode" @bind=@_voiceIdentity>
+                    <option value="">Do not speak</option>
+                    @foreach (var voice in _voices)
+                    {
+                        <option value="@voice.VoiceIdentity">@voice.Name</option>
+                    }
+                </select>
+            </div>
         </li>
         <li class="setting-item">
             <span>Number of questions</span>
-            <input type="number" @bind=@_numberOfQuestion />
+            <div>
+                <input type="number" @bind=@_numberOfQuestion />
+            </div>
+        </li>
+        <li class="setting-item">
+            <span>Study mode</span>
+            <div>
+                <select class="select-mode" @bind=@_mode>
+                    <option value="2">Choice</option>
+                    <option value="1">Flush card</option>
+                </select>
+            </div>
         </li>
     </ul>
-    <button @onclick=SaveButtonOnClick>Save changes</button>
+    <button @onclick=SaveButtonOnClick>@_buttonContent</button>
 </div>

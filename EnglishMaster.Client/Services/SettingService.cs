@@ -9,7 +9,7 @@ namespace EnglishMaster.Client.Services
     {
         private readonly ILocalStorageService _localStorageService;
         private const string USER_SETTINGS_STORAGE_KEY = $"{ApplicationSettings.APPLICATION_ID}_SETTING";
-        private readonly UserSettings _defaultSettings = new UserSettings(false, 10, StudyMode.Choice);
+        private readonly UserSettings _defaultSettings = new UserSettings("Samantha|en-US", 10, StudyMode.Choice);
 
         public SettingService(ILocalStorageService localStorageService)
         {
