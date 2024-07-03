@@ -22,11 +22,13 @@ public partial class ChoiceMode
     private bool _isAnswered = false;
     private bool _isCorrect = false;
     private int _questionNumber = 0;
+    private bool _isMute = false;
 
     protected override async Task OnInitializedAsync()
     {
         StateContainer.IsLoading = true;
         UserSettings userSettings = await SettingService.LoadAsync();
+        _isMute = string.IsNullOrEmpty(userSettings.VoiceIdentity);
         await SpeakService.SetVoiceAsync(userSettings.VoiceIdentity);
         _partOfSpeeches = await ExecuteAsync(PartOfSpeechClientService.GetPartOfSpeechesAsync);
         _levles = await ExecuteAsync(LevelClientService.GetLevelsAsync);

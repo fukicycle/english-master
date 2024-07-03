@@ -45,9 +45,12 @@
                     <div class="count">@_questionNumber/10</div>
                 </div>
                 <div class="word">@_question.Word</div>
-                <button class="sound-btn btn-icon" @onclick=SoundButtonOnClick>
-                    <img src="svgs/sound.svg" />
-                </button>
+                @if (!_isMute)
+                {
+                    <button class="sound-btn btn-icon" @onclick=SoundButtonOnClick>
+                        <img src="svgs/sound.svg" />
+                    </button>
+                }
             </div>
         }
     </div>
@@ -65,12 +68,18 @@
                     @if (_isCorrect)
                     {
                         <img src="svgs/correct.svg" />
-                        <audio autoplay src="sounds/correct.mp3" hidden />
+                        @if (!_isMute)
+                        {
+                            <audio autoplay src="sounds/correct.mp3" hidden />
+                        }
                     }
                     else
                     {
                         <img src="svgs/incorrect.svg" />
-                        <audio autoplay src="sounds/wrong.mp3" hidden />
+                        @if (!_isMute)
+                        {
+                            <audio autoplay src="sounds/wrong.mp3" hidden />
+                        }
                     }
                     <div>Tap to next</div>
                 </div>
