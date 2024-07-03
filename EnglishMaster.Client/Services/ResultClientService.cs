@@ -1,4 +1,5 @@
 ﻿using EnglishMaster.Client.Entities;
+using EnglishMaster.Client.Services.Interfaces;
 using EnglishMaster.Shared;
 using EnglishMaster.Shared.Dto.Request;
 using Newtonsoft.Json;
@@ -11,12 +12,12 @@ namespace EnglishMaster.Client.Services
         private readonly HttpClient _httpClient;
         private readonly ILogger<ResultClientService> _logger;
         private List<UserAnswer> _userAnswers = new List<UserAnswer>();
-        private readonly ModeClientService _modeClientService;
+        private readonly ISettingService _settingService;
 
-        public ResultClientService(HttpClient httpClient, ModeClientService modeClientService, ILogger<ResultClientService> logger)
+        public ResultClientService(HttpClient httpClient, ISettingService settingService, ILogger<ResultClientService> logger)
         {
             _httpClient = httpClient;
-            _modeClientService = modeClientService;
+            _settingService = settingService;
             _logger = logger;
         }
 
@@ -27,8 +28,9 @@ namespace EnglishMaster.Client.Services
 
         public async Task SubmitAsync()
         {
+            UserSettings userSettings = await _settingService.LoadAsync();
             List<ResultRequestDto> resultRequestDtos =
-                _userAnswers.Select(a => new ResultRequestDto(a.QuestionMeaningOfWordId, a.QuestionMeaning == a.AnswerMeaning, _modeClientService.CurrentModeId))
+                _userAnswers.Select(a => new ResultRequestDto(a.QuestionMeaningOfWordId, a.QuestionMeaning == a.AnswerMeaning, userSettings.Mode))
                             .ToList();
             HttpResponseMessage httpResponseMessage =
                 await _httpClient.PostAsJsonAsync(ApiEndPoint.RESULT, _userAnswers);

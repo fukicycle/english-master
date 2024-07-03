@@ -10,18 +10,19 @@ namespace EnglishMaster.Client.Services
     {
         private readonly HttpClient _httpClient;
         private readonly ILogger<AchivementClientService> _logger;
-        private readonly ModeClientService _modeClientService;
+        private readonly ISettingService _settingService;
 
-        public AchivementClientService(HttpClient httpClient, ModeClientService modeClientService, ILogger<AchivementClientService> logger)
+        public AchivementClientService(HttpClient httpClient, ISettingService settingService, ILogger<AchivementClientService> logger)
         {
             _httpClient = httpClient;
-            _modeClientService = modeClientService;
+            _settingService = settingService;
             _logger = logger;
         }
 
         public async Task<List<AchievementResponseDto>> GetAchievementAsync()
         {
-            HttpResponseMessage httpResponseMessage = await _httpClient.GetAsync($"{ApiEndPoint.ACHIEVEMENT}/{_modeClientService.CurrentModeId}");
+            UserSettings userSettings = await _settingService.LoadAsync();
+            HttpResponseMessage httpResponseMessage = await _httpClient.GetAsync($"{ApiEndPoint.ACHIEVEMENT}/{userSettings.Mode}");
             if (!httpResponseMessage.IsSuccessStatusCode)
             {
                 throw new Exception(await httpResponseMessage.Content.ReadAsStringAsync());
@@ -37,8 +38,9 @@ namespace EnglishMaster.Client.Services
 
         public async Task<List<AchievementGraphResponseDto>> GetAchievementGraphByWeekAsync()
         {
+            UserSettings userSettings = await _settingService.LoadAsync();
             HttpResponseMessage httpResponseMessage =
-                await _httpClient.GetAsync(ApiEndPoint.ACHIEVEMENT + $"/car/week/{_modeClientService.CurrentModeId}");
+                await _httpClient.GetAsync(ApiEndPoint.ACHIEVEMENT + $"/car/week/{userSettings.Mode}");
             if (!httpResponseMessage.IsSuccessStatusCode)
             {
                 throw new Exception(await httpResponseMessage.Content.ReadAsStringAsync());
@@ -54,8 +56,9 @@ namespace EnglishMaster.Client.Services
 
         public async Task<List<AchievementGraphResponseDto>> GetAchievementGraphByPartOfSpeechAsync()
         {
+            UserSettings userSettings = await _settingService.LoadAsync();
             HttpResponseMessage httpResponseMessage =
-                await _httpClient.GetAsync(ApiEndPoint.ACHIEVEMENT + $"/car/part-of-speech/{_modeClientService.CurrentModeId}");
+                await _httpClient.GetAsync(ApiEndPoint.ACHIEVEMENT + $"/car/part-of-speech/{userSettings.Mode}");
             if (!httpResponseMessage.IsSuccessStatusCode)
             {
                 throw new Exception(await httpResponseMessage.Content.ReadAsStringAsync());
