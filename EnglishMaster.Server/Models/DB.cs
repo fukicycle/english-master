@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using EnglishMaster.Shared.Models;
 
-namespace EnglishMaster.Server;
+namespace EnglishMaster.Server.Models;
 
 public partial class DB : DbContext
 {

@@ -33,7 +33,7 @@ namespace EnglishMaster.Client.Services
                 _userAnswers.Select(a => new ResultRequestDto(a.QuestionMeaningOfWordId, a.QuestionMeaning == a.AnswerMeaning, userSettings.Mode))
                             .ToList();
             HttpResponseMessage httpResponseMessage =
-                await _httpClient.PostAsJsonAsync(ApiEndPoint.RESULT, _userAnswers);
+                await _httpClient.PostAsJsonAsync(ApiEndPoint.RESULT, resultRequestDtos);
             if (!httpResponseMessage.IsSuccessStatusCode)
             {
                 throw new Exception(await httpResponseMessage.Content.ReadAsStringAsync());

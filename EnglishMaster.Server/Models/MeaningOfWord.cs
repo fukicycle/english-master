@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace EnglishMaster.Shared.Models;
+namespace EnglishMaster.Server.Models;
 
 public partial class MeaningOfWord
 {
