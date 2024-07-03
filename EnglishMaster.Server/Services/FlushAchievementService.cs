@@ -36,9 +36,11 @@ namespace EnglishMaster.Server.Services
                                                     .ToList();
             foreach (PartOfSpeech partOfSpeech in partOfSpeeches)
             {
-                int numberOfAnswerWord = user.MeaningOfWordLearningHistories.Where(a => a.ModeId == 1).Count(a => a.QuestionMeaningOfWord.PartOfSpeechId == partOfSpeech.Id);
+                int numberOfAnswerWord = user.MeaningOfWordLearningHistories
+                                            .Where(a => a.ModeId == StudyMode.Flush)
+                                            .Count(a => a.QuestionMeaningOfWord.PartOfSpeechId == partOfSpeech.Id);
                 int numberOfCoorectAnswerWord = user.MeaningOfWordLearningHistories
-                                                 .Where(a => a.QuestionMeaningOfWord.PartOfSpeechId == partOfSpeech.Id && a.ModeId == 1)
+                                                 .Where(a => a.QuestionMeaningOfWord.PartOfSpeechId == partOfSpeech.Id && a.ModeId == StudyMode.Flush)
                                                  .Count(a => a.IsCorrect);
                 if (numberOfAnswerWord == 0)
                 {
@@ -70,9 +72,10 @@ namespace EnglishMaster.Server.Services
             DateTime startDate = DateTime.Today.AddDays(-7);
             for (DateTime dt = startDate; dt < DateTime.Today; dt = dt.AddDays(1))
             {
-                int numberOfAnswerWord = user.MeaningOfWordLearningHistories.Count(a => a.Date.Date == dt && a.ModeId == 1);
+                int numberOfAnswerWord = user.MeaningOfWordLearningHistories
+                                            .Count(a => a.Date.Date == dt && a.ModeId == StudyMode.Flush);
                 int numberOfCorrectAnswerWord = user.MeaningOfWordLearningHistories
-                                                .Where(a => a.Date.Date == dt && a.ModeId == 1)
+                                                .Where(a => a.Date.Date == dt && a.ModeId == StudyMode.Flush)
                                                 .Count(a => a.IsCorrect);
                 if (numberOfAnswerWord == 0)
                 {
@@ -123,7 +126,7 @@ namespace EnglishMaster.Server.Services
                                 .Where(a => a.QuestionMeaningOfWord.LevelId == level.Id &&
                                             a.QuestionMeaningOfWord.PartOfSpeechId == partOfSpeech.Id &&
                                             a.IsCorrect &&
-                                            a.ModeId == 1)
+                                            a.ModeId == StudyMode.Flush)
                                 .GroupBy(a => a.QuestionMeaningOfWordId)
                                 .Count();
                     _logger.LogInformation($"Actual/Total[{partOfSpeech.Name},{level.Name}]:{actual}/{total}");
@@ -136,17 +139,7 @@ namespace EnglishMaster.Server.Services
 
         public IList<TreeFarmResponseDto> GetTreeFarmData(long userId, DateTime startDate)
         {
-            List<TreeFarmResponseDto> treeFarmResponseDtos = new List<TreeFarmResponseDto>();
-            List<MeaningOfWordLearningHistory> histories =
-                _db.MeaningOfWordLearningHistories
-                .Where(a => a.UserId == userId && a.Date.Date >= startDate)
-                .ToList();
-            foreach (var history in histories.GroupBy(a => new { a.Date.Year, a.Date.Month, a.Date.Day }))
-            {
-                DateTime dateTime = new DateTime(history.Key.Year, history.Key.Month, history.Key.Day);
-                treeFarmResponseDtos.Add(new TreeFarmResponseDto(dateTime));
-            }
-            return treeFarmResponseDtos;
+            throw new NotImplementedException("Please use Choice Achievement service.");
         }
     }
 }
