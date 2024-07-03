@@ -1,0 +1,50 @@
+﻿<div class="study-area">
+    <div class="selection-area">
+        @if (_question == null)
+        {
+            <div class="selection-item">
+                <div>Category</div>
+                <select @bind=@_levelId>
+                    <option value="0">All</option>
+                    @foreach (LevelResponseDto level in _levles)
+                    {
+                        <option value="@level.Id">@level.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="selection-item">
+            <div>Part of speech</div>
+            <select @bind=@_partOfSpeechId>
+                <option value="0">All</option>
+                @foreach (PartOfSpeechResponseDto partOfSpeech in _partOfSpeeches)
+                    {
+                        <option value="@partOfSpeech.Id">@partOfSpeech.Name</option>
+                    }
+                </select>
+            </div>
+        }
+    </div>
+    <div class="flush-card-wrapper">
+        @if (_question == null)
+        {
+            <button>Start !</button>
+        }
+        else
+        {
+            <div class="progress">
+                <div class="no">1/10</div>
+            </div>
+            <div class="flush-card">
+            <div class="word">@_question.Word</div>
+            <button>SHOW ANSWER</button>
+            <div class="result-btn-area">
+                <button class="btn-icon">Good</button>
+                <button class="btn-icon">Bad</button>
+            </div>
+        </div>
+            <div>
+
+        </div>
+        }
+    </div>
+</div>
