@@ -39,10 +39,12 @@ namespace EnglishMaster.Client.Authentication
 
         public async Task<bool> SignInWithGoogleAsync(string accessToken)
         {
+            _logger.LogInformation(accessToken);
             GoogleUser? googleUser = await _httpClientWithGoogle.GetFromJsonAsync<GoogleUser>($"https://www.googleapis.com/userinfo/v2/me?access_token={accessToken}");
             if (googleUser != null)
             {
                 _logger.LogInformation("Api authentication.");
+                _logger.LogInformation($"Google User {googleUser.Id},{googleUser.Email}");
                 //Api authentication
                 HttpResponseMessage responseMesage =
                     await _httpClient.PostAsJsonAsync(
