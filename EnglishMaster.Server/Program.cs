@@ -46,6 +46,7 @@ builder.Services.AddKeyedScoped<IAchievementService, ChoiceAchievementService>("
 builder.Services.AddScoped<IResultService, ResultService>();
 builder.Services.AddScoped<IAccessTokenAuthenticationService, AccessTokenAuthenticationService>();
 builder.Services.AddScoped<IFlushCardQuestionService, FlushCardQuestionService>();
+builder.Services.AddScoped<IFlushCardResultService, FlushCardResultService>();
 
 var app = builder.Build();
 

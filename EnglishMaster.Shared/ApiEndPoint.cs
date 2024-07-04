@@ -12,6 +12,7 @@
         public const string ACHIEVEMENT = $"{BASE_PATH_V1}achievements";
         public const string RESULT = $"{BASE_PATH_V1}results";
         public const string FLUSH_QUESTION = $"{BASE_PATH_V1}flush-questions";
+        public const string FLUSH_RESULT = $"{BASE_PATH_V1}flush-result";
 
     }
 }
