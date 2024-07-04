@@ -15,7 +15,7 @@ public sealed class FlushCardQuestionClientService
         _httpClient = httpClient;
     }
 
-    public async Task<IEnumerable<FlushCardResponseDto>> GetFlushCardsAsync()
+    public async Task<List<FlushCardResponseDto>> GetFlushCardsAsync()
     {
         HttpResponseMessage httpResponseMessage = await _httpClient.GetAsync(ApiEndPoint.FLUSH_QUESTION);
         if (!httpResponseMessage.IsSuccessStatusCode)

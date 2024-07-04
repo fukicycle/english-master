@@ -1,40 +1,32 @@
-﻿<div class="flush-card-wrapper">
+﻿@inherits ViewBase
+@inject FlushCardQuestionClientService FlushCardQuestionClientService
+<div class="flush-card-wrapper">
     @if (_question == null)
     {
-        <button>Start !</button>
+        <button @onclick=@StartButtonOnClick>Start !</button>
     }
     else
     {
         <div class="progress">
-            <div class="no">1/10</div>
+            <div class="no">@(_idx + 1)/@(_questions.Count)</div>
         </div>
         <div class="flush-card">
         <div class="word">@_question.Word</div>
         @if (_isShowAnswered)
             {
                 <div class="word-details">
-                    <div class="word-detail">
-                        <div class="header">名詞</div>
-                        <div class="word-mean">
-                            <div>単語</div>
+                    @foreach (KeyValuePair<string, List<string>> mean in _question.Means)
+                    {
+                        <div class="word-detail">
+                            <div class="header">@mean.Key</div>
+                            <div class="word-mean">
+                                @foreach (string wordMean in mean.Value)
+                                {
+                                    <div>@wordMean</div>
+                                }
+                            </div>
                         </div>
-                    </div>
-                    <div class="word-detail">
-                        <div class="header">動詞</div>
-                        <div class="word-mean">
-                            <div>何か長い意味！</div>
-                            <div>何か長い意味！</div>
-                            <div>何か長い意味！</div>
-                        </div>
-                    </div>
-                    <div class="word-detail">
-                        <div class="header">助動詞</div>
-                        <div class="word-mean">
-                            <div>何か長い意味！</div>
-                            <div>何か長い意味！</div>
-                            <div>何か長い意味！</div>
-                        </div>
-                    </div>
+                    }
                 </div>
             }
             else
@@ -43,14 +35,14 @@
             }
         </div>
         <div>
-        <div class="result-btn-area">
-            <button class="btn-icon">
-                <img src="svgs/yes.svg" />
-            </button>
-            <button class="btn-icon">
-                <img src="svgs/no.svg" />
-            </button>
+            <div class="result-btn-area">
+                <button @onclick=@OKButtonOnClick class="btn-icon">
+                    <img src="svgs/yes.svg" />
+                </button>
+                <button @onclick=@NGButtonOnClick class="btn-icon">
+                    <img src="svgs/no.svg" />
+                </button>
+            </div>
         </div>
-    </div>
     }
 </div>
