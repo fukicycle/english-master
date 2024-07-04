@@ -22,7 +22,7 @@ builder.Services.AddHttpClient(nameof(ApplicationMode.Prod), httpClient =>
 {
     httpClient.BaseAddress = new Uri("https://www.sato-home.mydns.jp:9445");
 });
-builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient(nameof(ApplicationSettings.Mode)));
+builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient(ApplicationSettings.Mode.ToString()));
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddSpeechSynthesis();
 builder.Services.AddScoped<ISettingService, SettingService>();
