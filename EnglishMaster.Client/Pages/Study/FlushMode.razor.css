@@ -34,7 +34,7 @@
 .result-btn-area {
     display: flex;
     justify-content: center;
-    gap: 8px;
+    gap: 32px;
 }
 
 .word-details {
