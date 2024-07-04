@@ -42,7 +42,7 @@ builder.Services.AddScoped<IPartOfSpeechService, PartOfSpeechService>();
 builder.Services.AddScoped<ILevelService, LevelService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddKeyedScoped<IAchievementService, ChoiceAchievementService>("Choice");
-builder.Services.AddKeyedScoped<IAchievementService, ChoiceAchievementService>("Flush");
+builder.Services.AddKeyedScoped<IAchievementService, FlushAchievementService>("Flush");
 builder.Services.AddScoped<IResultService, ResultService>();
 builder.Services.AddScoped<IAccessTokenAuthenticationService, AccessTokenAuthenticationService>();
 builder.Services.AddScoped<IFlushCardQuestionService, FlushCardQuestionService>();
