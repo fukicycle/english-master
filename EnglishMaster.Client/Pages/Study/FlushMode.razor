@@ -1,5 +1,7 @@
 ﻿@inherits ViewBase
 @inject FlushCardQuestionClientService FlushCardQuestionClientService
+@inject FlushCardResultClientService FlushCardResultClientService
+@inject CustomAuthenticationStateProvider AuthenticationStateProvider
 <div class="flush-card-wrapper">
     @if (_question == null)
     {

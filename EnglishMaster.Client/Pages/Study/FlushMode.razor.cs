@@ -12,8 +12,14 @@ public partial class FlushMode
     private FlushCardResponseDto? _question;
     private bool _isShowAnswered = false;
     private int _idx = 0;
+    private bool _isAuthenticated = false;
 
     private List<FlushCardResponseDto> _questions = new List<FlushCardResponseDto>();
+
+    protected override void OnInitialized()
+    {
+        _isAuthenticated = AuthenticationStateProvider.LoginUser != null;
+    }
 
     private async Task StartButtonOnClick()
     {
@@ -41,6 +47,10 @@ public partial class FlushMode
         }
         else
         {
+            if (_question != null && _isAuthenticated)
+            {
+                await FlushCardResultClientService.SubmitResultAsync(_question.WordId, isOk);
+            }
             _question = _questions[_idx];
         }
         _isShowAnswered = false;

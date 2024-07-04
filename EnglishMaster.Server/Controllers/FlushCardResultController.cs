@@ -1,4 +1,5 @@
 ﻿using EnglishMaster.Server.Services;
+using EnglishMaster.Server.Services.Interfaces;
 using EnglishMaster.Shared;
 using EnglishMaster.Shared.Dto.Request;
 using Microsoft.AspNetCore.Authorization;
@@ -11,8 +12,8 @@ namespace EnglishMaster.Server.Controllers;
 public sealed class FlushCardResultController : ControllerBase
 {
     private readonly ILogger<FlushCardResultController> _logger;
-    private readonly FlushCardResultService _flushCardResultService;
-    public FlushCardResultController(ILogger<FlushCardResultController> logger, FlushCardResultService flushCardResultService)
+    private readonly IFlushCardResultService _flushCardResultService;
+    public FlushCardResultController(ILogger<FlushCardResultController> logger, IFlushCardResultService flushCardResultService)
     {
         _logger = logger;
         _flushCardResultService = flushCardResultService;
