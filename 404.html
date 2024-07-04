@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>EnglishMaster.Client</title>
+    <base href="/english-master/" />
+    <link rel="stylesheet" href="css/app.css" />
+    <link rel="stylesheet" href="css/font.css" />
+    <link rel="stylesheet" href="css/button-base.css" />
+    <link href="EnglishMaster.Client.styles.css" rel="stylesheet" />
+    <link href="manifest.webmanifest" rel="manifest" />
+    <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
+    <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+          rel="stylesheet">
+</head>
+
+<body class="montserrat-400">
+    <div id="app">
+        <div class="splash-screen">
+            <div>Welcome to English Master</div>
+            <div class="splash-screen-logo-wrapper">
+                <svg viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M271.875 128L150 59.625L28.125 128L150 196.375L271.875 128Z" stroke="#D7E7FE"
+                          stroke-width="7.29167" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M226.625 153.375V197.375L150 240.375L73.375 197.375V153.375M271.875 218.875V128"
+                          stroke="#D7E7FE" stroke-width="7.29167" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+            </div>
+            <div>Loading now...</div>
+        </div>
+    </div>
+
+    <div id="blazor-error-ui">
+        An unhandled error has occurred.
+        <a href="" class="reload">Reload</a>
+        <a class="dismiss">🗙</a>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+    <!-- This is the glue between Blazor and Chart.js -->
+    <script src="_content/ChartJs.Blazor.Fork/ChartJsBlazorInterop.js"></script>
+    <script src="https://unpkg.com/chartjs-plugin-colorschemes"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="_framework/blazor.webassembly.js" autostart="false"></script>
+    <script src="_content/Microsoft.AspNetCore.Components.WebAssembly.Authentication/AuthenticationService.js"></script>
+    <script src="sw-registrator.js"></script>
+    <script src="brotliloader.min.js" type="module"></script>
+</body>
+
+</html>
