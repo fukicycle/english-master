@@ -9,11 +9,9 @@ namespace EnglishMaster.Server.Controllers
     public sealed class QuestionController : ControllerBase
     {
         private readonly IQuestionService _questionService;
-        private readonly ILoginService _loginService;
-        public QuestionController(IQuestionService questionService, ILoginService loginService)
+        public QuestionController(IQuestionService questionService)
         {
             _questionService = questionService;
-            _loginService = loginService;
         }
 
         [HttpGet]
@@ -23,26 +21,13 @@ namespace EnglishMaster.Server.Controllers
         {
             try
             {
+                //Fixed size number of quetion.
                 if (HttpContext.User.Identity?.IsAuthenticated == true)
                 {
-                    string email = _loginService.GetValueFromClaims(HttpContext.User.Claims, "email");
-                    return Ok(_questionService.GetQuestionResponseDtosWithCredentials(email, partOfSpeechId, levelId));
+                    long userId = HttpContext.GetUserId();
+                    return Ok(_questionService.GetQuestionResponseDtos(userId, partOfSpeechId, levelId, 10));
                 }
-                return Ok(_questionService.GetQuestionResponseDtos(partOfSpeechId, levelId));
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
-        }
-
-        [HttpGet]
-        [Route("part-of-speeches/{partOfSpeechId}/levels/{levelId}/number-of-question/{numberOfQuestion}")]
-        public IActionResult GetQuestionsWithNumberOfQuestions(long partOfSpeechId, long levelId, int numberOfQuestion)
-        {
-            try
-            {
-                return Ok(_questionService.GetQuestionResponseDtos(partOfSpeechId, levelId, numberOfQuestion));
+                return Ok(_questionService.GetQuestionResponseDtos(partOfSpeechId, levelId, 10));
             }
             catch (Exception ex)
             {

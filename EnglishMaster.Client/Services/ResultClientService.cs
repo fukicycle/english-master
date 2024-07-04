@@ -3,18 +3,21 @@ using EnglishMaster.Client.Services.Interfaces;
 using EnglishMaster.Shared;
 using EnglishMaster.Shared.Dto.Request;
 using Newtonsoft.Json;
+using System.Net.Http.Json;
 
 namespace EnglishMaster.Client.Services
 {
     public sealed class ResultClientService
     {
-        private readonly IHttpClientService _httpClientService;
+        private readonly HttpClient _httpClient;
         private readonly ILogger<ResultClientService> _logger;
         private List<UserAnswer> _userAnswers = new List<UserAnswer>();
+        private readonly ISettingService _settingService;
 
-        public ResultClientService(IHttpClientService httpClientService, ILogger<ResultClientService> logger)
+        public ResultClientService(HttpClient httpClient, ISettingService settingService, ILogger<ResultClientService> logger)
         {
-            _httpClientService = httpClientService;
+            _httpClient = httpClient;
+            _settingService = settingService;
             _logger = logger;
         }
 
@@ -23,13 +26,17 @@ namespace EnglishMaster.Client.Services
             _userAnswers.Add(userAnswer);
         }
 
-        public async Task Submit()
+        public async Task SubmitAsync()
         {
-            List<ResultRequestDto> resultRequestDtos = _userAnswers.Select(a => new ResultRequestDto(a.QuestionMeaningOfWordId, a.AnswerMeaningOfWordId)).ToList();
-            HttpResponseResult resultResponse = await _httpClientService.SendWithJWTTokenAsync(HttpMethod.Post, ApiEndPoint.RESULT, JsonConvert.SerializeObject(_userAnswers));
-            if (resultResponse.StatusCode != System.Net.HttpStatusCode.OK)
+            UserSettings userSettings = await _settingService.LoadAsync();
+            List<ResultRequestDto> resultRequestDtos =
+                _userAnswers.Select(a => new ResultRequestDto(a.QuestionMeaningOfWordId, a.QuestionMeaning == a.AnswerMeaning, userSettings.Mode))
+                            .ToList();
+            HttpResponseMessage httpResponseMessage =
+                await _httpClient.PostAsJsonAsync(ApiEndPoint.RESULT, resultRequestDtos);
+            if (!httpResponseMessage.IsSuccessStatusCode)
             {
-                throw new Exception(resultResponse.Message);
+                throw new Exception(await httpResponseMessage.Content.ReadAsStringAsync());
             }
         }
 
@@ -42,7 +49,7 @@ namespace EnglishMaster.Client.Services
         {
             if (_userAnswers.Any())
             {
-                int numberOfCorrect = _userAnswers.Count(a => a.QuestionMeaningOfWordId == a.AnswerMeaningOfWordId);
+                int numberOfCorrect = _userAnswers.Count(a => a.AnswerMeaning == a.QuestionMeaning);
                 int totalCount = _userAnswers.Count;
                 return Math.Round(numberOfCorrect * 100.0 / totalCount, 0).ToString("");
             }

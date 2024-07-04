@@ -15,47 +15,24 @@ namespace EnglishMaster.Server.Services
             _db = db;
             _logger = logger;
         }
-        public IList<ResultResponseDto> GetResultResponseDtosByEmail(string email, int count)
-        {
-            User user = _db.Users.Single(a => a.Username == email);
-            IList<MeaningOfWordLearningHistory> histories = _db.MeaningOfWordLearningHistories
-                                                                .Include(a => a.QuestionMeaningOfWord)
-                                                                .ThenInclude(a => a.Word)
-                                                                .Include(a => a.AnswerMeaningOfWord)
-                                                                .ThenInclude(a => a.Word)
-                                                                .Where(a => a.UserId == user.Id)
-                                                                .OrderByDescending(a => a.Date)
-                                                                .Take(count)
-                                                                .ToList();
-            IList<ResultResponseDto> result = new List<ResultResponseDto>();
-            foreach (MeaningOfWordLearningHistory history in histories)
-            {
-                result.Add(new ResultResponseDto(
-                    history.QuestionMeaningOfWordId,
-                    history.QuestionMeaningOfWord.Word.Word1,
-                    history.AnswerMeaningOfWord?.Meaning ?? "",
-                    history.QuestionMeaningOfWord.Meaning));
-            }
-            return result;
-        }
 
-        public int RegisterResult(string email, IEnumerable<ResultRequestDto> results)
+        public int RegisterResult(long userId, IEnumerable<ResultRequestDto> results)
         {
             if (!results.Any())
             {
                 _logger.LogWarning("Empty results.");
                 return 0;
             }
-            User user = _db.Users.Single(a => a.Username == email);
+            User user = _db.Users.Single(a => a.Id == userId);
             foreach (ResultRequestDto result in results)
             {
                 _db.MeaningOfWordLearningHistories.Add(new MeaningOfWordLearningHistory
                 {
                     UserId = user.Id,
                     QuestionMeaningOfWordId = result.QuestionMeaningOfWordId,
-                    AnswerMeaningOfWordId = result.AnswerMeaningOfWordId,
                     Date = DateTime.Now,
-                    IsDone = result.QuestionMeaningOfWordId == result.AnswerMeaningOfWordId
+                    IsCorrect = result.IsCorrect,
+                    ModeId = result.ModeId
                 });
             }
             return _db.SaveChanges();

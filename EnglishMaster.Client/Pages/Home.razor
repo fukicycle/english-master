@@ -1,15 +1,15 @@
 ﻿@page "/"
 @inherits ViewBase
 @inject NavigationManager NavigationManager
-@inject IAuthenticationService AuthenticationService
+@inject CustomAuthenticationStateProvider AuthenticationStateProvider
 @inject AchivementClientService AchivementClientService
 @inject ProgressClientService ProgressClientService
 @inject TreeFarmService TreeFarmService
 
 <PageTitle>Home</PageTitle>
-<Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
+<Microsoft.AspNetCore.Components.Authorization.AuthorizeView Roles="@nameof(AccessRole.General)">
     <Authorized>
-        <div>Welcome back, @_loginUser?.Fullname!</div>
+        <div>Welcome back, @_displayName!</div>
         <div class="achievement-area">
             @if (_achievements != null)
             {

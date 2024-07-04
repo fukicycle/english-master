@@ -2,7 +2,7 @@
 @inherits ViewBase
 @inject NavigationManager NavigationManager
 @inject ResultClientService ResultClientService
-@inject IAuthenticationService AuthenticationService
+@inject CustomAuthenticationStateProvider AuthenticationStateProvider
 <div class="result-wrapper">
     <div class="result-container">
         <div class="congratulations">Congratulations! <img src="svgs/cracker.svg" /></div>
@@ -20,7 +20,7 @@
                             <div class="user-answer">Your choice: @result.AnswerMeaning</div>
                         </div>
                         <div class="status">
-                            @if (result.QuestionMeaningOfWordId == result.AnswerMeaningOfWordId)
+                            @if (result.QuestionMeaning == result.AnswerMeaning)
                             {
                                 <img src="svgs/correct.svg" />
                             }

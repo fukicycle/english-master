@@ -1,0 +1,12 @@
+﻿@page "/study"
+@inherits ViewBase
+@inject ISettingService SettingService
+<PageTitle>Study</PageTitle>
+@if (Mode == StudyMode.Choice)
+{
+    <ChoiceMode PartOfSpeechId="@PartOfSpeechId" LevelId="@LevelId" AutoStart="@AutoStart" />
+}
+else
+{
+    <FlushMode AutoStart="@AutoStart" />
+}

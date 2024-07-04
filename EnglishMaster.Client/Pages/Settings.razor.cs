@@ -1,55 +1,47 @@
 ﻿using EnglishMaster.Shared;
+using Toolbelt.Blazor.SpeechSynthesis;
 
 namespace EnglishMaster.Client.Pages
 {
     public partial class Settings
     {
-        private bool _isMute = false;
+        private string? _voiceIdentity = null;
         private int _numberOfQuestion = 10;
+        private long _mode = StudyMode.Choice;
+        private string _buttonContent = "Save changes";
 
-        // protected override async Task OnInitializedAsync()
-        // {
-            //try
-            //{
-            //    StateContainer.IsLoading = true;
-            //    EnglishMaster.Shared.Settings? settings = await LocalStorageService.GetItemAsync<EnglishMaster.Shared.Settings>(ApplicationSettings.APPLICATION_ID);
-            //    if (settings != null)
-            //    {
-            //        _isMute = settings.IsMute;
-            //        _numberOfQuestion = settings.NumberOfQuestion;
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    StateContainer.Message = ex.Message;
-            //}
-            //finally
-            //{
-            //    StateContainer.IsLoading = false;
-            //}
-        // }
-        // private async Task SaveButtonOnClick()
-        // {
-            //try
-            //{
-            //    StateContainer.IsLoading = true;
-            //    SettingService.IsMute = _isMute;
-            //    SettingService.NumberOfQuestion = _numberOfQuestion;
-            //    EnglishMaster.Shared.Settings settings = new EnglishMaster.Shared.Settings
-            //    {
-            //        IsMute = SettingService.IsMute,
-            //        NumberOfQuestion = SettingService.NumberOfQuestion
-            //    };
-            //    await LocalStorageService.SetItemAsync(ApplicationSettings.APPLICATION_ID, settings);
-            //}
-            //catch (Exception ex)
-            //{
-            //    StateContainer.Message = ex.Message;
-            //}
-            //finally
-            //{
-            //    StateContainer.IsLoading = false;
-            //}
-        // }
+        private IEnumerable<SpeechSynthesisVoice> _voices = Enumerable.Empty<SpeechSynthesisVoice>();
+
+        protected override async Task OnInitializedAsync()
+        {
+            StateContainer.IsLoading = true;
+            _voices = await SpeakService.GetVoicesAsync();
+            UserSettings userSettings = await SettingService.LoadAsync();
+            _voiceIdentity = userSettings.VoiceIdentity;
+            _numberOfQuestion = userSettings.NumberOfQuestion;
+            _mode = userSettings.Mode;
+            StateContainer.IsLoading = false;
+        }
+
+        private async Task SaveButtonOnClick()
+        {
+            UserSettings userSettings = new UserSettings(_voiceIdentity, _numberOfQuestion, _mode);
+            if (userSettings.NumberOfQuestion < 10)
+            {
+                StateContainer.DialogContent =
+                    new Fukicycle.Tool.AppBase.Components.Dialog.DialogContent(
+                            "The number of questions must be greater than 10.",
+                            Fukicycle.Tool.AppBase.Components.Dialog.DialogType.Info);
+            }
+            else
+            {
+                await SettingService.SaveAsync(userSettings);
+                _buttonContent = "Saved!";
+                StateHasChanged();
+                await Task.Delay(1000);
+                _buttonContent = "Save changes";
+                StateHasChanged();
+            }
+        }
     }
 }

@@ -1,27 +1,35 @@
 ﻿@page "/authentication/{action}"
-<RemoteAuthenticatorView Action="@Action">
-    <LoggingIn>
-        <div class="loader-wrapper">
-            <div class="loader"></div>
-        </div>
-    </LoggingIn>
-    <CompletingLoggingIn>
-        <div class="loader-wrapper">
-            <div class="loader"></div>
-        </div>
-    </CompletingLoggingIn>
-    <CompletingLogOut>
-        <div class="loader-wrapper">
-            <div class="loader"></div>
-        </div>
-    </CompletingLogOut>
-    <LogOutSucceeded>
-        <div class="loader-wrapper">
-            <div class="loader"></div>
-        </div>
-    </LogOutSucceeded>
-</RemoteAuthenticatorView>
-
+@inherits ViewBase
+@inject CustomAuthenticationStateProvider CustomAuthenticationStateProvider
+@inject NavigationManager NavigationManager
+@inject OAuthConfigurationService OAuthConfigurationService
+<div class="loader-wrapper">
+    <div class="loader"></div>
+</div>
 @code {
     [Parameter] public string? Action { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Action == "login-callback")
+        {
+            if (NavigationManager.Uri.Contains("#"))
+            {
+                string accessToken = Regex.Match(NavigationManager.Uri, "#.*&").Value.Split('=')[1];
+                bool isRedirect = await CustomAuthenticationStateProvider.SignInWithGoogleAsync(accessToken);
+                if (!isRedirect)
+                {
+                    NavigationManager.NavigateTo("", true);
+                }
+                return;
+            }
+            StateContainer.DialogContent =
+                new DialogContent("認証中に不明なエラーが発生しました。アプリケーションを開きなおしてください。", DialogType.Error);
+        }
+        if (Action == "login")
+        {
+            string oauthUrl = OAuthConfigurationService.GetOAuthUri();
+            NavigationManager.NavigateToLogin(oauthUrl);
+        }
+    }
 }

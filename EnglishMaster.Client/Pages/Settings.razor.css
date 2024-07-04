@@ -11,28 +11,47 @@
 
 .setting-items {
     padding-top: .5rem;
-    list-style: none;
     padding-left: 1rem;
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: repeat(3, 45px);
     flex: 1;
 }
 
 .setting-item {
-    margin-bottom: .5rem;
     width: 100%;
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
 }
 
-    .setting-item > input[type=number] {
-        font-size: 16px;
-        width: 55px;
-        padding: .5rem;
-        outline: none;
-        background-color: transparent;
-        color: var(--app-white);
-        border: none;
-        border-radius: 0;
-        text-align: end;
-        border-bottom: solid 1px var(--app-primary-100);
-    }
+.setting-item>div {
+    text-align: end;
+}
+
+input[type=number] {
+    background-color: var(--app-primary-800);
+    border: none;
+    border-radius: .5rem;
+    box-shadow: 0 .3rem .1rem -.2rem rgba(0, 0, 0, .2) inset, 0 .2rem .2rem 0 rgba(0, 0, 0, .14) inset, 0 .1rem .5rem 0 rgba(0, 0, 0, .12) inset;
+    color: var(--app-white);
+    font-size: inherit;
+    width: 160px;
+    padding: .7rem;
+    font-size: 16px;
+    text-align: end;
+    outline: none;
+}
+
+.select-mode {
+    background-color: var(--app-primary-800);
+    border: none;
+    border-radius: .5rem;
+    box-shadow: 0 .3rem .1rem -.2rem rgba(0, 0, 0, .2), 0 .2rem .2rem 0 rgba(0, 0, 0, .14), 0 .1rem .5rem 0 rgba(0, 0, 0, .12);
+    color: var(--app-white);
+    font-size: inherit;
+    width: 160px;
+    padding: .7rem;
+    text-align: end;
+    outline: none;
+}

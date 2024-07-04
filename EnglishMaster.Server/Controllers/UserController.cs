@@ -11,11 +11,9 @@ namespace EnglishMaster.Server.Controllers
     public sealed class UserController : ControllerBase
     {
         private readonly IUserService _userService;
-        private readonly ILoginService _loginService;
-        public UserController(IUserService userService, ILoginService loginService)
+        public UserController(IUserService userService)
         {
             _userService = userService;
-            _loginService = loginService;
         }
 
         [HttpPost]
@@ -24,7 +22,7 @@ namespace EnglishMaster.Server.Controllers
         {
             try
             {
-                _userService.Register(userReqestDto.Username, userReqestDto.Password, userReqestDto.FirstName, userReqestDto.LastName, userReqestDto.Nickname);
+                _userService.Register(userReqestDto.Username, userReqestDto.Password, userReqestDto.FirstName, userReqestDto.LastName, userReqestDto.Nickname, userReqestDto.IconUrl);
                 return StatusCode(201);
             }
             catch (Exception ex)
@@ -40,8 +38,8 @@ namespace EnglishMaster.Server.Controllers
         {
             try
             {
-                string email = _loginService.GetValueFromClaims(HttpContext.User.Claims, "email");
-                return Ok(_userService.GetUserResponseDtoByEmail(email));
+                long userId = HttpContext.GetUserId();
+                return Ok(_userService.GetUserResponseDto(userId));
             }
             catch (Exception ex)
             {

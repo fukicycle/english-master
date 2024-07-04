@@ -1,12 +1,11 @@
 using EnglishMaster.Server;
+using EnglishMaster.Server.Security.Authentication;
+using EnglishMaster.Server.Security.Service;
 using EnglishMaster.Server.Services;
 using EnglishMaster.Server.Services.Interfaces;
 using EnglishMaster.Shared;
 using EnglishMaster.Shared.Models;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
 using System.Security.Cryptography;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,58 +21,18 @@ builder.Services.AddCors(options =>
     {
         policy.WithOrigins("http://localhost:5261", "https://localhost:7132", "https://fukicycle.github.io")
                 .WithMethods("GET", "POST", "OPTIONS")
-                .WithHeaders("Authorization", "Content-Type")
+                .WithHeaders(HttpHeaders.ACCESS_TOKEN_HEADER, "Content-Type")
                 .AllowCredentials();
     });
 });
 
-//Jwt authentication
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
-{
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        ValidIssuer = "sato-home.mydns.jp",
-        ValidAudience = "fukicycle.github.io",
-        IssuerSigningKey = new SymmetricSecurityKey(ApplicationSettings.JWT_KEY),
-        ClockSkew = TimeSpan.Zero
-    };
-});
+//Access token authentication
+builder.Services.AddAuthentication(AccessTokenAuthenticationOptions.DefaultScheme)
+    .AddScheme<AccessTokenAuthenticationOptions, AccessTokenAuthenticationHandler>
+    (AccessTokenAuthenticationOptions.DefaultScheme, options => { });
 
 // Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
-{
-    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        In = ParameterLocation.Header,
-        Description = "Please enter a valid token",
-        Name = "Authorization",
-        Type = SecuritySchemeType.Http,
-        BearerFormat = "JWT",
-        Scheme = "Bearer"
-    });
-    options.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            },
-            new string[]{ }
-        }
-    });
-});
 
 //Register service
 builder.Services.AddDbContext<DB>(a => a.UseSqlServer(builder.Configuration.GetConnectionString("DB")));
@@ -81,25 +40,20 @@ builder.Services.AddScoped<IDictionaryService, DictionaryService>();
 builder.Services.AddScoped<IQuestionService, QuestionService>();
 builder.Services.AddScoped<IPartOfSpeechService, PartOfSpeechService>();
 builder.Services.AddScoped<ILevelService, LevelService>();
-builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IAchievementService, AchievementService>();
+builder.Services.AddKeyedScoped<IAchievementService, ChoiceAchievementService>("Choice");
+builder.Services.AddKeyedScoped<IAchievementService, FlushAchievementService>("Flush");
 builder.Services.AddScoped<IResultService, ResultService>();
+builder.Services.AddScoped<IAccessTokenAuthenticationService, AccessTokenAuthenticationService>();
+builder.Services.AddScoped<IFlushCardQuestionService, FlushCardQuestionService>();
+builder.Services.AddScoped<IFlushCardResultService, FlushCardResultService>();
 
 var app = builder.Build();
 
 //CORS
 app.UseCors();
-//JWT
+//Access token authentication.
 app.UseAuthentication();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
 app.UseAuthorization();
 
 app.MapControllers();

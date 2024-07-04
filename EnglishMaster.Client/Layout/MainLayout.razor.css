@@ -12,8 +12,7 @@
     height: 100%;
     background-color: var(--app-primary-800);
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
 }
 
 header {
@@ -26,6 +25,12 @@ header {
     align-items: center;
     justify-content: start;
     color: var(--app-primary-100);
+}
+
+.header-menu {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 img {
@@ -50,4 +55,27 @@ article {
     margin: 0;
     margin-left: auto;
     box-shadow: 0 0 4px var(--app-primary-100);
+}
+
+::deep .nav-link {
+    font-size: .8rem;
+    text-decoration: none !important;
+    color: var(--app-primary-400) !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 50px;
+}
+
+::deep .nav-link.active {
+    color: var(--app-primary-100) !important;
+}
+
+::deep .menu-stroke {
+    stroke: var(--app-primary-400) !important;
+}
+
+::deep .menu-stroke.active {
+    stroke: var(--app-primary-100) !important;
 }

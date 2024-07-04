@@ -1,28 +1,27 @@
-﻿using EnglishMaster.Client.Entities;
+﻿using EnglishMaster.Client.Authentication;
+using EnglishMaster.Client.Entities;
 using EnglishMaster.Shared.Dto.Response;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 
 namespace EnglishMaster.Client.Pages
 {
     public partial class Home
     {
-        private LoginUser? _loginUser = null;
         private List<AchievementResponseDto> _achievements = new List<AchievementResponseDto>();
         private string _treeImagePath = "process/tree_01.png";
         private int _level = 1;
+        private string _displayName = "";
 
         protected override async Task OnInitializedAsync()
         {
             StateContainer.IsLoading = true;
-            bool isAuthenticated = await ExecuteAsync(AuthenticationService.IsAuthenticatedAsync);
-            if (isAuthenticated)
+            AuthenticationState authState = await ExecuteAsync(AuthenticationStateProvider.GetAuthenticationStateAsync);
+            if (authState.User.IsInRole(nameof(AccessRole.General)))
             {
-                _loginUser = await ExecuteAsync(AuthenticationService.GetLoginUserAsync);
-                if (_loginUser == null)
-                {
-                    NavigationManager.NavigateTo("register");
-                    return;
-                }
+                string fullName = AuthenticationStateProvider.LoginUser!.FirstName + " " + AuthenticationStateProvider.LoginUser!.LastName;
+                string? nickName = AuthenticationStateProvider.LoginUser!.Nickname;
+                _displayName = nickName ?? fullName;
                 _achievements = await ExecuteAsync(AchivementClientService.GetAchievementAsync);
                 await ExecuteAsync(GetTreeImagePathAsync);
             }
@@ -31,7 +30,7 @@ namespace EnglishMaster.Client.Pages
 
         private void LoginButtonOnClick()
         {
-            NavigationManager.NavigateToLogin($"authentication/login?returnUrl={Uri.EscapeDataString(NavigationManager.Uri)}");
+            NavigationManager.NavigateToLogin("authentication/login");
         }
 
         private async Task GetTreeImagePathAsync()

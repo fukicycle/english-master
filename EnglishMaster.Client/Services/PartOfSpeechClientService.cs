@@ -2,28 +2,30 @@
 using EnglishMaster.Shared.Dto.Response;
 using EnglishMaster.Shared;
 using Newtonsoft.Json;
+using System.Net.Http.Json;
 
 namespace EnglishMaster.Client.Services
 {
     public sealed class PartOfSpeechClientService
     {
-        private readonly IHttpClientService _httpClientService;
+        private readonly HttpClient _httpClient;
         private readonly ILogger<PartOfSpeechClientService> _logger;
 
-        public PartOfSpeechClientService(IHttpClientService httpClientService, ILogger<PartOfSpeechClientService> logger)
+        public PartOfSpeechClientService(HttpClient httpClient, ILogger<PartOfSpeechClientService> logger)
         {
-            _httpClientService = httpClientService;
+            _httpClient = httpClient;
             _logger = logger;
         }
 
         public async Task<List<PartOfSpeechResponseDto>> GetPartOfSpeechesAsync()
         {
-            HttpResponseResult partOfSpeechesResponse = await _httpClientService.SendAsync(HttpMethod.Get, ApiEndPoint.PART_OF_SPEECH);
-            if (partOfSpeechesResponse.StatusCode != System.Net.HttpStatusCode.OK)
+            HttpResponseMessage httpResponseMessage = await _httpClient.GetAsync(ApiEndPoint.PART_OF_SPEECH);
+            if (!httpResponseMessage.IsSuccessStatusCode)
             {
-                throw new Exception(partOfSpeechesResponse.Message);
+                throw new Exception(await httpResponseMessage.Content.ReadAsStringAsync());
             }
-            List<PartOfSpeechResponseDto>? partOfSpeeches = JsonConvert.DeserializeObject<List<PartOfSpeechResponseDto>>(partOfSpeechesResponse.Json);
+            List<PartOfSpeechResponseDto>? partOfSpeeches =
+                await httpResponseMessage.Content.ReadFromJsonAsync<List<PartOfSpeechResponseDto>>();
             if (partOfSpeeches == null)
             {
                 throw new Exception($"Can not deserialized.{nameof(List<PartOfSpeechResponseDto>)}");

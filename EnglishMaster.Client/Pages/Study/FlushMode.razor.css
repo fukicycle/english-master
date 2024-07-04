@@ -1,0 +1,72 @@
+.no {
+    text-align: center;
+}
+
+.word {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 6vh;
+    flex: 1;
+    font-weight: bold;
+    overflow: auto;
+}
+
+.flush-card-wrapper {
+    height: 100%;
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    grid-gap: .5rem;
+    padding: 0 32px;
+}
+
+.flush-card {
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+    font-size: 16px;
+    padding: 16px;
+    color: var(--app-white);
+    grid-gap: 8px;
+}
+
+.result-btn-area {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+.word-details {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    border: none;
+    overflow: auto;
+}
+
+.word-detail {
+    display: grid;
+    grid-template-columns: 60px minmax(0, 1fr);
+    grid-template-rows: auto;
+
+}
+
+.header {
+    font-size: .8em;
+    align-content: center;
+    background-color: var(--app-primary-100);
+    padding: 8px;
+    border-radius: 8px 0 0 8px;
+    color: var(--app-black);
+}
+
+.word-mean {
+    border: solid 1px var(--app-primary-100);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 8px;
+    align-content: center;
+    border-radius: 0 8px 8px 0;
+}

@@ -6,17 +6,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EnglishMaster.Server.Services
 {
-    public sealed class AchievementService : IAchievementService
+    public sealed class FlushAchievementService : IAchievementService
     {
         private readonly DB _db;
-        private readonly ILogger<AchievementService> _logger;
-        public AchievementService(DB db, ILogger<AchievementService> logger)
+        private readonly ILogger<FlushAchievementService> _logger;
+        public FlushAchievementService(DB db, ILogger<FlushAchievementService> logger)
         {
             _db = db;
             _logger = logger;
         }
 
-        public IList<AchievementGraphResponseDto> GetAchievementGraphResponseDtosByPartOfSpeech(string email)
+        public IList<AchievementGraphResponseDto> GetAchievementGraphResponseDtosByPartOfSpeech(long userId)
         {
             List<AchievementGraphResponseDto> achievementGraphResponseDtos = new List<AchievementGraphResponseDto>();
             User? user = _db.Users
@@ -25,7 +25,7 @@ namespace EnglishMaster.Server.Services
                             .ThenInclude(a => a.PartOfSpeech)
                             .Include(a => a.MeaningOfWordLearningHistories)
                             .ThenInclude(a => a.QuestionMeaningOfWord)
-                            .FirstOrDefault(a => a.Username == email);
+                            .FirstOrDefault(a => a.Id == userId);
             if (user == null)
             {
                 return achievementGraphResponseDtos;
@@ -36,10 +36,12 @@ namespace EnglishMaster.Server.Services
                                                     .ToList();
             foreach (PartOfSpeech partOfSpeech in partOfSpeeches)
             {
-                int numberOfAnswerWord = user.MeaningOfWordLearningHistories.Count(a => a.QuestionMeaningOfWord.PartOfSpeechId == partOfSpeech.Id);
+                int numberOfAnswerWord = user.MeaningOfWordLearningHistories
+                                            .Where(a => a.ModeId == StudyMode.Flush)
+                                            .Count(a => a.QuestionMeaningOfWord.PartOfSpeechId == partOfSpeech.Id);
                 int numberOfCoorectAnswerWord = user.MeaningOfWordLearningHistories
-                                                 .Where(a => a.QuestionMeaningOfWord.PartOfSpeechId == partOfSpeech.Id)
-                                                 .Count(a => a.QuestionMeaningOfWordId == a.AnswerMeaningOfWordId);
+                                                 .Where(a => a.QuestionMeaningOfWord.PartOfSpeechId == partOfSpeech.Id && a.ModeId == StudyMode.Flush)
+                                                 .Count(a => a.IsCorrect);
                 if (numberOfAnswerWord == 0)
                 {
                     //Parts of speech with no answer will not be displayed.
@@ -53,7 +55,7 @@ namespace EnglishMaster.Server.Services
             return achievementGraphResponseDtos;
         }
 
-        public IList<AchievementGraphResponseDto> GetAchievementGraphResponseDtosByWeek(string email)
+        public IList<AchievementGraphResponseDto> GetAchievementGraphResponseDtosByWeek(long userId)
         {
             List<AchievementGraphResponseDto> achievementGraphResponseDtos = new List<AchievementGraphResponseDto>();
             User? user = _db.Users
@@ -62,7 +64,7 @@ namespace EnglishMaster.Server.Services
                             .ThenInclude(a => a.PartOfSpeech)
                             .Include(a => a.MeaningOfWordLearningHistories)
                             .ThenInclude(a => a.QuestionMeaningOfWord)
-                            .FirstOrDefault(a => a.Username == email);
+                            .FirstOrDefault(a => a.Id == userId);
             if (user == null)
             {
                 return achievementGraphResponseDtos;
@@ -70,10 +72,11 @@ namespace EnglishMaster.Server.Services
             DateTime startDate = DateTime.Today.AddDays(-7);
             for (DateTime dt = startDate; dt < DateTime.Today; dt = dt.AddDays(1))
             {
-                int numberOfAnswerWord = user.MeaningOfWordLearningHistories.Count(a => a.Date.Date == dt);
+                int numberOfAnswerWord = user.MeaningOfWordLearningHistories
+                                            .Count(a => a.Date.Date == dt && a.ModeId == StudyMode.Flush);
                 int numberOfCorrectAnswerWord = user.MeaningOfWordLearningHistories
-                                                .Where(a => a.Date.Date == dt)
-                                                .Count(a => a.AnswerMeaningOfWordId == a.QuestionMeaningOfWordId);
+                                                .Where(a => a.Date.Date == dt && a.ModeId == StudyMode.Flush)
+                                                .Count(a => a.IsCorrect);
                 if (numberOfAnswerWord == 0)
                 {
                     achievementGraphResponseDtos.Add(new AchievementGraphResponseDto(dt.ToString("MM/dd"), null));
@@ -87,7 +90,7 @@ namespace EnglishMaster.Server.Services
             return achievementGraphResponseDtos;
         }
 
-        public IList<AchievementResponseDto> GetAchievementResponseDtosByEmail(string email)
+        public IList<AchievementResponseDto> GetAchievementResponseDtos(long userId)
         {
             List<AchievementResponseDto> achievementResponseDtos = new List<AchievementResponseDto>();
             User? user = _db.Users
@@ -97,7 +100,7 @@ namespace EnglishMaster.Server.Services
                             .Include(a => a.MeaningOfWordLearningHistories)
                             .ThenInclude(a => a.QuestionMeaningOfWord)
                             .ThenInclude(a => a.Level)
-                            .FirstOrDefault(a => a.Username == email);
+                            .FirstOrDefault(a => a.Id == userId);
             if (user == null)
             {
                 return achievementResponseDtos;
@@ -119,7 +122,13 @@ namespace EnglishMaster.Server.Services
                         continue;
                     }
                     int total = partOfSpeech.MeaningOfWords.Where(a => a.LevelId == level.Id).Count();
-                    int actual = user.MeaningOfWordLearningHistories.Where(a => a.QuestionMeaningOfWord.LevelId == level.Id && a.QuestionMeaningOfWord.PartOfSpeechId == partOfSpeech.Id && a.AnswerMeaningOfWordId == a.QuestionMeaningOfWordId).GroupBy(a => a.QuestionMeaningOfWordId).Count();
+                    int actual = user.MeaningOfWordLearningHistories
+                                .Where(a => a.QuestionMeaningOfWord.LevelId == level.Id &&
+                                            a.QuestionMeaningOfWord.PartOfSpeechId == partOfSpeech.Id &&
+                                            a.IsCorrect &&
+                                            a.ModeId == StudyMode.Flush)
+                                .GroupBy(a => a.QuestionMeaningOfWordId)
+                                .Count();
                     _logger.LogInformation($"Actual/Total[{partOfSpeech.Name},{level.Name}]:{actual}/{total}");
                     detailResponseDtos.Add(new AchievementDetailResponseDto(partOfSpeech.Name, total, actual));
                 }
@@ -128,20 +137,9 @@ namespace EnglishMaster.Server.Services
             return achievementResponseDtos;
         }
 
-        public IList<TreeFarmResponseDto> GetTreeFarmData(string email, DateTime startDate)
+        public IList<TreeFarmResponseDto> GetTreeFarmData(long userId, DateTime startDate)
         {
-            List<TreeFarmResponseDto> treeFarmResponseDtos = new List<TreeFarmResponseDto>();
-            List<MeaningOfWordLearningHistory> histories =
-                _db.MeaningOfWordLearningHistories
-                .Include(a => a.User)
-                .Where(a => a.User.Username == email && a.Date.Date >= startDate)
-                .ToList();
-            foreach (var history in histories.GroupBy(a => new { a.Date.Year, a.Date.Month, a.Date.Day }))
-            {
-                DateTime dateTime = new DateTime(history.Key.Year, history.Key.Month, history.Key.Day);
-                treeFarmResponseDtos.Add(new TreeFarmResponseDto(dateTime));
-            }
-            return treeFarmResponseDtos;
+            throw new NotImplementedException("Please use Choice Achievement service.");
         }
     }
 }

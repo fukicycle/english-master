@@ -1,7 +1,5 @@
-﻿@inject ILocalStorageService LocalStorageService
-@inject ISettingService SettingService
-<Microsoft.AspNetCore.Components.Authorization.CascadingAuthenticationState>
-    <Router AppAssembly="@typeof(App).Assembly">
+﻿<Microsoft.AspNetCore.Components.Authorization.CascadingAuthenticationState>
+    <ViewTransitionRouter AppAssembly="@typeof(App).Assembly">
         <Found Context="routeData">
             <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
             <FocusOnNavigate RouteData="@routeData" Selector="h1" />
@@ -12,5 +10,5 @@
                 <p role="alert">Sorry, there's nothing at this address.</p>
             </LayoutView>
         </NotFound>
-    </Router>
+    </ViewTransitionRouter>
 </Microsoft.AspNetCore.Components.Authorization.CascadingAuthenticationState>

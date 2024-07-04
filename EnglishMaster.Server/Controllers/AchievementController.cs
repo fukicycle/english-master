@@ -1,4 +1,5 @@
-﻿using EnglishMaster.Server.Services.Interfaces;
+﻿using EnglishMaster.Server.Security.Service;
+using EnglishMaster.Server.Services.Interfaces;
 using EnglishMaster.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,22 +10,52 @@ namespace EnglishMaster.Server.Controllers
     [Route(ApiEndPoint.ACHIEVEMENT)]
     public sealed class AchievementController : ControllerBase
     {
-        private readonly IAchievementService _achievementService;
-        private readonly ILoginService _loginService;
-        public AchievementController(IAchievementService achievementService, ILoginService loginService)
+        private readonly IAchievementService _choiceAchievementService;
+        private readonly IAchievementService _flushAchievementService;
+        public AchievementController([FromKeyedServices("Choice")] IAchievementService choiceAchievementService, [FromKeyedServices("Flush")] IAchievementService flushAchievementService)
         {
-            _achievementService = achievementService;
-            _loginService = loginService;
+            _choiceAchievementService = choiceAchievementService;
+            _flushAchievementService = flushAchievementService;
         }
 
-        [HttpGet]
+        [HttpGet("{mode}")]
         [Route("")]
-        public IActionResult GetAchievements()
+        public IActionResult GetAchievements(long mode)
         {
             try
             {
-                string email = _loginService.GetValueFromClaims(HttpContext.User.Claims, "email");
-                return Ok(_achievementService.GetAchievementResponseDtosByEmail(email));
+                long userId = HttpContext.GetUserId();
+                switch (mode)
+                {
+                    case 1:
+                        return Ok(_flushAchievementService.GetAchievementResponseDtos(userId));
+                    case 2:
+                        return Ok(_choiceAchievementService.GetAchievementResponseDtos(userId));
+                }
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpGet()]
+        [Route("car/week/{mode}")]
+        [Authorize]
+        public IActionResult GetAchievementCARByWeek(long mode)
+        {
+            try
+            {
+                long userId = HttpContext.GetUserId();
+                switch (mode)
+                {
+                    case 1:
+                        return Ok(_flushAchievementService.GetAchievementGraphResponseDtosByWeek(userId));
+                    case 2:
+                        return Ok(_choiceAchievementService.GetAchievementGraphResponseDtosByWeek(userId));
+                }
+                return BadRequest();
             }
             catch (Exception ex)
             {
@@ -33,30 +64,21 @@ namespace EnglishMaster.Server.Controllers
         }
 
         [HttpGet]
-        [Route("car/week")]
+        [Route("car/part-of-speech/{mode}")]
         [Authorize]
-        public IActionResult GetAchievementCARByWeek()
+        public IActionResult GetAchievementCARByPartOfSpeech(long mode)
         {
             try
             {
-                string email = _loginService.GetValueFromClaims(HttpContext.User.Claims, "email");
-                return Ok(_achievementService.GetAchievementGraphResponseDtosByWeek(email));
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
-        }
-
-        [HttpGet]
-        [Route("car/part-of-speech")]
-        [Authorize]
-        public IActionResult GetAchievementCARByPartOfSpeech()
-        {
-            try
-            {
-                string email = _loginService.GetValueFromClaims(HttpContext.User.Claims, "email");
-                return Ok(_achievementService.GetAchievementGraphResponseDtosByPartOfSpeech(email));
+                long userId = HttpContext.GetUserId();
+                switch (mode)
+                {
+                    case 1:
+                        return Ok(_flushAchievementService.GetAchievementGraphResponseDtosByPartOfSpeech(userId));
+                    case 2:
+                        return Ok(_choiceAchievementService.GetAchievementGraphResponseDtosByPartOfSpeech(userId));
+                }
+                return BadRequest();
             }
             catch (Exception ex)
             {
@@ -71,8 +93,8 @@ namespace EnglishMaster.Server.Controllers
         {
             try
             {
-                string email = _loginService.GetValueFromClaims(HttpContext.User.Claims, "email");
-                return Ok(_achievementService.GetTreeFarmData(email,startDate));
+                long userId = HttpContext.GetUserId();
+                return Ok(_choiceAchievementService.GetTreeFarmData(userId, startDate));
             }
             catch (Exception ex)
             {
