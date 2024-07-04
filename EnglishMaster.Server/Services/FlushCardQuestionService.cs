@@ -22,13 +22,11 @@ public sealed class FlushCardQuestionService : IFlushCardQuestionService
                                                         .ToList();
         foreach (Word word in GetRandomWord(10))
         {
-            KeyValuePair<string, List<string>> means = new KeyValuePair<string, List<string>>();
+            Dictionary<string, List<string>> means = new Dictionary<string, List<string>>();
             foreach (var grouping in meaningOfWords.Where(a => a.WordId == word.Id)
                                                    .GroupBy(a => a.PartOfSpeech))
             {
-                means = new KeyValuePair<string, List<string>>(
-                        grouping.Key.InJapanese,
-                        grouping.Select(a => a.Meaning).ToList());
+                means.Add(grouping.Key.InJapanese, grouping.Select(a => a.Meaning).ToList());
             }
             yield return new FlushCardResponseDto(word.Word1, word.Id, means);
         }
