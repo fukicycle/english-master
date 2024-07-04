@@ -49,7 +49,7 @@ public partial class FlushMode
         {
             if (_question != null && _isAuthenticated)
             {
-                await FlushCardResultClientService.SubmitResultAsync(_question.WordId, isOk);
+                await ExecuteAsync(async () => await FlushCardResultClientService.SubmitResultAsync(_question.WordId, isOk), true);
             }
             _question = _questions[_idx];
         }

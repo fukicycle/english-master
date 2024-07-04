@@ -1,5 +1,7 @@
-﻿using EnglishMaster.Server.Services.Interfaces;
+﻿using EnglishMaster.Server.Controllers;
+using EnglishMaster.Server.Services.Interfaces;
 using EnglishMaster.Shared;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EnglishMaster.Server;
@@ -15,11 +17,16 @@ public sealed class FlushCardQuestionController : ControllerBase
         _logger = logger;
     }
 
-    [Route("")]
+    [HttpGet()]
+    [Authorize, AllowAnonymous]
     public IActionResult GetQuestions()
     {
         try
         {
+            if (HttpContext.User.Identity?.IsAuthenticated == true)
+            {
+                return Ok(_flushCardQuestionService.GetFlushCardResponseDtos(HttpContext.GetUserId()));
+            }
             return Ok(_flushCardQuestionService.GetFlushCardResponseDtos());
         }
         catch (Exception ex)
